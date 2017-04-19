@@ -8,6 +8,11 @@ import (
 	"octopus/rtb"
 	"octopus/supliers"
 
+	"fmt"
+	"services/assert"
+	"services/eav"
+	"time"
+
 	"github.com/fzerorubigd/xmux"
 )
 
@@ -44,7 +49,15 @@ func getAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res := rtb.SelectCPM(imp, ads)
-
+	// save winner in store
+	for i := range res {
+		store := eav.NewEavStore(res[i].TrackID())
+		store.SetSubKey("IP", realIP(r))
+		store.SetSubKey("ID", res[i].ID())
+		store.SetSubKey("DEMAND", res[i].Demand().Name())
+		store.SetSubKey("BID", fmt.Sprintf("%d", res[i].WinnerCPM()))
+		assert.Nil(store.Save(24 * time.Hour))
+	}
 	err = imp.Source().Supplier().Renderer().Render(res, w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

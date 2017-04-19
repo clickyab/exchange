@@ -133,3 +133,11 @@ func demandIsAllowed(impression exchange.Impression, data providerData) bool {
 	}
 	return true
 }
+
+// GetDemand return demand by its name
+func GetDemand(name string) entity.Demand {
+	lock.RLock()
+	defer lock.RUnlock()
+	return allProviders[name].provider
+
+}
