@@ -103,6 +103,9 @@ func Call(ctx context.Context, imp entity.Impression) map[string][]entity.Advert
 	allRes := make(chan map[string]entity.Advertise, l)
 	lock.RLock()
 	for i := range allProviders {
+		if !demandIsAllowed(imp, allProviders[i]) {
+			continue
+		}
 		go func(inner string) {
 			defer wg.Done()
 			p := allProviders[inner]
@@ -132,4 +135,11 @@ func Call(ctx context.Context, imp entity.Impression) map[string][]entity.Advert
 	}
 
 	return res
+}
+
+func demandIsAllowed(impression entity.Impression, data providerData) bool {
+	if impression.Source().Name() == data.name {
+		return false
+	}
+	return true
 }
