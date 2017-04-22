@@ -2,12 +2,13 @@ package restful
 
 import (
 	"context"
-	"core"
 	"encoding/base64"
 	"net/http"
 	"services/assert"
 	"services/eav"
 	"strconv"
+
+	core2 "octopus/core"
 
 	"github.com/fzerorubigd/xmux"
 )
@@ -26,16 +27,19 @@ func trackPixel(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//get from store
-		store := eav.NewEavStore(trackID)
-		winnerDemand := store.SubKey("DEMAND")
-		winnerID := store.SubKey("ID")
-		winnerBID := store.SubKey("BID")
+		store := eav.NewEavStore(trackID).AllKeys()
+		winnerDemand := store["DEMAND"]
+		winnerID := store["ID"]
+		winnerBID := store["BID"]
 		winnerInt, err := strconv.ParseInt(winnerBID, 10, 0)
 		if err != nil {
 			return
 		}
 		//set winner
-		d := core.GetDemand(winnerDemand)
+		d, err := core2.GetDemand(winnerDemand)
+		if err != nil {
+			return
+		}
 		d.Win(ctx, winnerID, winnerInt)
 	}()
 }

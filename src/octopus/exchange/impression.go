@@ -21,7 +21,7 @@ const (
 type Impression interface {
 	// TrackID return the random id of this imp object
 	TrackID() string
-	// IP return the client ip
+	// IP return the client httplib
 	IP() net.IP
 	// UserAgent return the client user agent
 	UserAgent() string
