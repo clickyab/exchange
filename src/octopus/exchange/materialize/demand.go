@@ -19,7 +19,7 @@ func (d demand) Encode() ([]byte, error) {
 	for i := range d.ads {
 		advertizes = append(advertizes, advertiseToMap(d.ads[i]))
 	}
-	themap = append(themap, demandToMap(d.dmn), impressionToMap(d.imp), advertizes)
+	themap = append(themap, demandToMap(d.dmn), impressionToMap(d.imp, d.ads...), advertizes)
 	return json.Marshal(themap)
 }
 
