@@ -22,7 +22,15 @@ type restful struct {
 	sup          exchange.Supplier
 }
 
-func (rf restful) Render(in map[string]exchange.Advertise, w io.Writer) error {
+func (rf restful) Render(in map[string]exchange.Advertise, fallback string, w io.Writer) error {
+	if len(in) == 0 {
+		response := map[string]*dumbAd{"": &dumbAd{Code: fallback}}
+		encoder := json.NewEncoder(w)
+		err := encoder.Encode(response)
+
+		return err
+	}
+
 	res := make(map[string]*dumbAd, len(in))
 	for i := range in {
 		if in[i] == nil {

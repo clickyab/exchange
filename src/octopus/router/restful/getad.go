@@ -22,9 +22,19 @@ import (
 	"github.com/fzerorubigd/xmux"
 )
 
+type payload struct {
+	URL string `json:"url"`
+}
+
 func getAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	dec := json.NewEncoder(w)
 	key := xmux.Param(ctx, "key")
+
+	var p payload
+	decoder := json.NewDecoder(r.Body)
+	err := decoder.Decode(&p)
+	assert.Nil(err)
+
 	imp, err := supliers.GetImpression(key, r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -67,7 +77,7 @@ func getAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		store.SetSubKey("IP", httplib.RealIP(r)).SetSubKey("ID", res[i].ID()).SetSubKey("DEMAND", res[i].Demand().Name()).SetSubKey("BID", fmt.Sprintf("%d", res[i].WinnerCPM()))
 		assert.Nil(store.Save(24 * time.Hour))
 	}
-	err = imp.Source().Supplier().Renderer().Render(res, w)
+	err = imp.Source().Supplier().Renderer().Render(res, p.URL, w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		dec.Encode(struct {
