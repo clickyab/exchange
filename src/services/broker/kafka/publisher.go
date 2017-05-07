@@ -106,7 +106,6 @@ func (b *cluster) setKafka(ctx context.Context, sa sarama.AsyncProducer) {
 }
 
 func (b *cluster) Initialize(ctx context.Context) {
-
 	if *flushFrequency < time.Millisecond {
 		*flushFrequency = 500 * time.Millisecond
 	}
