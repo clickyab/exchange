@@ -6,6 +6,7 @@ import (
 	_ "octopus/router/restful"
 	"services/config"
 	"services/initializer"
+	_ "services/statistic/redis"
 
 	"github.com/Sirupsen/logrus"
 )

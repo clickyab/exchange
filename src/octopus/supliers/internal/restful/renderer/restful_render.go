@@ -1,6 +1,8 @@
 package renderer
 
 import (
+	cfg "services/config"
+
 	"encoding/json"
 	"fmt"
 	"io"
@@ -51,7 +53,22 @@ func (rf restful) Render(in map[string]exchange.Advertise, w io.Writer) error {
 			winURL = win.String()
 		}
 
-		d.Code = fmt.Sprintf("TODO , tracker code is %s, the actual route is %s", x.String(), winURL)
+		host := cfg.GetStringDefault("exchange.host.name", "localhost:3412")
+		trackURL := fmt.Sprintf(`%s/pixel/%s/%s`, host, in[i].Demand().Name(), in[i].TrackID())
+
+		d.Code = fmt.Sprintf(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<iframe>
+    <img src="%s" alt="">
+    <iframe src="%s"></iframe>
+</iframe>
+</body>
+</html>`, trackURL, in[i].URL())
 		res[i] = d
 	}
 

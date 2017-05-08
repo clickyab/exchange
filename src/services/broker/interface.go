@@ -1,6 +1,13 @@
 package broker
 
-import "services/assert"
+import (
+	"services/assert"
+	"services/config"
+)
+var (
+	develMode = config.RegisterBoolean("core.devel_mode", false, "")
+	testMode = config.RegisterBoolean("services.broker.test_mode", false, "ljlbkj")
+)
 
 // Job is a normal job
 type Job interface {
@@ -33,6 +40,9 @@ func SetActiveBroker(b Interface) {
 
 // Publish try to Publish a job into system using the broker
 func Publish(j Job) {
-	assert.NotNil(activeBroker, "[BUG] active broker is not et")
+	assert.NotNil(activeBroker, "[BUG] active broker is not set")
+	if *develMode  && *testMode {
+		return
+	}
 	activeBroker.Publish(j)
 }

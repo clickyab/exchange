@@ -21,7 +21,11 @@ func TestSpec(t *testing.T) {
 		So(func() {
 			SetActiveBroker(dum{})
 		}, ShouldPanic)
-
+		*develMode = false
 		So(func() { Publish(nil) }, ShouldPanicWith, "HI THIS IS ME")
+		*develMode = true
+		*testMode = true
+		So(func() { Publish(nil) }, ShouldNotPanic)
+
 	})
 }

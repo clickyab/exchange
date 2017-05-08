@@ -41,7 +41,7 @@ func demandDemo(w http.ResponseWriter, r *http.Request) {
 			MaxCPM:  temp.Source.FloorCPM + 1,
 			Width:   temp.Slots[i].Width,
 			Height:  temp.Slots[i].Height,
-			URL:     fmt.Sprintf("http://a.clickyab.com/ads/?a=4471405272967&width=%d&height=%d&slot=71634138754&domainname=p30download.com&eventpage=416310534&loc=http%3A%2F%2Fp30download.com%2Fagahi%2Fplan%2Fa1i.php&ref=http%3A%2F%2Fp30download.com%2F&adcount=1", temp.Slots[i].Width, temp.Slots[i].Height),
+			URL:     fmt.Sprintf("http://a.clickyab.com/ads/?a=4471405272967&width=%d&height=%d&slot=71634138754&domainname=p30download.com&eventpage=416310534&loc=http://p30download.com/agahi/plan/a1i.php&ref=http://p30download.com/&adcount=1", temp.Slots[i].Width, temp.Slots[i].Height),
 			Landing: "clickyab.com",
 		}
 		res = append(res, a)

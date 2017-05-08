@@ -72,12 +72,10 @@ func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan e
 		logrus.Debug(err)
 		return
 	}
-
 	if resp.StatusCode != http.StatusOK {
 		logrus.Debugf("status code is %d", resp.StatusCode)
 		return
 	}
-
 	ads := []*restAd{}
 	dec := json.NewDecoder(resp.Body)
 	defer resp.Body.Close()
@@ -87,6 +85,7 @@ func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan e
 	}
 
 	for i := range ads {
+		ads[i].demand = d
 		ch <- ads[i]
 	}
 }

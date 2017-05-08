@@ -180,9 +180,9 @@ func contains(s []string, t string) bool {
 
 func init() {
 	filters = []func(exchange.Impression, providerData) bool{
-		isSameProvider,
-		notwhitelistCountries,
-		isExcludedDemands,
+	isSameProvider,
+	notwhitelistCountries,
+	isExcludedDemands,
 	}
 }
 
