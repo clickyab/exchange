@@ -1,6 +1,9 @@
 package broker
 
-import "services/assert"
+import (
+	"services/assert"
+	"services/config"
+)
 
 // Job is a normal job
 type Job interface {
@@ -27,12 +30,18 @@ var activeBroker Interface
 
 // SetActiveBroker is a gateway to set active broker for this service
 func SetActiveBroker(b Interface) {
+	if config.GetStringDefault("exchange.mode", "develop") == "develop" {
+		return
+	}
 	assert.Nil(activeBroker, "[BUG] active broker is already set")
 	activeBroker = b
 }
 
 // Publish try to Publish a job into system using the broker
 func Publish(j Job) {
+	if config.GetStringDefault("exchange.mode", "develop") == "develop" {
+		return
+	}
 	assert.NotNil(activeBroker, "[BUG] active broker is not et")
 	activeBroker.Publish(j)
 }
