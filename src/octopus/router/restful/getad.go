@@ -17,7 +17,6 @@ import (
 
 	"octopus/exchange/materialize"
 	"services/broker"
-	"services/safe"
 
 	"github.com/fzerorubigd/xmux"
 )
@@ -36,10 +35,8 @@ func getAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// OK push it to broker
-	safe.GoRoutine(func() {
-		jImp := materialize.ImpressionJob(imp)
-		broker.Publish(jImp)
-	}, r)
+	jImp := materialize.ImpressionJob(imp)
+	broker.Publish(jImp)
 	nCtx, cnl := context.WithCancel(ctx)
 	defer cnl()
 	ads := core.Call(nCtx, imp)
@@ -61,6 +58,14 @@ func getAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 	ads = rtb.Moderate(imp.Source(), ads)
 	res := rtb.SelectCPM(imp, ads)
+	// Publish them into message broker
+	for i := range res {
+		broker.Publish(materialize.WinnerJob(
+			imp,
+			res[i],
+			i,
+		))
+	}
 	// save winner in store
 	for i := range res {
 		store := eav.NewEavStore(res[i].TrackID())
