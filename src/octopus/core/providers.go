@@ -160,7 +160,10 @@ func isSameProvider(impression exchange.Impression, data providerData) bool {
 }
 
 func notwhitelistCountries(impression exchange.Impression, data providerData) bool {
-	return !contains(data.provider.WhiteListCountries(), impression.Location().Country().Name)
+	if len(data.provider.WhiteListCountries()) == 0 {
+		return true
+	}
+	return !contains(data.provider.WhiteListCountries(), impression.Location().Country().ISO)
 }
 
 func isExcludedDemands(impression exchange.Impression, data providerData) bool {
