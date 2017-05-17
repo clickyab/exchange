@@ -13,3 +13,8 @@ type DistributedSet interface {
 	// Save the set with lifetime
 	Save(time.Duration)
 }
+
+// GetDistributedSet retrieve DistributedSet from store or make new one if dose not exist
+func GetDistributedSet(key string) DistributedSet {
+	return nil
+}
