@@ -11,7 +11,7 @@ import (
 func SelectCPM(imp exchange.Impression, all map[string][]exchange.Advertise) (res map[string]exchange.Advertise) {
 	res = make(map[string]exchange.Advertise, len(all))
 
-	set := dset.NewDistributedSet("EXC" + imp.Source().Supplier().Name() + imp.PageTrackID())
+	set := dset.GetDistributedSet("EXC" + imp.Source().Supplier().Name() + imp.PageTrackID())
 	for id := range all {
 		this := moderate(imp.Source(), all[id])
 		if len(this) == 0 {

@@ -13,8 +13,3 @@ type DistributedSet interface {
 	// Save the set with lifetime
 	Save(time.Duration)
 }
-
-// NewDistributedSet is the distributed set
-func NewDistributedSet(name string) DistributedSet {
-	return nil
-}
