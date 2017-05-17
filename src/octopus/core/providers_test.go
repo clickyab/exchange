@@ -168,7 +168,6 @@ func TestProviders(t *testing.T) {
 			})
 
 		})
-
 		Convey("Register func", func() {
 
 			Convey("should panic if provider (name) is NOT unique", func() {
