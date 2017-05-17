@@ -11,6 +11,8 @@ var lock = sync.Mutex{}
 
 // GetDistributedSet retrieve DistributedSet from store or make new one if dose not exist
 func GetDistributedSet(key string) DistributedSet {
+	lock.Lock()
+	defer lock.Unlock()
 	if distributedSets[key] != nil {
 		return distributedSets[key]
 	}
@@ -35,6 +37,7 @@ func (d *distributedSet) Members() []string {
 
 // Add new ad ID to memebers (after invoking save)
 func (d *distributedSet) Add(members ...string) {
+
 	d.adds = append(d.adds, members...)
 }
 
