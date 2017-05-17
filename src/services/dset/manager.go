@@ -14,13 +14,13 @@ func GetDistributedSet(key string) DistributedSet {
 	if distributedSets[key] != nil {
 		return distributedSets[key]
 	}
-	d := &dist{
+	d := &distributedSet{
 		key: key,
 	}
 	return d
 }
 
-type dist struct {
+type distributedSet struct {
 	once    sync.Once
 	members []string
 	adds    []string
@@ -28,19 +28,21 @@ type dist struct {
 	exp     time.Time
 }
 
-// Members return
-func (d *dist) Members() []string {
+// Members return ad IDs
+func (d *distributedSet) Members() []string {
 	return d.members
 }
 
-func (d *dist) Add(members ...string) {
+// Add new ad ID (needs to call save to get permanent)
+func (d *distributedSet) Add(members ...string) {
 	d.adds = append(d.adds, members...)
 }
 
-func (d *dist) Key() string {
+// Key of DistributedSet
+func (d *distributedSet) Key() string {
 	return d.key
 }
-func (d *dist) Save(t time.Duration) {
+func (d *distributedSet) Save(t time.Duration) {
 	lock.Lock()
 	defer lock.Unlock()
 	d.exp = time.Now().Add(t)
@@ -51,7 +53,7 @@ func (d *dist) Save(t time.Duration) {
 	})
 
 }
-func (c *dist) timer() {
+func (c *distributedSet) timer() {
 	for {
 		select {
 		case <-time.After(time.Until(c.exp)):
