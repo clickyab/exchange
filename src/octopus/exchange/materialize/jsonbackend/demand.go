@@ -5,13 +5,16 @@ import (
 	"octopus/exchange"
 	"services/broker"
 
+	"fmt"
+	"time"
+
 	"github.com/Sirupsen/logrus"
 )
 
 type demand struct {
-	imp exchange.Impression
-	dmn exchange.Demand
-	ads map[string]exchange.Advertise
+	imp  exchange.Impression
+	dmn  exchange.Demand
+	ads  map[string]exchange.Advertise
 
 	src []byte
 }

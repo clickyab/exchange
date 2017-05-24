@@ -16,6 +16,7 @@ func impressionToMap(imp exchange.Impression, ads map[string]exchange.Advertise)
 		"category":    imp.Category(),
 		"platform":    imp.Platform(),
 		"under_floor": imp.UnderFloor(),
+		"time":        imp.Time(),
 	}
 }
 
@@ -95,20 +96,23 @@ func slotsToMap(slots []exchange.Slot, ads map[string]exchange.Advertise) []map[
 }
 
 func winnerToMap(imp exchange.Impression, ad exchange.Advertise, slotID string) map[string]interface{} {
+	m := make(map[string]exchange.Advertise)
+	m[slotID] = ad
 	return map[string]interface{}{
-		"track_id":    imp.TrackID(),
-		"demand_name": ad.Demand().Name(),
-		"price":       ad.WinnerCPM(),
-		"slot_id":     slotID,
+		"impression": impressionToMap(imp, m),
+		"advertise":  advertiseToMap(ad),
+		"slot_id":    slotID,
 	}
 }
 
-func showToMap(trackID, demand, slotID, adID string, winner int64) map[string]interface{} {
+func showToMap(trackID, demand, slotID, adID string, winner int64, supplier string, publisher string) map[string]interface{} {
 	return map[string]interface{}{
 		"track_id":    trackID,
 		"demand_name": demand,
 		"price":       winner,
 		"slot_id":     slotID,
 		"ad_id":       adID,
+		"supplier":    supplier,
+		"publisher":   publisher,
 	}
 }
