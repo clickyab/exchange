@@ -300,7 +300,7 @@
 		{
 			"importpath": "github.com/influxdata/influxdb/pkg/escape",
 			"repository": "https://github.com/influxdata/influxdb",
-			"revision": "72df1fe4d9401711ef5c03ebd9196a06324bcd5f",
+			"revision": "4bdce21a9a32022a2cfe7205099ba2d7c5ed1a23",
 			"branch": "master",
 			"path": "/pkg/escape"
 		},

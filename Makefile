@@ -11,3 +11,4 @@ include $(ROOT)/build/codegen.mk
 include $(ROOT)/build/services.mk
 include $(ROOT)/build/cleanup.mk
 include $(ROOT)/build/test.mk
+include $(ROOT)/build/console.mk
