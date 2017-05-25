@@ -2,17 +2,15 @@ package core
 
 import (
 	"context"
+	"errors"
 	"math/rand"
-	"octopus/exchange"
-	"services/assert"
 	"sync"
 	"sync/atomic"
 	"time"
 
-	"errors"
-
+	"octopus/exchange"
 	"octopus/exchange/materialize"
-
+	"services/assert"
 	"services/broker"
 
 	"github.com/Sirupsen/logrus"

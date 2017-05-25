@@ -1,6 +1,7 @@
 
 -- +migrate Up
 -- SQL in section 'Up' is executed when this migration is applied
+
 CREATE TABLE time_table
 (
 	id int auto_increment
@@ -17537,4 +17538,5 @@ INSERT INTO time_table (year,month,day,hour,j_year,j_month,j_day) VALUES (2017,3
 
 -- +migrate Down
 -- SQL section 'Down' is executed when this migration is rolled back
+
 DROP TABLE time_table;
