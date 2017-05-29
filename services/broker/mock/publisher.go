@@ -17,6 +17,11 @@ type chnBroker struct {
 	out  []chan broker.Job
 }
 
+func (*chnBroker) RegisterConsumer(broker.Consumer) error {
+	// TODO:  Just ignore it for now, but mock it when there is time
+	return nil
+}
+
 // Publish is here for satisfy the interface
 func (p *chnBroker) Publish(j broker.Job) {
 	p.lock.RLock()
