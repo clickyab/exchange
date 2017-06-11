@@ -84,6 +84,17 @@ type Exchange struct {
 	Income                int64     `json:"income" db:"income"`
 }
 
+// SupplierReport table
+type SupplierReport struct {
+	ID                  int64     `json:"id" db:"id"`
+	Supplier            string    `json:"supplier" db:"supplier"`
+	Date                time.Time `json:"target_date" db:"target_date"`
+	ImpressionIn        int64     `json:"impression_in" db:"impression_in"`
+	ImpressionOut       int64     `json:"impression_out" db:"impression_out"`
+	DeliveredImpression int64     `json:"delivered_impression" db:"delivered_impression"`
+	Earn                int64     `json:"earn" db:"earn"`
+}
+
 // Parts is a multi query trick
 type Parts struct {
 	Query  string
