@@ -12,7 +12,7 @@ type Manager struct {
 // Initialize the manager. nothing to do, just keep it in interface shape
 func (m *Manager) Initialize() {
 	m.AddTableWithName(
-		SupplierSourceDemand{},
+		SupplierDemandSource{},
 		"sup_dem_src",
 	).SetKeys(
 		true,
@@ -32,6 +32,12 @@ func (m *Manager) Initialize() {
 		true,
 		"ID",
 	)
+	m.AddTableWithName(
+		SupplierReport{},
+		"supplier_report",
+	).SetKeys(
+		true,
+		"ID")
 
 	m.AddTableWithName(DemandReport{}, "demand_report").
 		SetKeys(true, "ID")

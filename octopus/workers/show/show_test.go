@@ -9,7 +9,7 @@ import (
 
 	"context"
 
-	"clickyab.com/exchange/octopus/workers/internal/datamodels"
+	"clickyab.com/exchange/octopus/workers/internal"
 	"clickyab.com/exchange/octopus/workers/mocks"
 	"clickyab.com/exchange/services/broker"
 	"clickyab.com/exchange/services/config"
@@ -20,10 +20,10 @@ var (
 )
 
 type agg struct {
-	c chan datamodels.TableModel
+	c chan internal.TableModel
 }
 
-func (a *agg) Channel() chan<- datamodels.TableModel {
+func (a *agg) Channel() chan<- internal.TableModel {
 	return a.c
 }
 
@@ -33,8 +33,8 @@ func winToDelivery() broker.Delivery {
 
 func TestImpression(t *testing.T) {
 	config.Initialize("test", "test", "test")
-	a := &agg{c: make(chan datamodels.TableModel, 2)}
-	datamodels.RegisterAggregator(a)
+	a := &agg{c: make(chan internal.TableModel, 2)}
+	internal.RegisterAggregator(a)
 	base := context.Background()
 	Convey("the demand test with the show job", t, func() {
 		ctx, cl := context.WithCancel(base)
@@ -48,7 +48,7 @@ func TestImpression(t *testing.T) {
 		case <-time.After(time.Second):
 			So(true, ShouldBeFalse)
 		}
-		var t datamodels.TableModel
+		var t internal.TableModel
 		select {
 		case t = <-a.c:
 			So(true, ShouldBeTrue)

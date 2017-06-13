@@ -11,7 +11,7 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
-	"clickyab.com/exchange/octopus/workers/internal/datamodels"
+	"clickyab.com/exchange/octopus/workers/internal"
 	"clickyab.com/exchange/octopus/workers/mocks"
 	"clickyab.com/exchange/services/assert"
 	"clickyab.com/exchange/services/broker"
@@ -45,18 +45,18 @@ func impToDelivery(in exchange.Impression) broker.Delivery {
 }
 
 type agg struct {
-	c chan datamodels.TableModel
+	c chan internal.TableModel
 }
 
-func (a *agg) Channel() chan<- datamodels.TableModel {
+func (a *agg) Channel() chan<- internal.TableModel {
 	return a.c
 }
 
 func TestImpression(t *testing.T) {
 	config.Initialize("test", "test", "test")
 	// make sure channel has space for more than 1 delivery
-	a := &agg{c: make(chan datamodels.TableModel, 2)}
-	datamodels.RegisterAggregator(a)
+	a := &agg{c: make(chan internal.TableModel, 2)}
+	internal.RegisterAggregator(a)
 	base := context.Background()
 	Convey("the demand test with the impression job", t, func() {
 		imp := newImpression(t1, 10, "test_source", "test_sup")
@@ -73,7 +73,7 @@ func TestImpression(t *testing.T) {
 		case <-time.After(time.Second):
 			So(true, ShouldBeFalse)
 		}
-		var t datamodels.TableModel
+		var t internal.TableModel
 		select {
 		case t = <-a.c:
 			So(true, ShouldBeTrue)

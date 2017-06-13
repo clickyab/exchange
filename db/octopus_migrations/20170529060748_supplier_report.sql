@@ -9,7 +9,7 @@ CREATE TABLE supplier_report
     target_date DATE NOT NULL,
     impression_out INT DEFAULT 0 NOT NULL,
     impression_in INT DEFAULT 0 NOT NULL,
-    delivered_impression INT DEFAULT 0 NOT NULL,
+    delivered_count INT DEFAULT 0 NOT NULL,
     earn INT DEFAULT 0 NOT NULL
 );
 CREATE UNIQUE INDEX supplier_report_unique_gp ON supplier_report (supplier, target_date);

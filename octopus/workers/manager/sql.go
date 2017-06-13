@@ -5,10 +5,10 @@ import (
 	"strings"
 
 	"clickyab.com/exchange/octopus/models"
-	"clickyab.com/exchange/octopus/workers/internal/datamodels"
+	"clickyab.com/exchange/octopus/workers/internal"
 )
 
-func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
+func hasDataSupplierDemand(tm *internal.TableModel) (bool, string) {
 	b := tm.RequestOutCount+tm.ImpressionOutCount+tm.ImpressionInCount+tm.WinCount+tm.WinBid+tm.DeliverCount+tm.DeliverBid+tm.Profit > 0
 	if b {
 		//(supplier,demand,source,time_id,request_out_count,imp_out_count,imp_in_count,win_count,win_bid,deliver_count,deliver_bid,profit)
@@ -30,7 +30,7 @@ func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
 	return false, ""
 }
 
-func hasDataSupplier(tm *datamodels.TableModel) (bool, string) {
+func hasDataSupplier(tm *internal.TableModel) (bool, string) {
 	b := tm.RequestInCount+tm.ImpressionInCount+tm.ImpressionOutCount+tm.DeliverCount+tm.DeliverBid+tm.Profit > 0
 	if b {
 		// (supplier,source,time_id,request_in_count,imp_in_count,imp_out_count,deliver_count,deliver_bid,profit)
@@ -75,7 +75,7 @@ ON DUPLICATE KEY UPDATE
  profit=profit+VALUES(profit)
 `
 
-func flush(supDemSrc map[string]*datamodels.TableModel, supSrc map[string]*datamodels.TableModel) error {
+func flush(supDemSrc map[string]*internal.TableModel, supSrc map[string]*internal.TableModel) error {
 	var (
 		parts1, parts2 []string
 	)
