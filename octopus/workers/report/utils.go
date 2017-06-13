@@ -1,7 +1,6 @@
 package report
 
 import (
-	"fmt"
 	"time"
 
 	"clickyab.com/exchange/octopus/workers/internal"
@@ -16,12 +15,17 @@ func factTableID(tm time.Time) int64 {
 	return int64(tm.Sub(epoch).Hours()) + 1
 }
 
-func translator(r internal.SupplierReporter) string {
-	return fmt.Sprintf(`("%s","%s",%d,%d,%d,%d)`,
-		r.Supplier,
-		r.Date.Format("2006-01-02"),
-		r.ImpressionOut,
-		r.ImpressionIn,
-		r.DeliveredImpression,
-		r.Earn)
+// FactTableYesterdayID is a helper function to get the fact table for yesterday id from time
+func factTableYesterdayID(tm time.Time) (int64, int64) {
+	y, m, d := tm.Date()
+	from := time.Date(y, m, d, 0, 0, 1, 0, time.UTC)
+	to := time.Date(y, m, d, 23, 59, 59, 0, time.UTC)
+	return internal.FactTableID(from), internal.FactTableID(to)
+}
+
+func factTableRange(t time.Time) (int64, int64) {
+	y, m, d := t.Date()
+	from := time.Date(y, m, d, 0, 0, 1, 0, time.UTC)
+	to := time.Date(y, m, d, 23, 59, 59, 0, time.UTC)
+	return factTableID(from), factTableID(to)
 }

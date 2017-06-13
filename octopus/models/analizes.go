@@ -7,12 +7,23 @@ import (
 )
 
 const (
-	// ExchangeTableName table name exchange
-	ExchangeTableName = "exchange_report"
-	// DemandTableName table name demand
-	DemandTableName = "supplier_source_demand"
-	// SuplierTableName table supplier
-	SuplierTableName = "supplier_source"
+	// ExchangeReportTableName table name exchange
+	ExchangeReportTableName = "exchange_report"
+
+	// DemandReportTableName demand report table
+	DemandReportTableName = "demand_report"
+
+	// SupplierReportTableName supplier report table
+	SupplierReportTableName = "supplier_report"
+
+	// SupplierDemandTableName table name demand
+	SupplierDemandTableName = "sup_dem_src"
+
+	// SupplierTableName table supplier
+	SupplierTableName = "sup_src"
+
+	// TimeTableName TimeTableName
+	TimeTableName = "time_table"
 )
 
 // DemandReport demand_report
@@ -27,10 +38,35 @@ type DemandReport struct {
 	WinBid          int64  `json:"win_bid" db:"win_bid"`
 	DeliverCount    int64  `json:"deliver_count" db:"deliver_count"`
 	DeliverBid      int64  `json:"deliver_bid" db:"deliver_bid"`
+	Profit          int64  `json:"profit" db:"profit"`
 }
 
-// SupplierSourceDemand supplier_source_demand
-type SupplierSourceDemand struct {
+// SupplierReport table
+type SupplierReport struct {
+	ID             int64     `json:"id" db:"id"`
+	Supplier       string    `json:"supplier" db:"supplier"`
+	TargetDate     time.Time `json:"target_date" db:"target_date"`
+	ImpressionIn   int64     `json:"impression_in" db:"impression_in"`
+	ImpressionOut  int64     `json:"impression_out" db:"impression_out"`
+	DeliveredCount int64     `json:"delivered_count" db:"delivered_count"`
+	Earn           int64     `json:"earn" db:"earn"`
+}
+
+// ExchangeReport exchange_report
+type ExchangeReport struct {
+	ID                    int64     `json:"id" db:"id"`
+	TargetDate            time.Time `json:"target_date" db:"target_date"`
+	SupplierImpressionIN  int64     `json:"supplier_impression_in" db:"supplier_impression_in"`
+	SupplierImpressionOUT int64     `json:"supplier_impression_out" db:"supplier_impression_out"`
+	DemandImpressionIN    int64     `json:"demand_impression_in" db:"demand_impression_in"`
+	DemandImpressionOUT   int64     `json:"demand_impression_out" db:"demand_impression_out"`
+	Earn                  int64     `json:"earn" db:"earn"`
+	Spent                 int64     `json:"spent" db:"spent"`
+	Income                int64     `json:"income" db:"income"`
+}
+
+// SupplierDemandSource supplier_source_demand
+type SupplierDemandSource struct {
 	ID              int64  `json:"id" db:"id"`
 	Demand          string `json:"demand" db:"demand"`
 	Supplier        string `json:"supplier" db:"supplier"`
@@ -43,6 +79,7 @@ type SupplierSourceDemand struct {
 	WinBid          int64  `json:"win_bid" db:"win_bid"`
 	DeliverCount    int64  `json:"deliver_count" db:"deliver_count"`
 	DeliverBid      int64  `json:"deliver_bid" db:"deliver_bid"`
+	Profit          int64  `json:"profit" db:"profit"`
 }
 
 // SupplierSource supplier_source
@@ -69,19 +106,6 @@ type TimeTable struct {
 	JYear  int64 `json:"j_year" db:"j_year"`
 	JMonth int64 `json:"j_month" db:"j_month"`
 	JDay   int64 `json:"j_day" db:"j_day"`
-}
-
-// Exchange exchange_report
-type Exchange struct {
-	ID                    int64     `json:"id" db:"id"`
-	Date                  time.Time `json:"target_date" db:"target_date"`
-	SupplierImpressionIN  int64     `json:"supplier_impression_in" db:"supplier_impression_in"`
-	SupplierImpressionOUT int64     `json:"supplier_impression_out" db:"supplier_impression_out"`
-	DemandImpressionIN    int64     `json:"demand_impression_in" db:"demand_impression_in"`
-	DemandImpressionOUT   int64     `json:"demand_impression_out" db:"demand_impression_out"`
-	Earn                  int64     `json:"earn" db:"earn"`
-	Spent                 int64     `json:"spent" db:"spent"`
-	Income                int64     `json:"income" db:"income"`
 }
 
 // Parts is a multi query trick

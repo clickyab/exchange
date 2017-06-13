@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"clickyab.com/exchange/octopus/workers/internal/datamodels"
+	"clickyab.com/exchange/octopus/workers/internal"
 	"clickyab.com/exchange/services/assert"
 	"clickyab.com/exchange/services/broker"
 	"clickyab.com/exchange/services/initializer"
@@ -72,11 +72,11 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 						win++
 					}
 				}
-				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
+				internal.ActiveAggregator().Channel() <- internal.TableModel{
 					Supplier:           obj.Impression.Source.Supplier.Name,
 					Source:             obj.Impression.Source.Name,
 					Demand:             obj.Demand.Name,
-					Time:               datamodels.FactTableID(obj.Impression.Time),
+					Time:               internal.FactTableID(obj.Impression.Time),
 					ImpressionInCount:  win,
 					RequestOutCount:    1,
 					ImpressionOutCount: winOut,

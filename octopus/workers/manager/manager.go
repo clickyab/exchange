@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"clickyab.com/exchange/octopus/workers/internal/datamodels"
+	"clickyab.com/exchange/octopus/workers/internal"
 	"clickyab.com/exchange/services/assert"
 	"clickyab.com/exchange/services/config"
 	"clickyab.com/exchange/services/mysql"
@@ -17,30 +17,30 @@ var (
 )
 
 type starter struct {
-	channel chan datamodels.TableModel
+	channel chan internal.TableModel
 }
 
 func (s *starter) Initialize() {
-	datamodels.RegisterAggregator(s)
+	internal.RegisterAggregator(s)
 	safe.GoRoutine(func() {
 		worker(s.channel)
 	})
 }
 
-func (s *starter) Channel() chan<- datamodels.TableModel {
+func (s *starter) Channel() chan<- internal.TableModel {
 	return s.channel
 }
 
-func worker(c chan datamodels.TableModel) {
-	supDemSrcTable := make(map[string]*datamodels.TableModel)
-	supSrcTable := make(map[string]*datamodels.TableModel)
+func worker(c chan internal.TableModel) {
+	supDemSrcTable := make(map[string]*internal.TableModel)
+	supSrcTable := make(map[string]*internal.TableModel)
 
 	t := *timeout
 	if t < 10*time.Second {
 		t = 10 * time.Second
 	}
 	var counter = 0
-	var ack datamodels.Acknowledger
+	var ack internal.Acknowledger
 
 	defer func() {
 		if ack != nil {
@@ -59,8 +59,8 @@ func worker(c chan datamodels.TableModel) {
 		}
 		ack = nil
 		counter = 0
-		supDemSrcTable = make(map[string]*datamodels.TableModel)
-		supSrcTable = make(map[string]*datamodels.TableModel)
+		supDemSrcTable = make(map[string]*internal.TableModel)
+		supSrcTable = make(map[string]*internal.TableModel)
 	}
 	ticker := time.NewTicker(t)
 
@@ -96,7 +96,7 @@ func worker(c chan datamodels.TableModel) {
 	}
 }
 
-func aggregate(a *datamodels.TableModel, b datamodels.TableModel) *datamodels.TableModel {
+func aggregate(a *internal.TableModel, b internal.TableModel) *internal.TableModel {
 	if a == nil {
 		return &b
 	}
@@ -118,5 +118,5 @@ func aggregate(a *datamodels.TableModel, b datamodels.TableModel) *datamodels.Ta
 
 func init() {
 	//make sure worker start after mysql
-	mysql.Register(&starter{channel: make(chan datamodels.TableModel)})
+	mysql.Register(&starter{channel: make(chan internal.TableModel)})
 }

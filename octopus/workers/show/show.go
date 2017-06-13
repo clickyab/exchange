@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"clickyab.com/exchange/octopus/workers/internal/datamodels"
+	"clickyab.com/exchange/octopus/workers/internal"
 	"clickyab.com/exchange/services/assert"
 	"clickyab.com/exchange/services/broker"
 	"clickyab.com/exchange/services/initializer"
@@ -59,7 +59,7 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				err := del.Decode(&obj)
 				assert.Nil(err)
 
-				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
+				internal.ActiveAggregator().Channel() <- internal.TableModel{
 					Supplier:     obj.Supplier,
 					Source:       obj.Publisher,
 					Demand:       obj.DemandName,
@@ -67,7 +67,7 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 					DeliverCount: 1,
 					Profit:       int64(obj.Profit),
 					// TODO : why this is different with other?? make it same.
-					Time:         datamodels.FactTableID(timestampToTime(obj.Time)),
+					Time:         internal.FactTableID(timestampToTime(obj.Time)),
 					Acknowledger: del,
 				}
 			case <-done:

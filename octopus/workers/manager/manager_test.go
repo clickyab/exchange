@@ -3,13 +3,13 @@ package manager
 import (
 	"testing"
 
-	"clickyab.com/exchange/octopus/workers/internal/datamodels"
+	"clickyab.com/exchange/octopus/workers/internal"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestAggregateFunc(t *testing.T) {
 	Convey("the demand test with the impression job", t, func() {
-		a := datamodels.TableModel{
+		a := internal.TableModel{
 			Time:               1,
 			Demand:             "Demand",
 			Supplier:           "Supplier",
