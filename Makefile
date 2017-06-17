@@ -10,4 +10,5 @@ include $(ROOT)/bin/build/migration.mk
 include $(ROOT)/bin/build/codegen.mk
 include $(ROOT)/bin/build/services.mk
 include $(ROOT)/bin/build/cleanup.mk
+include $(ROOT)/bin/build/workers.mk
 include $(ROOT)/bin/build/test.mk

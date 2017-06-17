@@ -16,7 +16,7 @@ type cfg struct {
 
 func (cfg) Initialize() config.DescriptiveLayer {
 	layer := config.NewDescriptiveLayer()
-	layer.Add("application is in test mode and broker is not active", "services.broker.provider", "mock")
+	layer.Add("application is in test mode and broker is not active", "services.broker.provider", "rabbitmq")
 	return layer
 }
 
