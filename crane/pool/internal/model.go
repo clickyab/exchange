@@ -2,7 +2,7 @@ package internal
 
 import (
 	"clickyab.com/exchange/crane/entity"
-	"clickyab.com/exchange/services/mysql"
+	"github.com/clickyab/services/mysql"
 )
 
 // TODO: needs to have migration
@@ -14,7 +14,7 @@ type Manager struct {
 }
 
 // Initialize this package initializer
-func (Manager) Initialize() {
+func (*Manager) Initialize() {
 }
 
 // GetAllActiveAds is needed for ad pool
