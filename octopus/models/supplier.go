@@ -1,15 +1,14 @@
 package models
 
 import (
-	"time"
-
 	"fmt"
+	"time"
 
 	"github.com/clickyab/services/assert"
 )
 
-// updateSupplierReport will update supplier report (inclusive)
-func updateSupplierReport(t time.Time) {
+// UpdateSupplierReport will update supplier report (inclusive)
+func (m *Manager) UpdateSupplierReport(t time.Time) {
 	td := t.Format("2006-01-02")
 	from, to := factTableRange(t)
 	var q = fmt.Sprintf(`INSERT INTO %s (
@@ -41,13 +40,13 @@ func updateSupplierReport(t time.Time) {
 }
 
 // UpdateSupplierRange will update supplier report in range of two date (inclusive)
-func UpdateSupplierRange(from time.Time, to time.Time) {
+func (m *Manager) UpdateSupplierRange(from time.Time, to time.Time) {
 	if from.Unix() > to.Unix() {
 		from, to = to, from
 	}
 	to = to.Add(24 * time.Hour)
 	for from.Unix() < to.Unix() {
-		updateSupplierReport(from)
+		m.UpdateSupplierReport(from)
 		from = from.Add(time.Hour * 24)
 	}
 }
