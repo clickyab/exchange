@@ -8,66 +8,6 @@ import (
 	"github.com/clickyab/services/assert"
 )
 
-// updateDemandReport will update demand report (inclusive)
-func updateDemandReport(t time.Time) {
-
-	td := t.Format("2006-01-02")
-	from, to := factTableRange(t)
-
-	var q = fmt.Sprintf(`INSERT INTO demand_report (
-								demand,
-								target_date,
-								request_out_count,
-								ad_in_count,
-								imp_out_count,
-								ad_out_count,
-								ad_out_bid,
-								deliver_count,
-								deliver_bid,
-								profit
-								)
-
-							SELECT demand,
-							"%s",
-							sum(request_out_count),
-							sum(ad_in_count),
-							sum(imp_out_count),
-							sum(ad_out_count),
-							sum(ad_out_bid),
-							sum(deliver_count),
-							sum(deliver_bid),
-							sum(profit)
-								FROM sup_dem_src WHERE time_id BETWEEN %d AND %d
-							GROUP BY demand
-
-							 ON DUPLICATE KEY UPDATE
-							  demand=VALUES(demand),
-							  target_date=VALUES(target_date),
-							  request_out_count=VALUES(request_out_count),
-							  ad_in_count=VALUES(ad_in_count),
-							  imp_out_count=VALUES(imp_out_count),
-							  ad_out_count=VALUES(ad_out_count),
-							  ad_out_bid=VALUES(ad_out_bid),
-							  deliver_count=VALUES(deliver_count),
-							  deliver_bid=VALUES(deliver_bid),
-							  profit=values(profit)`, td, from, to)
-
-	_, err := NewManager().GetRDbMap().Exec(q)
-	assert.Nil(err)
-}
-
-// UpdateDemandRange will update demand report in range of two date (inclusive)
-func UpdateDemandRange(from time.Time, to time.Time) {
-	if from.Unix() > to.Unix() {
-		from, to = to, from
-	}
-	to = to.Add(24 * time.Hour)
-	for from.Unix() < to.Unix() {
-		updateDemandReport(from)
-		from = from.Add(time.Hour * 24)
-	}
-}
-
 func calculator(a []DemandReport) []DemandReport {
 	res := make([]DemandReport, 0)
 
@@ -89,23 +29,23 @@ func calculator(a []DemandReport) []DemandReport {
 	return res
 }
 
-// ByDate returns list of demand for specific date
-func ByDate(t time.Time) []DemandReport {
-	return ByDateRange(t, t)
+// DemandByDate returns list of demand for specific date
+func (m *Manager) DemandByDate(t time.Time) []DemandReport {
+	return m.DemandByDateRange(t, t)
 }
 
-// ByDateRange returns list of demand for range of dates
-func ByDateRange(from time.Time, to time.Time) []DemandReport {
-	return ByDateRangeNames(from, to)
+// DemandByDateRange returns list of demand for range of dates
+func (m *Manager) DemandByDateRange(from time.Time, to time.Time) []DemandReport {
+	return m.DeamandByDateRangeNames(from, to)
 }
 
-// ByDateNames returns demand with specific date
-func ByDateNames(f time.Time, demands ...string) []DemandReport {
-	return ByDateRangeNames(f, f, demands...)
+// DemandByDateNames returns demand with specific date
+func (m *Manager) DemandByDateNames(f time.Time, demands ...string) []DemandReport {
+	return m.DeamandByDateRangeNames(f, f, demands...)
 }
 
-// ByDateRangeNames returns demands with for range of dates
-func ByDateRangeNames(f time.Time, t time.Time, names ...string) []DemandReport {
+// DeamandByDateRangeNames returns demands with for range of dates
+func (m *Manager) DeamandByDateRangeNames(f time.Time, t time.Time, names ...string) []DemandReport {
 
 	var a []DemandReport
 
@@ -121,7 +61,7 @@ func ByDateRangeNames(f time.Time, t time.Time, names ...string) []DemandReport 
 					deliver_count,
 					deliver_bid
 				FROM demand_report where %s %s ORDER BY id DESC	`,
-		timePartial(true, f, t), demandPartial(false, names...))
+		demandtimePartial(true, f, t), demandPartial(false, names...))
 
 	_, err := NewManager().GetRDbMap().Select(&a, q)
 	assert.Nil(err)
@@ -129,24 +69,24 @@ func ByDateRangeNames(f time.Time, t time.Time, names ...string) []DemandReport 
 	return calculator(a)
 }
 
-// AggregateByDate returns list of demand for specific date
-func AggregateByDate(t time.Time) []DemandReport {
-	return AggregateDemandsByDateRange(t, t)
+// DemandAggregateByDate returns list of demand for specific date
+func (m *Manager) DemandAggregateByDate(t time.Time) []DemandReport {
+	return m.DemandAggregateDemandsByDateRange(t, t)
 }
 
-// AggregateByDateRange return list of demand for range of dates
-func AggregateByDateRange(f time.Time, t time.Time) []DemandReport {
-	return AggregateDemandsByDateRange(f, t)
+// DemandAggregateByDateRange return list of demand for range of dates
+func (m *Manager) DemandAggregateByDateRange(f time.Time, t time.Time) []DemandReport {
+	return m.DemandAggregateDemandsByDateRange(f, t)
 
 }
 
-// AggregateDemandsByDate return demand with specific date
-func AggregateDemandsByDate(f time.Time, demands ...string) []DemandReport {
-	return AggregateDemandsByDateRange(f, f, demands...)
+// DemandAggregateDemandsByDate return demand with specific date
+func (m *Manager) DemandAggregateDemandsByDate(f time.Time, demands ...string) []DemandReport {
+	return m.DemandAggregateDemandsByDateRange(f, f, demands...)
 }
 
-// AggregateDemandsByDateRange return demands with for range of dates
-func AggregateDemandsByDateRange(f time.Time, t time.Time, demands ...string) []DemandReport {
+// DemandAggregateDemandsByDateRange return demands with for range of dates
+func (m *Manager) DemandAggregateDemandsByDateRange(f time.Time, t time.Time, demands ...string) []DemandReport {
 
 	var a []DemandReport
 
@@ -161,7 +101,7 @@ func AggregateDemandsByDateRange(f time.Time, t time.Time, demands ...string) []
 					SUM(deliver_count) as deliver_count,
 					SUM(deliver_bid) as deliver_bid
 				FROM demand_report where %s %s GROUP BY demand`,
-		timePartial(true, f, t), demandPartial(false, demands...))
+		demandtimePartial(true, f, t), demandPartial(false, demands...))
 
 	_, err := NewManager().GetRDbMap().Select(&a, q)
 	assert.Nil(err)
@@ -169,13 +109,13 @@ func AggregateDemandsByDateRange(f time.Time, t time.Time, demands ...string) []
 	return calculator(a)
 }
 
-// AggregateAllByDate return all with for range of dates
-func AggregateAllByDate(t time.Time) []DemandReport {
-	return AggregateAllByDateRange(t, t)
+// DemandAggregateAllByDate return all with for range of dates
+func (m *Manager) DemandAggregateAllByDate(t time.Time) []DemandReport {
+	return m.DemandAggregateAllByDateRange(t, t)
 }
 
-// AggregateAllByDateRange return demands with for range of dates
-func AggregateAllByDateRange(f time.Time, t time.Time) []DemandReport {
+// DemandAggregateAllByDateRange return demands with for range of dates
+func (m *Manager) DemandAggregateAllByDateRange(f time.Time, t time.Time) []DemandReport {
 
 	var a []DemandReport
 
@@ -190,7 +130,7 @@ func AggregateAllByDateRange(f time.Time, t time.Time) []DemandReport {
 					SUM(deliver_count) as deliver_count,
 					SUM(deliver_bid) as deliver_bid
 				FROM demand_report where %s`,
-		timePartial(true, f, t))
+		demandtimePartial(true, f, t))
 
 	_, err := NewManager().GetRDbMap().Select(&a, q)
 	assert.Nil(err)
@@ -217,7 +157,7 @@ func demandPartial(isFirst bool, names ...string) (res string) {
 	return
 }
 
-func timePartial(isFirst bool, from time.Time, to time.Time) (res string) {
+func demandtimePartial(isFirst bool, from time.Time, to time.Time) (res string) {
 	if isFirst {
 		res = "target_date  "
 	} else {

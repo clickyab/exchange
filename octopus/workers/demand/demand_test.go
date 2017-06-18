@@ -20,8 +20,6 @@ import (
 
 var (
 	t1, _ = time.Parse("2006-01-02T15:04:05.000Z", "2017-03-21T00:01:00.000Z")
-	//t2, _ = time.Parse("2006-01-02T15:04:05.000Z", "2017-03-21T01:01:00.000Z")
-	//t3, _ = time.Parse("2006-01-02T15:04:05.000Z", "2017-03-21T02:01:00.000Z")
 )
 
 func newDemand(name string, rate int, handicap int64) exchange.Demand {
