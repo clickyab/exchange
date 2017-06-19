@@ -10,9 +10,9 @@ create table publishers
   soft_floor_cpm int null,
   name varchar(60) not null,
   bid_type tinyint not null,
-  under_floor bit default b'0' null,
+  under_floor tinyint default 0 null,
   platform tinyint not null,
-  active bit default b'1' not null,
+  active tinyint default 0 not null,
   created_at timestamp default CURRENT_TIMESTAMP not null,
   updated_at timestamp default CURRENT_TIMESTAMP not null,
   constraint publishers_users_id_fk

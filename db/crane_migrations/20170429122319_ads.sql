@@ -5,14 +5,16 @@ create table ads
 (
   id int not null auto_increment
     primary key,
-  type tinyint not null,
-  width int not null,
+  target tinyint not null,
   height int not null,
-  created_at timestamp default CURRENT_TIMESTAMP not null,
-  updated_at timestamp default CURRENT_TIMESTAMP not null,
-  active bit default b'1' not null,
+  width int not null,
+  active INT default 0 not null,
   user_id int not null,
   url text not null,
+  src varchar(255) null,
+  attribute text,
+  created_at timestamp default CURRENT_TIMESTAMP not null,
+  updated_at timestamp default CURRENT_TIMESTAMP not null,
   constraint ads_users_id_fk
     foreign key (user_id) references users (id)
 )
