@@ -16,6 +16,12 @@ octopus_migredo: tools-migrate
 octopus_miglist: tools-migrate
 	$(BIN)/migration -action=list -app=octopus
 
+crane_migup: tools-migrate
+	$(BIN)/migration -action=up -app=crane
+
+crane_migdown: tools-migrate
+	$(BIN)/migration -action=down -app=crane
+
 migcreate:
 	@/bin/bash $(BIN)/create_migration.sh
 
