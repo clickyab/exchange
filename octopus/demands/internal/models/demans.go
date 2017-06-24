@@ -51,6 +51,8 @@ type Demand struct {
 	Rate               int                   `json:"-" db:"call_rate"`
 	WhiteListCountries mysql.StringJSONArray `json:"white_countrie" db:"white_countrie" `
 	ExcludedSuppliers  mysql.StringJSONArray `json:"excluded_suppliers" db:"excluded_suppliers"`
+
+	UserID int64 `json:"user_id" db:"user_id"`
 }
 
 // IsValid try to validate enum value on ths type
