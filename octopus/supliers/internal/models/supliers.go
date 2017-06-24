@@ -22,6 +22,8 @@ type Supplier struct {
 	SShare        int                   `json:"-" db:"share"`
 	SActive       int                   `json:"-" db:"active"`
 
+	UserID int64 `json:"user_id" db:"user_id"`
+
 	r exchange.Renderer
 }
 
