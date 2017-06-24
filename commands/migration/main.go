@@ -20,10 +20,10 @@ import (
 )
 
 var (
-	validApps = []string{"octopus", "crane"}
+	validApps = []string{"octopus"}
 
 	action = flag.String("action", "up", "up/down is supported, default is up")
-	app    = flag.String("app", "", "application to handle migrations valids are "+strings.Join(validApps, ","))
+	app    = flag.String("app", "octopus", "application to handle migrations valids are "+strings.Join(validApps, ","))
 	n      int
 )
 
