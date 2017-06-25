@@ -105,12 +105,12 @@ func flush(supDemSrc map[string]*datamodels.TableModel, supSrc map[string]*datam
 		return nil
 	}
 
-	if len(supDemSrc) > 0 && len(supSrc) == 0 {
+	if len(parts1) > 0 && len(parts2) == 0 {
 		return models.NewManager().MultiQuery(models.Parts{
 			Query: q1,
 		})
 	}
-	if len(supDemSrc) == 0 && len(supSrc) > 0 {
+	if len(parts1) == 0 && len(parts2) > 0 {
 		return models.NewManager().MultiQuery(models.Parts{
 			Query: q2,
 		})
