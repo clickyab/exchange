@@ -30,10 +30,11 @@ func doJob() (err error) {
 			m.Commit()
 		}
 	}()
+	last := time.Now().Add(-time.Hour * 24)
 	now := time.Now()
-	m.UpdateDemandRange(now, now)
-	m.UpdateSupplierRange(now, now)
-	m.UpdateExchangeRange(now, now)
+	m.UpdateDemandRange(last, now)
+	m.UpdateSupplierRange(last, now)
+	m.UpdateExchangeRange(last, now)
 
 	return err
 }
