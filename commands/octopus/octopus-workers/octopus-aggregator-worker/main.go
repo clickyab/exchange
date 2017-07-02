@@ -13,6 +13,7 @@ import (
 	"github.com/clickyab/services/dlock"
 	"github.com/clickyab/services/dlock/mock"
 
+	_ "clickyab.com/exchange/octopus/console/report/generator"
 	"github.com/Sirupsen/logrus"
 	_ "github.com/clickyab/services/mysql/connection/mysql"
 )
