@@ -18,7 +18,7 @@ func (m *Manager) fetchDemand(start int64, end int64) *ExchangeReport {
 	FROM %s
 	WHERE time_id >= ?
 	AND time_id <= ?`, DemandTableName)
-	_, err := m.GetRDbMap().Select(ex, q, start, end)
+	err := m.GetRDbMap().SelectOne(&ex, q, start, end)
 	assert.Nil(err)
 	return &ex
 }
@@ -32,7 +32,7 @@ func (m *Manager) fetchSupplier(start int64, end int64) *ExchangeReport {
 	FROM %s
 	WHERE time_id >= ?
 	AND time_id <= ?`, SupplierTableName)
-	_, err := m.GetRDbMap().Select(ex, q, start, end)
+	err := m.GetRDbMap().SelectOne(&ex, q, start, end)
 	assert.Nil(err)
 	return &ex
 }
@@ -64,7 +64,7 @@ func (m *Manager) updateExchangeReport(t time.Time) {
 				`, ExchangeReportTableName)
 	_, err := m.GetRDbMap().Exec(q, td, sup.SupplierImpressionIN,
 		sup.SupplierImpressionOUT, dem.DemandImpressionIN, dem.DemandImpressionOUT,
-		sup.Earn, dem.Spent, sup.Earn-sup.Spent)
+		sup.Spent, dem.Earn, dem.Earn-sup.Spent)
 	assert.Nil(err)
 }
 
