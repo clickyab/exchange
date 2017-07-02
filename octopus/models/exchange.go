@@ -5,45 +5,44 @@ import (
 
 	"fmt"
 
+	"clickyab.com/exchange/octopus/console/user/aaa"
 	"github.com/clickyab/services/assert"
 )
 
 // fetchDemand select demand side
-func fetchDemand(start int64, end int64) *ExchangeReport {
+func (m *Manager) fetchDemand(start int64, end int64) *ExchangeReport {
 	ex := ExchangeReport{}
-	q := fmt.Sprintf(`SELECT SUM(ad_out_count) AS demand_impression_in,
-	SUM(imp_out_count) AS demand_impression_out,
-	SUM(deliver_bid) AS earn
+	q := fmt.Sprintf(`SELECT COALESCE(SUM(ad_out_count),0) AS demand_impression_in,
+	COALESCE(SUM(imp_out_count),0) AS demand_impression_out,
+	COALESCE(SUM(deliver_bid),0) AS earn
 	FROM %s
 	WHERE time_id >= ?
 	AND time_id <= ?`, DemandTableName)
-	m := NewManager()
 	_, err := m.GetRDbMap().Select(ex, q, start, end)
 	assert.Nil(err)
 	return &ex
 }
 
 // fetchSupplier select demand side
-func fetchSupplier(start int64, end int64) *ExchangeReport {
+func (m *Manager) fetchSupplier(start int64, end int64) *ExchangeReport {
 	ex := ExchangeReport{}
-	q := fmt.Sprintf(`SELECT SUM(request_in_count) AS supplier_impression_in,
-	SUM(deliver_count) AS supplier_impression_out,
-	SUM(deliver_bid) AS spent
+	q := fmt.Sprintf(`SELECT COALESCE(SUM(request_in_count),0) AS supplier_impression_in,
+	COALESCE(SUM(deliver_count),0) AS supplier_impression_out,
+	COALESCE(SUM(deliver_bid),0) AS spent
 	FROM %s
 	WHERE time_id >= ?
 	AND time_id <= ?`, SupplierTableName)
-	m := NewManager()
 	_, err := m.GetRDbMap().Select(ex, q, start, end)
 	assert.Nil(err)
 	return &ex
 }
 
 // updateExchangeReport will update demand report (inclusive)
-func updateExchangeReport(t time.Time) {
+func (m *Manager) updateExchangeReport(t time.Time) {
 	td := t.Format("2006-01-02")
 	from, to := factTableRange(t)
-	dem := fetchDemand(from, to)
-	sup := fetchSupplier(from, to)
+	dem := m.fetchDemand(from, to)
+	sup := m.fetchSupplier(from, to)
 	q := fmt.Sprintf(`INSERT INTO %s
 				(target_date,
 				supplier_impression_in,
@@ -63,22 +62,45 @@ func updateExchangeReport(t time.Time) {
 				spent = VALUES(spent),
 				income = VALUES(income)
 				`, ExchangeReportTableName)
-	m := NewManager()
 	_, err := m.GetRDbMap().Exec(q, td, sup.SupplierImpressionIN,
 		sup.SupplierImpressionOUT, dem.DemandImpressionIN, dem.DemandImpressionOUT,
 		sup.Earn, dem.Spent, sup.Earn-sup.Spent)
 	assert.Nil(err)
 }
 
-// UpdateExchangeReportRange cron worker report exchange
-func UpdateExchangeReportRange(from time.Time, to time.Time) {
+// UpdateExchangeRange cron worker report exchange
+func (m *Manager) UpdateExchangeRange(from time.Time, to time.Time) {
 	if from.Unix() > to.Unix() {
 		from, to = to, from
 	}
 	to = to.Add(24 * time.Hour)
 	for from.Unix() < to.Unix() {
-		updateExchangeReport(from)
+		m.updateExchangeReport(from)
 		from = from.Add(time.Hour * 24)
 	}
 
+}
+
+// FillExchangeReport exchange report
+func (m *Manager) FillExchangeReport(p, c int, sort, order string, from, to int64, user *aaa.User) ([]ExchangeReport, int64) {
+	var res []ExchangeReport
+	var params []interface{}
+	limit := c
+	offset := (p - 1) * c
+	params = append(params, from, to)
+	countQuery := fmt.Sprintf("SELECT COUNT(er.id) FROM %s AS er "+
+		"WHERE er.target_date BETWEEN ? AND ? ", ExchangeReportTableName)
+	query := fmt.Sprintf("SELECT er.* FROM %s AS er "+
+		"WHERE er.target_date BETWEEN ? AND ? ", ExchangeReportTableName)
+
+	if sort != "" {
+		query += fmt.Sprintf("ORDER BY %s %s ", sort, order)
+	}
+	query += fmt.Sprintf("LIMIT %d OFFSET %d ", limit, offset)
+	count, err := m.GetRDbMap().SelectInt(countQuery, params...)
+	assert.Nil(err)
+
+	_, err = m.GetRDbMap().Select(&res, query, params...)
+	assert.Nil(err)
+	return res, count
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"clickyab.com/exchange/commands"
-	_ "github.com/clickyab/services/broker/selector"
 	"github.com/clickyab/services/config"
 	_ "github.com/clickyab/services/dset/redis"
 	_ "github.com/clickyab/services/eav/redis"
@@ -11,13 +10,9 @@ import (
 	_ "github.com/clickyab/services/statistic/redis"
 	_ "github.com/clickyab/services/store/redis"
 
-	_ "clickyab.com/exchange/octopus/workers/demand"
-	_ "clickyab.com/exchange/octopus/workers/manager"
-
 	"github.com/clickyab/services/dlock"
 	"github.com/clickyab/services/dlock/mock"
 
-	_ "clickyab.com/exchange/octopus/console/report/generator"
 	"github.com/Sirupsen/logrus"
 	_ "github.com/clickyab/services/mysql/connection/mysql"
 )
