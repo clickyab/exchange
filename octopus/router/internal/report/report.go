@@ -28,8 +28,9 @@ func Update(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	m := models.NewManager()
-	m.UpdateDemandReport(t)
-	m.UpdateSupplierReport(t)
+	m.UpdateDemandRange(t, t)
+	m.UpdateSupplierRange(t, t)
+	m.UpdateExchangeRange(t, t)
 }
 
 // UpdateRange is the demand status route
@@ -59,5 +60,5 @@ func UpdateRange(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	m := models.NewManager()
 	m.UpdateDemandRange(tf, tt)
 	m.UpdateSupplierRange(tf, tt)
-
+	m.UpdateExchangeRange(tf, tt)
 }

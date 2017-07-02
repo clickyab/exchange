@@ -36,16 +36,16 @@ func (m *Manager) DemandByDate(t time.Time) []DemandReport {
 
 // DemandByDateRange returns list of demand for range of dates
 func (m *Manager) DemandByDateRange(from time.Time, to time.Time) []DemandReport {
-	return m.DeamandByDateRangeNames(from, to)
+	return m.DemandByDateRangeNames(from, to)
 }
 
 // DemandByDateNames returns demand with specific date
 func (m *Manager) DemandByDateNames(f time.Time, demands ...string) []DemandReport {
-	return m.DeamandByDateRangeNames(f, f, demands...)
+	return m.DemandByDateRangeNames(f, f, demands...)
 }
 
-// DeamandByDateRangeNames returns demands with for range of dates
-func (m *Manager) DeamandByDateRangeNames(f time.Time, t time.Time, names ...string) []DemandReport {
+// DemandByDateRangeNames returns demands with for range of dates
+func (m *Manager) DemandByDateRangeNames(f time.Time, t time.Time, names ...string) []DemandReport {
 
 	var a []DemandReport
 
@@ -61,7 +61,7 @@ func (m *Manager) DeamandByDateRangeNames(f time.Time, t time.Time, names ...str
 					deliver_count,
 					deliver_bid
 				FROM demand_report where %s %s ORDER BY id DESC	`,
-		demandtimePartial(true, f, t), demandPartial(false, names...))
+		demandTimePartial(true, f, t), demandPartial(false, names...))
 
 	_, err := NewManager().GetRDbMap().Select(&a, q)
 	assert.Nil(err)
@@ -101,7 +101,7 @@ func (m *Manager) DemandAggregateDemandsByDateRange(f time.Time, t time.Time, de
 					SUM(deliver_count) as deliver_count,
 					SUM(deliver_bid) as deliver_bid
 				FROM demand_report where %s %s GROUP BY demand`,
-		demandtimePartial(true, f, t), demandPartial(false, demands...))
+		demandTimePartial(true, f, t), demandPartial(false, demands...))
 
 	_, err := NewManager().GetRDbMap().Select(&a, q)
 	assert.Nil(err)
@@ -130,7 +130,7 @@ func (m *Manager) DemandAggregateAllByDateRange(f time.Time, t time.Time) []Dema
 					SUM(deliver_count) as deliver_count,
 					SUM(deliver_bid) as deliver_bid
 				FROM demand_report where %s`,
-		demandtimePartial(true, f, t))
+		demandTimePartial(true, f, t))
 
 	_, err := NewManager().GetRDbMap().Select(&a, q)
 	assert.Nil(err)
@@ -157,7 +157,7 @@ func demandPartial(isFirst bool, names ...string) (res string) {
 	return
 }
 
-func demandtimePartial(isFirst bool, from time.Time, to time.Time) (res string) {
+func demandTimePartial(isFirst bool, from time.Time, to time.Time) (res string) {
 	if isFirst {
 		res = "target_date  "
 	} else {
@@ -204,55 +204,61 @@ func (m *Manager) FillDemandReport(p, c int, sort, order string, from, to int64,
 	return res, count
 }
 
-// FillSupplierReport supplier report
-func (m *Manager) FillSupplierReport(p, c int, sort, order string, from, to int64, user *aaa.User) ([]SupplierReporter, int64) {
-	var res []SupplierReporter
-	var params []interface{}
-	limit := c
-	offset := (p - 1) * c
-	params = append(params, from, to)
-	countQuery := fmt.Sprintf("SELECT COUNT(sr.id) FROM %s AS sr "+
-		"INNER JOIN %s AS s ON s.name=sr.supplier WHERE sr.target_date BETWEEN ? AND ? ", SupplierReportTableName, "suppliers")
-	query := fmt.Sprintf("SELECT sr.* FROM %s AS sr "+
-		"INNER JOIN %s AS s ON s.name=sr.supplier WHERE sr.target_date BETWEEN ? AND ? ", SupplierReportTableName, "suppliers")
-	//check user perm
-	if user.UserType != aaa.AdminUserType {
-		countQuery += "AND s.user_id = ? "
-		query += "AND s.user_id = ? "
-		params = append(params, user.ID)
-	}
-	if sort != "" {
-		query += fmt.Sprintf("ORDER BY %s %s ", sort, order)
-	}
-	query += fmt.Sprintf("LIMIT %d OFFSET %d ", limit, offset)
-	count, err := m.GetRDbMap().SelectInt(countQuery, params...)
-	assert.Nil(err)
+// updateDemandReport will update demand report in range of two date (inclusive)
+func (m *Manager) updateDemandReport(t time.Time) {
+	td := t.Format("2006-01-02")
+	from, to := factTableRange(t)
 
-	_, err = m.GetRDbMap().Select(&res, query, params...)
+	var q = fmt.Sprintf(`INSERT INTO demand_report (
+								demand,
+								target_date,
+								request_out_count,
+								ad_in_count,
+								imp_out_count,
+								ad_out_count,
+								ad_out_bid,
+								deliver_count,
+								deliver_bid,
+								profit
+								)
+
+							SELECT demand,
+							"%s",
+							sum(request_out_count),
+							sum(ad_in_count),
+							sum(imp_out_count),
+							sum(ad_out_count),
+							sum(ad_out_bid),
+							sum(deliver_count),
+							sum(deliver_bid),
+							sum(profit)
+								FROM sup_dem_src WHERE time_id BETWEEN %d AND %d
+							GROUP BY demand
+
+							 ON DUPLICATE KEY UPDATE
+							  demand=VALUES(demand),
+							  target_date=VALUES(target_date),
+							  request_out_count=VALUES(request_out_count),
+							  ad_in_count=VALUES(ad_in_count),
+							  imp_out_count=VALUES(imp_out_count),
+							  ad_out_count=VALUES(ad_out_count),
+							  ad_out_bid=VALUES(ad_out_bid),
+							  deliver_count=VALUES(deliver_count),
+							  deliver_bid=VALUES(deliver_bid),
+							  profit=values(profit)`, td, from, to)
+
+	_, err := NewManager().GetRDbMap().Exec(q)
 	assert.Nil(err)
-	return res, count
 }
 
-// FillExchangeReport exchange report
-func (m *Manager) FillExchangeReport(p, c int, sort, order string, from, to int64, user *aaa.User) ([]ExchangeReport, int64) {
-	var res []ExchangeReport
-	var params []interface{}
-	limit := c
-	offset := (p - 1) * c
-	params = append(params, from, to)
-	countQuery := fmt.Sprintf("SELECT COUNT(er.id) FROM %s AS er "+
-		"WHERE er.target_date BETWEEN ? AND ? ", ExchangeReportTableName)
-	query := fmt.Sprintf("SELECT er.* FROM %s AS er "+
-		"WHERE er.target_date BETWEEN ? AND ? ", ExchangeReportTableName)
-
-	if sort != "" {
-		query += fmt.Sprintf("ORDER BY %s %s ", sort, order)
+// UpdateDemandRange will update demand report in range of two date (inclusive)
+func (m *Manager) UpdateDemandRange(from time.Time, to time.Time) {
+	if from.Unix() > to.Unix() {
+		from, to = to, from
 	}
-	query += fmt.Sprintf("LIMIT %d OFFSET %d ", limit, offset)
-	count, err := m.GetRDbMap().SelectInt(countQuery, params...)
-	assert.Nil(err)
-
-	_, err = m.GetRDbMap().Select(&res, query, params...)
-	assert.Nil(err)
-	return res, count
+	to = to.Add(24 * time.Hour)
+	for from.Unix() < to.Unix() {
+		m.updateDemandReport(from)
+		from = from.Add(time.Hour * 24)
+	}
 }
