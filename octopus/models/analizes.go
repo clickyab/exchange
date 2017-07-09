@@ -82,20 +82,20 @@ type Parts struct {
 
 // DemandReport demand_report
 type DemandReport struct {
-	ID              int64  `json:"id" db:"id"`
-	Demand          string `json:"demand" db:"demand"`
-	TargetDate      int64  `json:"target_date" db:"target_date"`
-	RequestOutCount int64  `json:"request_out_count" db:"request_out_count"`
-	AdInCount       int64  `json:"ad_in_count" db:"ad_in_count"`
-	ImpOutCount     int64  `json:"imp_out_count" db:"imp_out_count"`
-	AdOutCount      int64  `json:"ad_out_count" db:"ad_out_count"`
-	AdOutBid        int64  `json:"ad_out_bid" db:"ad_out_bid"`
-	DeliverCount    int64  `json:"deliver_count" db:"deliver_count"`
-	DeliverBid      int64  `json:"deliver_bid" db:"deliver_bid"`
-	Profit          int64  `json:"profit" db:"profit"`
-	SuccessRate     int64  `json:"success_rate" db:"-"`
-	DeliverRate     int64  `json:"deliver_rate" db:"-"`
-	WinRate         int64  `json:"win_rate" db:"-"`
+	ID              int64     `json:"id" db:"id"`
+	Demand          string    `json:"demand" db:"demand"`
+	TargetDate      time.Time `json:"target_date" db:"target_date"`
+	RequestOutCount int64     `json:"request_out_count" db:"request_out_count"`
+	AdInCount       int64     `json:"ad_in_count" db:"ad_in_count"`
+	ImpOutCount     int64     `json:"imp_out_count" db:"imp_out_count"`
+	AdOutCount      int64     `json:"ad_out_count" db:"ad_out_count"`
+	AdOutBid        int64     `json:"ad_out_bid" db:"ad_out_bid"`
+	DeliverCount    int64     `json:"deliver_count" db:"deliver_count"`
+	DeliverBid      int64     `json:"deliver_bid" db:"deliver_bid"`
+	Profit          int64     `json:"profit" db:"profit"`
+	SuccessRate     int64     `json:"success_rate" db:"-"`
+	DeliverRate     int64     `json:"deliver_rate" db:"-"`
+	WinRate         int64     `json:"win_rate" db:"-"`
 }
 
 // SupplierReporter table
