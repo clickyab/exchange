@@ -17,11 +17,11 @@ func calculator(a []DemandReport) []DemandReport {
 			ID:              v.ID,
 			ImpOutCount:     v.ImpOutCount,
 			RequestOutCount: v.AdInCount,
-			SuccessRate:     (v.ImpOutCount * 100) / v.AdInCount,
+			SuccessRate:     float64((v.AdInCount * 100) / v.ImpOutCount),
 			DeliverCount:    v.DeliverCount,
-			DeliverRate:     (v.DeliverCount * 100) / v.AdOutCount,
+			DeliverRate:     float64((v.DeliverCount * 100) / v.AdInCount),
 			AdOutCount:      v.AdOutCount,
-			WinRate:         (v.AdOutCount * 100) / v.AdInCount,
+			WinRate:         float64((v.AdOutCount * 100) / v.AdInCount),
 			DeliverBid:      v.DeliverBid,
 		})
 	}
@@ -184,7 +184,11 @@ func (m *Manager) FillDemandReport(p, c int, sort, order string, from, to string
 	params = append(params, from, to)
 	countQuery := fmt.Sprintf("SELECT COUNT(dr.id) FROM %s AS dr "+
 		"INNER JOIN %s AS d ON d.name=dr.demand WHERE dr.target_date BETWEEN ? AND ? ", DemandReportTableName, "demands")
-	query := fmt.Sprintf("SELECT dr.* FROM %s AS dr "+
+	query := fmt.Sprintf("SELECT dr.*,"+
+		"CASE WHEN ad_in_count=0 THEN 0 ELSE ROUND(deliver_count/ad_in_count,2) END AS deliver_rate,"+
+		"CASE WHEN imp_out_count=0 THEN 0 ELSE ROUND(ad_in_count/imp_out_count,2) END AS success_rate,"+
+		"CASE WHEN ad_in_count=0 THEN 0 ELSE ROUND(ad_out_count/ad_in_count,2) END AS win_rate"+
+		" FROM %s AS dr "+
 		"INNER JOIN %s AS d ON d.name=dr.demand WHERE dr.target_date BETWEEN ? AND ? ", DemandReportTableName, "demands")
 	//check user perm
 	if user.UserType != aaa.AdminUserType {

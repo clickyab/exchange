@@ -61,7 +61,9 @@ func (m *Manager) FillSupplierReport(p, c int, sort, order string, from, to stri
 	params = append(params, from, to)
 	countQuery := fmt.Sprintf("SELECT COUNT(sr.id) FROM %s AS sr "+
 		"INNER JOIN %s AS s ON s.name=sr.supplier WHERE sr.target_date BETWEEN ? AND ? ", SupplierReportTableName, "suppliers")
-	query := fmt.Sprintf("SELECT sr.* FROM %s AS sr "+
+	query := fmt.Sprintf("SELECT sr.*,"+
+		"CASE WHEN ad_out_count=0 THEN 0 ELSE ROUND(delivered_count/ad_out_count,2) END AS deliver_rate,"+
+		"CASE WHEN impression_in_count=0 THEN 0 ELSE ROUND(ad_out_count/impression_in_count,2) END AS success_rate FROM %s AS sr "+
 		"INNER JOIN %s AS s ON s.name=sr.supplier WHERE sr.target_date BETWEEN ? AND ? ", SupplierReportTableName, "suppliers")
 	//check user perm
 	if user.UserType != aaa.AdminUserType {
