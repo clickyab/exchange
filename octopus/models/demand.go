@@ -176,7 +176,7 @@ func demandTimePartial(isFirst bool, from time.Time, to time.Time) (res string) 
 }
 
 // FillDemandReport demand report
-func (m *Manager) FillDemandReport(p, c int, sort, order string, from, to int64, user *aaa.User) ([]DemandReport, int64) {
+func (m *Manager) FillDemandReport(p, c int, sort, order string, from, to string, user *aaa.User) ([]DemandReport, int64) {
 	var res []DemandReport
 	var params []interface{}
 	limit := c

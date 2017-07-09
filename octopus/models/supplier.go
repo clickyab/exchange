@@ -53,7 +53,7 @@ func (m *Manager) UpdateSupplierRange(from time.Time, to time.Time) {
 }
 
 // FillSupplierReport supplier report
-func (m *Manager) FillSupplierReport(p, c int, sort, order string, from, to int64, user *aaa.User) ([]SupplierReporter, int64) {
+func (m *Manager) FillSupplierReport(p, c int, sort, order string, from, to string, user *aaa.User) ([]SupplierReporter, int64) {
 	var res []SupplierReporter
 	var params []interface{}
 	limit := c
