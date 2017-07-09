@@ -82,7 +82,7 @@ func (m *Manager) UpdateExchangeRange(from time.Time, to time.Time) {
 }
 
 // FillExchangeReport exchange report
-func (m *Manager) FillExchangeReport(p, c int, sort, order string, from, to int64, user *aaa.User) ([]ExchangeReport, int64) {
+func (m *Manager) FillExchangeReport(p, c int, sort, order string, from, to string, user *aaa.User) ([]ExchangeReport, int64) {
 	var res []ExchangeReport
 	var params []interface{}
 	limit := c

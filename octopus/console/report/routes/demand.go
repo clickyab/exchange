@@ -48,8 +48,8 @@ func (c Controller) demand(ctx context.Context, w http.ResponseWriter, r *http.R
 	if err != nil {
 		toTime = fromTime.AddDate(0, 0, 1)
 	}
-	fromTimeInt := models.FactTableID(fromTime)
-	toTimeInt := models.FactTableID(toTime)
+	fromTimeString := fromTime.Format("2006-01-02")
+	toTimeString := toTime.Format("2006-01-02")
 	s := r.URL.Query().Get("sort")
 	parts := strings.SplitN(s, ":", 2)
 	if len(parts) != 2 {
@@ -63,7 +63,7 @@ func (c Controller) demand(ctx context.Context, w http.ResponseWriter, r *http.R
 	if !array.StringInArray(order, "ASC", "DESC") {
 		order = aaa.DefaultOrder
 	}
-	result, num := models.NewManager().FillDemandReport(p, count, sort, order, fromTimeInt, toTimeInt, currentUser)
+	result, num := models.NewManager().FillDemandReport(p, count, sort, order, fromTimeString, toTimeString, currentUser)
 	res.Data = result
 	res.Count = num
 	c.OKResponse(w, res)
