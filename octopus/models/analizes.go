@@ -93,9 +93,9 @@ type DemandReport struct {
 	DeliverCount    int64     `json:"deliver_count" db:"deliver_count"`
 	DeliverBid      int64     `json:"deliver_bid" db:"deliver_bid"`
 	Profit          int64     `json:"profit" db:"profit"`
-	SuccessRate     int64     `json:"success_rate" db:"-"`
-	DeliverRate     int64     `json:"deliver_rate" db:"-"`
-	WinRate         int64     `json:"win_rate" db:"-"`
+	SuccessRate     float64   `json:"success_rate" db:"success_rate"`
+	DeliverRate     float64   `json:"deliver_rate" db:"deliver_rate"`
+	WinRate         float64   `json:"win_rate" db:"win_rate"`
 }
 
 // SupplierReporter table
