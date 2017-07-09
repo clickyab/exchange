@@ -2,6 +2,9 @@ package main
 
 import (
 	"clickyab.com/exchange/commands"
+	_ "clickyab.com/exchange/octopus/console/report/routes"
+	_ "clickyab.com/exchange/octopus/console/user/aaa"
+	_ "clickyab.com/exchange/octopus/console/user/routes"
 	_ "clickyab.com/exchange/octopus/demands"
 	_ "clickyab.com/exchange/octopus/router"
 	_ "github.com/clickyab/services/broker/selector"
