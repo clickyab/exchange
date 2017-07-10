@@ -8,4 +8,4 @@ octopus-user: tools-codegen
 octopus-report: tools-codegen
 	$(BIN)/codegen -p clickyab.com/exchange/octopus/console/report/routes
 
-codegen: ip2location migration octopus-user
+codegen: ip2location migration octopus-user octopus-report

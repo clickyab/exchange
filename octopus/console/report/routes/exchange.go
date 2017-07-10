@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"clickyab.com/exchange/octopus/console/user/aaa"
-	"clickyab.com/exchange/octopus/console/user/routes"
+	"clickyab.com/exchange/octopus/console/user/authz"
 	"clickyab.com/exchange/octopus/models"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/framework"
@@ -25,11 +25,16 @@ type exchangeReportResponse struct {
 // @Route {
 // 		url = /exchange/:from/:to
 //		method = get
-//		middleware = routes.Authenticate
+//		_sort_ = string, the sort and order like id:asc or id:desc available column "id","created_at","updated_at"
+//		_c_ = integer , count per page
+//		_p_ = integer , page number
+//		middleware = authz.Authenticate
 //		400 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+//		200 = exchangeReportResponse
 // }
 func (c Controller) exchange(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	currentUser := routes.MustGetUser(ctx)
+	currentUser := authz.MustGetUser(ctx)
 	if currentUser.UserType != aaa.AdminUserType {
 		c.ForbiddenResponse(w, errors.New("not allowed"))
 		return

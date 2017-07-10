@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"clickyab.com/exchange/octopus/console/user/aaa"
-	"clickyab.com/exchange/octopus/console/user/routes"
+	"clickyab.com/exchange/octopus/console/user/authz"
 	"clickyab.com/exchange/octopus/models"
 	"github.com/clickyab/services/array"
 	"github.com/clickyab/services/framework"
@@ -25,11 +25,16 @@ type supplierReportResponse struct {
 // @Route {
 // 		url = /supplier/:from/:to
 //		method = get
-//		middleware = routes.Authenticate
+//		middleware = authz.Authenticate
+//		_sort_ = string, the sort and order like id:asc or id:desc available column "id","created_at","updated_at"
+//		_c_ = integer , count per page
+//		_p_ = integer , page number
 //		400 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
+//		200 = demandReportResponse
 // }
 func (c Controller) supplier(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	currentUser := routes.MustGetUser(ctx)
+	currentUser := authz.MustGetUser(ctx)
 	var toTime time.Time
 	var res supplierReportResponse
 	p, count := framework.GetPageAndCount(r, false)
