@@ -1,4 +1,4 @@
-package routes
+package authz
 
 import (
 	"context"

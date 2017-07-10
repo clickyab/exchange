@@ -3,6 +3,7 @@
 package routes
 
 import (
+	"clickyab.com/exchange/octopus/console/user/authz"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
@@ -44,7 +45,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Function": "Controller.logout",
 		"RoutePkg": "routes",
 		"RouteMiddleware": [
-			"Authenticate"
+			"authz.Authenticate"
 		],
 		"RouteFuncMiddleware": "",
 		"RecType": "Controller",
@@ -54,7 +55,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Scope": ""
 	} with key 1 */
 	m1 := append(groupMiddleware, []framework.Middleware{
-		Authenticate,
+		authz.Authenticate,
 	}...)
 
 	group.GET("/logout", xhandler.HandlerFuncC(framework.Mix(c.logout, m1...)))

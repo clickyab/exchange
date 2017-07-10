@@ -22,6 +22,7 @@ type registrationPayload struct {
 //      	payload = registrationPayload
 //		200 = responseLoginOK
 //		400 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
 // }
 func (c Controller) register(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*registrationPayload)

@@ -3,7 +3,7 @@
 package routes
 
 import (
-	"clickyab.com/exchange/octopus/console/user/routes"
+	"clickyab.com/exchange/octopus/console/user/authz"
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
@@ -24,7 +24,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Function": "Controller.demand",
 		"RoutePkg": "routes",
 		"RouteMiddleware": [
-			"routes.Authenticate"
+			"authz.Authenticate"
 		],
 		"RouteFuncMiddleware": "",
 		"RecType": "Controller",
@@ -34,7 +34,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Scope": ""
 	} with key 0 */
 	m0 := append(groupMiddleware, []framework.Middleware{
-		routes.Authenticate,
+		authz.Authenticate,
 	}...)
 
 	group.GET("/demand/:from/:to", xhandler.HandlerFuncC(framework.Mix(c.demand, m0...)))
@@ -46,7 +46,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Function": "Controller.exchange",
 		"RoutePkg": "routes",
 		"RouteMiddleware": [
-			"routes.Authenticate"
+			"authz.Authenticate"
 		],
 		"RouteFuncMiddleware": "",
 		"RecType": "Controller",
@@ -56,7 +56,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Scope": ""
 	} with key 1 */
 	m1 := append(groupMiddleware, []framework.Middleware{
-		routes.Authenticate,
+		authz.Authenticate,
 	}...)
 
 	group.GET("/exchange/:from/:to", xhandler.HandlerFuncC(framework.Mix(c.exchange, m1...)))
@@ -68,7 +68,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Function": "Controller.supplier",
 		"RoutePkg": "routes",
 		"RouteMiddleware": [
-			"routes.Authenticate"
+			"authz.Authenticate"
 		],
 		"RouteFuncMiddleware": "",
 		"RecType": "Controller",
@@ -78,7 +78,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 		"Scope": ""
 	} with key 2 */
 	m2 := append(groupMiddleware, []framework.Middleware{
-		routes.Authenticate,
+		authz.Authenticate,
 	}...)
 
 	group.GET("/supplier/:from/:to", xhandler.HandlerFuncC(framework.Mix(c.supplier, m2...)))

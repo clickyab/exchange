@@ -39,6 +39,7 @@ type loginPayload struct {
 //      	payload = loginPayload
 //		200 = responseLoginOK
 //		400 = controller.ErrorResponseSimple
+//		403 = controller.ErrorResponseSimple
 // }
 func (c Controller) login(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	pl := c.MustGetPayload(ctx).(*loginPayload)

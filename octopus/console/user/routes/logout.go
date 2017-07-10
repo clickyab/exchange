@@ -4,6 +4,8 @@ import (
 	"context"
 	"net/http"
 
+	"clickyab.com/exchange/octopus/console/user/authz"
+
 	"github.com/clickyab/services/assert"
 
 	"github.com/clickyab/services/eav"
@@ -13,11 +15,11 @@ import (
 // @Route {
 // 		url = /logout
 //		method = get
-//		middleware = Authenticate
+//		middleware = authz.Authenticate
 //      	200 = controller.NormalResponse
 // }
 func (c Controller) logout(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	d := MustGetToken(ctx)
+	d := authz.MustGetToken(ctx)
 	if d == "" {
 		c.OKResponse(w, struct {
 			Status string `json:"status"`
