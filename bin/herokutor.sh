@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+#set -x
 set -eo pipefail
 
 # This job is from jenkins. so kill it if it is a pull request
@@ -86,7 +86,4 @@ for WRK_TYP in web winner impression demand show aggregator
 do
     kubectl -n ${APP} set image deployment  ${APP}-${WRK_TYP} ${APP}-${BRANCH}=registry.clickyab.ae/clickyab/${APP}:${BRANCH}.${COMMITCOUNT} --record
 done
-
-fi
-
 
