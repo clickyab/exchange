@@ -26,7 +26,7 @@ SOURCE_DIR=${1:-}
 [ -z ${SOURCE_DIR} ] && exit_message "Must pass the source directory as the first parameter" 1
 SOURCE_DIR=$(cd "${SOURCE_DIR}/" && pwd)
 
-BUILD_DIR=${2:-$(mktem -d)}
+BUILD_DIR=${2:-$(mktemp -d)}
 CACHE_DIR=${3:-${SOURCE_DIR}-cache}
 ENV_DIR=$(mktemp -d)
 
