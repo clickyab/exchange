@@ -18,4 +18,8 @@ node {
         sh "./bin/ci-test.sh test"
         sh "docker rm -f redis-jenkins-service-test"
     }
+    stage('Deploy into k8s') {
+        checkout scm
+        sh "APP=octopus bash ./bin/herokutor.sh `pwd`"
+    }
 }
