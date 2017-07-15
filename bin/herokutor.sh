@@ -9,10 +9,10 @@ exit_message() {
     exit ${code}
 }
 
-env
 APP=${APP:-}
 BRANCH=${BRANCH_NAME:-master}
 BRANCH=${CHANGE_TARGET:-${BRANCH}}
+CACHE_ROOT=${CACHE_ROOT:-/var/lib/jenkins/cache}
 
 [ -z ${CHANGE_AUTHOR} ] || exit_message "It's a PR, bail out" 0
 if [[ ( "${BRANCH}" != "master" ) && ( "${BRANCH}" != "deploy" ) ]]; then
@@ -27,7 +27,8 @@ SOURCE_DIR=${1:-}
 SOURCE_DIR=$(cd "${SOURCE_DIR}/" && pwd)
 
 BUILD_DIR=${2:-$(mktemp -d)}
-CACHE_DIR=${3:-${SOURCE_DIR}-cache}
+# Make sure the cache is writable on the worker server
+CACHE_DIR=${CACHE_ROOT}/${APP}-${BRANCH}
 ENV_DIR=$(mktemp -d)
 
 mkdir -p "${BUILD_DIR}" "${CACHE_DIR}" "${ENV_DIR}"
@@ -42,7 +43,7 @@ BUILD_PACKS_DIR=$(mktemp -d)
 
 # Extract build data
 pushd ${SOURCE_DIR}
-GIT_WORK_TREE=${BUILD} git checkout -f ${BRANCH}
+GIT_WORK_TREE=${BUILD} git checkout -f HEAD
 
 export LONGHASH=$(git log -n1 --pretty="format:%H" | cat)
 export SHORTHASH=$(git log -n1 --pretty="format:%h"| cat)
@@ -79,8 +80,11 @@ pushd ${TEMPORARY}
 rocker build --push -var Build=${BUILD} -var EnvDir=${VARS} -var Cache=${CACHE} -var Target=${TARGET} -var Version=${BRANCH}.${COMMITCOUNT} -var App=${APP}
 popd
 
-rm -rf ${VARS} || true
-rm -rf ${TARGET} || true
+echo "${VARS}" >> /tmp/kill-me
+echo "${TARGET}" >> /tmp/kill-me
+echo "${TEMPORARY}" >> /tmp/kill-me
+echo "${BUILD_DIR}" >> /tmp/kill-me
+echo "${BUILD_PACKS_DIR}" >> /tmp/kill-me
 
 for WRK_TYP in web winner impression demand show aggregator
 do
