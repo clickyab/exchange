@@ -107,6 +107,8 @@ type SupplierReporter struct {
 	AdOutCount     int64     `json:"ad_out_count" db:"ad_out_count"`
 	DeliveredCount int64     `json:"delivered_count" db:"delivered_count"`
 	Earn           int64     `json:"earn" db:"earn"`
+	SuccessRate    float64   `json:"success_rate" db:"success_rate"`
+	DeliverRate    float64   `json:"deliver_rate" db:"deliver_rate"`
 }
 
 // MultiQuery is a hack to run multiple query in one transaction

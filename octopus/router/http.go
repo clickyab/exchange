@@ -15,15 +15,15 @@ type initRouter struct {
 }
 
 func (initRouter) Routes(mux *xmux.Mux, mountPoint string) {
-	mux.POST("/rest/get/:key", xhandler.HandlerFuncC(restful.GetAd))
-	mux.GET("/pixel/:demand/:trackID", xhandler.HandlerFuncC(restful.TrackPixel))
+	mux.POST(mountPoint+"/rest/get/:key", xhandler.HandlerFuncC(restful.GetAd))
+	mux.GET(mountPoint+"/pixel/:demand/:trackID", xhandler.HandlerFuncC(restful.TrackPixel))
 	// The demand status routes
-	mux.GET("/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.POST("/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.DELETE("/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.HEAD("/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.PUT("/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.OPTIONS("/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
+	mux.GET(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
+	mux.POST(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
+	mux.DELETE(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
+	mux.HEAD(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
+	mux.PUT(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
+	mux.OPTIONS(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
 }
 
 func init() {
