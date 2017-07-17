@@ -12,12 +12,16 @@ import (
 	"clickyab.com/exchange/octopus/supliers/internal/models"
 	"clickyab.com/exchange/octopus/supliers/internal/restful"
 	"clickyab.com/exchange/octopus/supliers/internal/restful/renderer"
+	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
 
 	"github.com/Sirupsen/logrus"
 )
 
-var sm *supplierManager
+var (
+	sm         *supplierManager
+	mountPoint = config.RegisterString("services.framework.controller.mount_point", "/api", "http controller mount point")
+)
 
 type supplierManager struct {
 	suppliers map[string]models.Supplier
@@ -27,7 +31,8 @@ type supplierManager struct {
 func restRendererFactory(sup exchange.Supplier, in string) exchange.Renderer {
 	switch in {
 	case "rest":
-		return renderer.NewRestfulRenderer(sup, "/pixel/%s/%s")
+		// TODO : /api is hardcoded
+		return renderer.NewRestfulRenderer(sup, mountPoint.String()+"/pixel/%s/%s")
 	default:
 		logrus.Panicf("supplier with key %s not found", in)
 	}
