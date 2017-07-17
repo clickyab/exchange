@@ -61,26 +61,6 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 	group.GET("/logout", xhandler.HandlerFuncC(framework.Mix(c.logout, m1...)))
 	// End route with key 1
 
-	/* Route {
-		"Route": "/register",
-		"Method": "POST",
-		"Function": "Controller.register",
-		"RoutePkg": "routes",
-		"RouteMiddleware": null,
-		"RouteFuncMiddleware": "",
-		"RecType": "Controller",
-		"RecName": "c",
-		"Payload": "registrationPayload",
-		"Resource": "",
-		"Scope": ""
-	} with key 2 */
-	m2 := append(groupMiddleware, []framework.Middleware{}...)
-
-	// Make sure payload is the last middleware
-	m2 = append(m2, middleware.PayloadUnMarshallerGenerator(registrationPayload{}))
-	group.POST("/register", xhandler.HandlerFuncC(framework.Mix(c.register, m2...)))
-	// End route with key 2
-
 	initializer.DoInitialize(c)
 }
 
