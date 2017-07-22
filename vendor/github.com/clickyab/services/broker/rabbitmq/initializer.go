@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/clickyab/services/safe"
 	"github.com/streadway/amqp"
 )
 
@@ -159,16 +160,19 @@ func (in *initRabbit) Initialize(ctx context.Context) {
 		// the size is here for channel to not block the caller. since we read this on the health check command
 		in.notifyCloser = make(chan *amqp.Error, 10)
 		kill, _ = context.WithCancel(ctx)
-		var err error
-		conn, err = amqp.Dial(cfg.DSN)
-		assert.Nil(err)
+		safe.Try(func() error {
+			var err error
+			conn, err = amqp.Dial(dsn.String())
+			return err
+		}, tryLimit.Duration())
+
 		chn, err := conn.Channel()
 		assert.Nil(err)
 		defer chn.Close()
 
 		assert.Nil(
 			chn.ExchangeDeclare(
-				cfg.Exchange,
+				exchange.String(),
 				"topic",
 				true,
 				false,
@@ -178,11 +182,11 @@ func (in *initRabbit) Initialize(ctx context.Context) {
 			),
 		)
 
-		rng = ring.New(cfg.Publisher)
-		for i := 0; i < cfg.Publisher; i++ {
+		rng = ring.New(publisher.Int())
+		for i := 0; i < publisher.Int(); i++ {
 			pchn, err := conn.Channel()
 			assert.Nil(err)
-			rtrn := make(chan amqp.Confirmation, cfg.ConfirmLen)
+			rtrn := make(chan amqp.Confirmation, confirmLen.Int())
 			err = pchn.Confirm(false)
 			assert.Nil(err)
 			pchn.NotifyPublish(rtrn)
