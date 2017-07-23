@@ -229,7 +229,8 @@
 		},
 		{
 			"ImportPath": "github.com/golang/mock/gomock",
-			"Rev": "bd3c8e81be01eef76d4b503f5e687d2d1354d2d9"
+			"Comment": "v1.0.0",
+			"Rev": "13f360950a79f5864a972c786a10a50e44b69541"
 		},
 		{
 			"ImportPath": "github.com/gopherjs/gopherjs/js",
@@ -265,7 +266,7 @@
 		},
 		{
 			"ImportPath": "github.com/jtolds/gls",
-			"Comment": "v4.2.0-2-g77f1821",
+			"Comment": "v4.2.1",
 			"Rev": "77f18212c9c7edc9bd6a33d383a7b545ce62f064"
 		},
 		{
@@ -293,7 +294,7 @@
 		},
 		{
 			"ImportPath": "github.com/rs/cors",
-			"Comment": "v1.0-5-g8dd4211",
+			"Comment": "v.1.1",
 			"Rev": "8dd4211afb5d08dbb39a533b9bb9e4b486351df6"
 		},
 		{
