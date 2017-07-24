@@ -4,6 +4,11 @@ type Slot struct {
 	SWidth, SHeight int
 	STRackID        string
 	SFallback       string
+	Attribute      map[string]string
+}
+
+func (s Slot) Attributes() map[string]string {
+	return s.Attribute
 }
 
 func (s Slot) Width() int {

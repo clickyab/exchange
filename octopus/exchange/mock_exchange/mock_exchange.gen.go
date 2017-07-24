@@ -659,6 +659,18 @@ func (_m *MockSlot) EXPECT() *MockSlotMockRecorder {
 	return _m.recorder
 }
 
+// Attributes mocks base method
+func (_m *MockSlot) Attributes() map[string]string {
+	ret := _m.ctrl.Call(_m, "Attributes")
+	ret0, _ := ret[0].(map[string]string)
+	return ret0
+}
+
+// Attributes indicates an expected call of Attributes
+func (_mr *MockSlotMockRecorder) Attributes() *gomock.Call {
+	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Attributes", reflect.TypeOf((*MockSlot)(nil).Attributes))
+}
+
 // Fallback mocks base method
 func (_m *MockSlot) Fallback() string {
 	ret := _m.ctrl.Call(_m, "Fallback")
