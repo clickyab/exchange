@@ -9,4 +9,5 @@ type Slot interface {
 	TrackID() string
 	// Fallback returns slots fallback url
 	Fallback() string
+	Attributes() map[string]string
 }

@@ -49,15 +49,18 @@ type rawSlot struct {
 	Height int `json:"height"`
 	// TrackID is an string for this slot, its a random at first but the value is not changed at all other calls
 	TrackID string `json:"track_id"`
+	// data needed for supplier and it's optional
+	Attributes map[string]string `json:"attributes"`
 }
 
 func getRawSlots(in []exchange.Slot) []rawSlot {
 	res := make([]rawSlot, len(in))
 	for i := range in {
 		res[i] = rawSlot{
-			Width:   in[i].Width(),
-			Height:  in[i].Height(),
-			TrackID: in[i].TrackID(),
+			Width:      in[i].Width(),
+			Height:     in[i].Height(),
+			TrackID:    in[i].TrackID(),
+			Attributes: in[i].Attributes(),
 		}
 	}
 
