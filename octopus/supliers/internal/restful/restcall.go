@@ -19,7 +19,7 @@ type requestBody struct {
 	Publisher   *restPublisher      `json:"publisher"`
 	Categories  []exchange.Category `json:"categories"`
 	Type        string              `json:"type"`
-	UnderFloor  bool
+	UnderFloor  bool                `json:"under_floor"`
 	App         struct {
 		OSVersion  string `json:"os_version,omitempty"`
 		Operator   string `json:"operator,omitempty"`

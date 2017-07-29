@@ -88,8 +88,8 @@ func (ir impressionRest) Location() exchange.Location {
 	return ir.Loc
 }
 
-func (impressionRest) Attributes() map[string]interface{} {
-	return nil
+func (ir impressionRest) Attributes() map[string]interface{} {
+	return ir.Attr
 }
 
 func (ir *impressionRest) Slots() []exchange.Slot {
