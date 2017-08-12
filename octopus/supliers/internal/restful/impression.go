@@ -11,19 +11,19 @@ import (
 )
 
 type impressionRest struct {
-	Schm          string                      `json:"scheme"`
-	PTI           string                      `json:"page_track_id"`
-	UTI           string                      `json:"user_track_id"`
-	SIP           string                      `json:"ip"`
-	Mega          string                      `json:"track_id"`
-	UA            string                      `json:"user_agent"`
-	Pub           *restPublisher              `json:"source"`
-	Loc           exchange.Location           `json:"location"`
-	ImpSlots      []*slotRest                 `json:"slots"`
 	Categories    []exchange.Category         `json:"categories"`
 	ImpPlatform   exchange.ImpressionPlatform `json:"platform"`
-	UnderFloorCPM bool                        `json:"under_floor"`
+	ImpSlots      []*slotRest                 `json:"slots"`
+	Loc           exchange.Location           `json:"location"`
+	Mega          string                      `json:"track_id"`
+	PTI           string                      `json:"page_track_id"`
+	Pub           *restPublisher              `json:"source"`
+	Schm          string                      `json:"scheme"`
+	SIP           string                      `json:"ip"`
 	STime         time.Time                   `json:"time"`
+	UA            string                      `json:"user_agent"`
+	UnderFloorCPM bool                        `json:"under_floor"`
+	UTI           string                      `json:"user_track_id"`
 
 	Attr map[string]interface{} `json:"attributes"`
 

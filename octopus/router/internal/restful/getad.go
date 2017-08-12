@@ -18,14 +18,28 @@ import (
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
 
+	"strings"
+
+	"clickyab.com/exchange/octopus/router/static"
 	"github.com/Sirupsen/logrus"
+	"github.com/clickyab/services/config"
 	"github.com/rs/xmux"
 )
+
+var testKeys = config.RegisterString("rest.test.keys", "", "")
 
 // GetAd is route to get the ad from a restful endpoint
 func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	dec := json.NewEncoder(w)
 	key := xmux.Param(ctx, "key")
+	logrus.Warn(testKeys)
+	for _, v := range strings.Split(testKeys.String(), ",") {
+		if v == key {
+			static.DemandHandler(ctx, w, r)
+			return
+		}
+	}
+
 	imp, err := supliers.GetImpression(key, r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
