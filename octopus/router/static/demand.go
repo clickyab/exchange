@@ -13,7 +13,6 @@ import (
 
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/eav"
@@ -109,7 +108,6 @@ func demandRequest(rq request) ([]response, error) {
 
 		// Just to send some slots empty
 		if inRange(1, 10)%5 == 0 {
-			logrus.Warn("happens")
 			tm.Code = v.FallbackURL
 			tm.IsFilled = false
 			res = append(res, tm)
@@ -118,7 +116,6 @@ func demandRequest(rq request) ([]response, error) {
 		stq = append(stq, v.TID)
 		tm.Winner = inRange(int(min)+1, int(min)+500)
 		tm.AdTrackID = <-random.ID
-		logrus.Warn(host)
 		tm.Code = render(codeModel{
 			Width:  v.W,
 			Height: v.H,
