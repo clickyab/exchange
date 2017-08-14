@@ -9,7 +9,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 )
 
@@ -36,15 +36,15 @@ font-weight: 500;
 
 `
 
-// ShowHandler handle show url for exam
-func ShowHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
+// showHandler handle show url for exam
+func showHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
 	imp := xmux.Param(ctx, "impTrackID")
 	slot := xmux.Param(ctx, "slotTrackId")
 	if imp == "" || slot == "" {
 		logrus.Debug("both track id and demand are empty")
 		return
 	}
-	k := eav.NewEavStore(slotKeyGen(imp, slot))
+	k := kv.NewEavStore(slotKeyGen(imp, slot))
 	if len(k.AllKeys()) == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write(filler("#", "NOT FOUND"))

@@ -13,7 +13,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -63,7 +63,7 @@ func (c Controller) login(ctx context.Context, w http.ResponseWriter, r *http.Re
 func getNewToken(user *aaa.User) string {
 	t := fmt.Sprintf("%d:%s", user.ID, <-random.ID)
 	logrus.Warn(t)
-	generated := eav.NewEavStore(t).SetSubKey("token", user.Token)
+	generated := kv.NewEavStore(t).SetSubKey("token", user.Token)
 	assert.Nil(generated.Save(loginTime.Duration()))
 	return t
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/clickyab/services/statistic"
+	"github.com/clickyab/services/kv"
 )
 
 const (
@@ -44,20 +44,24 @@ func incCPM(name string, cpm int64) {
 	dp := getDailyPattern()
 	hp := getHourlyPattern()
 	ip := getMinutlyPattern()
-	t := statistic.GetStatisticStore(mp+name, month)
+	t := kv.NewAEAVStore(mp + name)
 	t.IncSubKey("month", cpm)
 	t.IncSubKey("month_count", 1)
 	t.IncSubKey(dp, cpm)
 	t.IncSubKey(dp+"_count", cpm)
-	t = statistic.GetStatisticStore(wp+name, week)
+	t.Save(month)
+	t = kv.NewAEAVStore(wp + name)
 	t.IncSubKey("week", cpm)
 	t.IncSubKey(dp, cpm)
-	t = statistic.GetStatisticStore(dp+name, day)
+	t.Save(week)
+	t = kv.NewAEAVStore(dp + name)
 	t.IncSubKey("day", cpm)
 	t.IncSubKey(hp, cpm)
-	t = statistic.GetStatisticStore(hp+name, hour)
+	t.Save(day)
+	t = kv.NewAEAVStore(hp + name)
 	t.IncSubKey("hour", cpm)
 	t.IncSubKey(ip, cpm)
+	t.Save(hour)
 }
 
 func realVal(all, count int64) int64 {
@@ -66,34 +70,35 @@ func realVal(all, count int64) int64 {
 	}
 	return 0
 }
+
 func getCPM(name string) (m, w, d, h, i int64) {
 	mp := getMonthlyPattern()
 	wp := getWeeklyPattern()
 	dp := getDailyPattern()
 	hp := getHourlyPattern()
 	ip := getMinutlyPattern()
-	t := statistic.GetStatisticStore(mp+name, month)
-	m, _ = t.Touch("month")
-	cc, _ := t.Touch("month_count")
+	t := kv.NewAEAVStore(mp + name)
+	m = t.SubKey("month")
+	cc := t.SubKey("month_count")
 	m = realVal(m, cc)
 
-	t = statistic.GetStatisticStore(wp+name, week)
-	w, _ = t.Touch("week")
-	cc, _ = t.Touch("week_count")
+	t = kv.NewAEAVStore(wp + name)
+	w = t.SubKey("week")
+	cc = t.SubKey("week_count")
 	w = realVal(w, cc)
 
-	t = statistic.GetStatisticStore(dp+name, day)
-	d, _ = t.Touch("day")
-	cc, _ = t.Touch("day_count")
+	t = kv.NewAEAVStore(dp + name)
+	d = t.SubKey("day")
+	cc = t.SubKey("day_count")
 	d = realVal(d, cc)
 
-	t = statistic.GetStatisticStore(hp+name, hour)
-	h, _ = t.Touch("hour")
-	cc, _ = t.Touch("hour_count")
+	t = kv.NewAEAVStore(hp + name)
+	h = t.SubKey("hour")
+	cc = t.SubKey("hour_count")
 	h = realVal(h, cc)
 
-	i, _ = t.Touch(ip)
-	cc, _ = t.Touch(ip + "_count")
+	i = t.SubKey(ip)
+	cc = t.SubKey(ip + "_count")
 	i = realVal(i, cc)
 
 	return

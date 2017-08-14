@@ -4,7 +4,6 @@ package router
 import (
 	"clickyab.com/exchange/octopus/router/internal/demands"
 	"clickyab.com/exchange/octopus/router/internal/restful"
-	"clickyab.com/exchange/octopus/router/static"
 
 	"github.com/clickyab/services/framework/router"
 	"github.com/rs/xhandler"
@@ -18,10 +17,6 @@ type initRouter struct {
 func (initRouter) Routes(mux *xmux.Mux, mountPoint string) {
 	mux.POST(mountPoint+"/rest/get/:key", xhandler.HandlerFuncC(restful.GetAd))
 	mux.GET(mountPoint+"/pixel/:demand/:trackID", xhandler.HandlerFuncC(restful.TrackPixel))
-	// Exam paths
-	mux.GET(mountPoint+"/exam/pixel/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(static.PixelHandler))
-	mux.GET(mountPoint+"/exam/show/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(static.ShowHandler))
-	mux.GET(mountPoint+"/exam/click/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(static.ClickHandler))
 	// The demand status routes
 	mux.GET(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
 	mux.POST(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))

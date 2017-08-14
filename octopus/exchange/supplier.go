@@ -15,4 +15,6 @@ type Supplier interface {
 	Share() int
 	// Renderer return the renderer of this supplier
 	Renderer() Renderer
+
+	TestMode() bool
 }

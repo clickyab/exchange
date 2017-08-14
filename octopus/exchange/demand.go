@@ -29,4 +29,7 @@ type Demand interface {
 	WhiteListCountries() []string
 	// ExcludedSuppliers is the white listed supplier for this.
 	ExcludedSuppliers() []string
+	// TestMode return true if this demand is a test demand. just test mode supplier are
+	// sent to this demand
+	TestMode() bool
 }

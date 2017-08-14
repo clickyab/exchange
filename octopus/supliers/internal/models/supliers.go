@@ -23,6 +23,7 @@ type Supplier struct {
 	SActive       int                   `json:"-" db:"active"`
 
 	UserID int64 `json:"user_id" db:"user_id"`
+	Test   int   `json:"test_mode" db:"test_mode"`
 
 	r exchange.Renderer
 }
@@ -71,6 +72,10 @@ func (s Supplier) Share() int {
 		s.SShare = 1
 	}
 	return s.SShare
+}
+
+func (s Supplier) TestMode() bool {
+	return s.Test != 0
 }
 
 // GetSuppliers return all suppliers

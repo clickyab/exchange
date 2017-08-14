@@ -9,9 +9,9 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	mock_entity "clickyab.com/exchange/octopus/exchange/mock_exchange"
 	"github.com/clickyab/services/random"
-	"github.com/clickyab/services/statistic"
-	"github.com/clickyab/services/statistic/mock"
 
+	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/kv/mock"
 	"github.com/golang/mock/gomock"
 	. "github.com/smartystreets/goconvey/convey"
 	"gopkg.in/jarcoal/httpmock.v1"
@@ -45,7 +45,7 @@ func TestDemandProvide(t *testing.T) {
 			httpmock.Activate()
 			defer httpmock.DeactivateAndReset()
 
-			statistic.Register(mock.NewMockStatistic)
+			kv.Register(nil, nil, nil, nil, mock.NewAtomicMockStore, nil, nil)
 			ads, ids := handler(1)
 			httpmock.RegisterResponder("POST", "http://127.0.0.1:9898", ads)
 			ctx, cl := context.WithTimeout(context.Background(), time.Second*2)

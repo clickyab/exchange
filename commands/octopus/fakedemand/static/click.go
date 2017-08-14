@@ -7,24 +7,24 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 )
 
-// ClickHandler for exam
-func ClickHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
+// clickHandler for exam
+func clickHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
 	imp := xmux.Param(ctx, "impTrackID")
 	slot := xmux.Param(ctx, "slotTrackId")
 	if imp == "" || slot == "" {
 		logrus.Debug("both track id and demand are empty")
 		return
 	}
-	k := eav.NewEavStore(slotKeyGen(imp, slot))
+	k := kv.NewEavStore(slotKeyGen(imp, slot))
 	if len(k.AllKeys()) == 0 {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	o := eav.NewEavStore(fmt.Sprintf(`%s_%s`, prefixImpression, imp))
+	o := kv.NewEavStore(fmt.Sprintf(`%s_%s`, prefixImpression, imp))
 	r := o.SubKey(raw)
 	if r != "" {
 		r = "Original request: " + r

@@ -12,6 +12,7 @@
 // db/octopus_migrations/20170614070757_sup_dem_src.sql
 // db/octopus_migrations/20170617091700_report_changes.sql
 // db/octopus_migrations/20170620083542_demand_supplier_changes.sql
+// db/octopus_migrations/20170814065009_test_mode.sql
 // DO NOT EDIT!
 
 package main
@@ -319,6 +320,26 @@ func dbOctopus_migrations20170620083542_demand_supplier_changesSql() (*asset, er
 	return a, nil
 }
 
+var _dbOctopus_migrations20170814065009_test_modeSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xcf\xb1\x4a\xc6\x30\x14\x05\xe0\x3d\x4f\x71\xf8\x97\x0e\xd2\xc1\xd9\x29\x9a\x0a\x42\x6c\xb5\x26\xb3\xc4\xe6\x62\x83\x6d\x12\x9a\x94\xfa\xf8\x52\xc5\x1f\x0a\x2d\x74\xbc\x87\x73\xe0\x7e\xac\x2c\x71\x33\xba\xcf\xc9\x64\x82\x8e\xeb\xf9\xf6\x2a\xe1\x3c\x12\x75\xd9\x05\x8f\x42\xc7\x02\x2e\x81\xbe\xa9\x9b\x33\x59\x2c\x3d\x79\xe4\xde\x25\xfc\xed\xd6\x92\x4b\x30\x31\x0e\x8e\x2c\x63\x5c\xaa\xaa\x85\xe2\xf7\xb2\x42\x9a\x7f\xd3\x29\x81\x0b\x81\x87\x46\xea\xe7\x1a\x97\x4c\x29\xbf\x8f\xc1\xd2\x05\x4f\xb5\x82\xa8\x1e\xb9\x96\x0a\xb7\x77\x9b\xad\xa5\xd1\x78\x7b\x76\xb9\x81\x88\xb0\xf8\x7f\xca\xd5\xb1\x86\xa7\x24\x53\x18\x06\xb2\xf8\x30\xdd\xd7\x91\x46\xb4\xcd\xcb\xce\x53\xfb\x80\xc3\x32\xfb\x09\x00\x00\xff\xff\x23\x0b\x32\x95\x7e\x01\x00\x00"
+
+func dbOctopus_migrations20170814065009_test_modeSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbOctopus_migrations20170814065009_test_modeSql,
+		"db/octopus_migrations/20170814065009_test_mode.sql",
+	)
+}
+
+func dbOctopus_migrations20170814065009_test_modeSql() (*asset, error) {
+	bytes, err := dbOctopus_migrations20170814065009_test_modeSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/octopus_migrations/20170814065009_test_mode.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -383,6 +404,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/octopus_migrations/20170614070757_sup_dem_src.sql": dbOctopus_migrations20170614070757_sup_dem_srcSql,
 	"db/octopus_migrations/20170617091700_report_changes.sql": dbOctopus_migrations20170617091700_report_changesSql,
 	"db/octopus_migrations/20170620083542_demand_supplier_changes.sql": dbOctopus_migrations20170620083542_demand_supplier_changesSql,
+	"db/octopus_migrations/20170814065009_test_mode.sql": dbOctopus_migrations20170814065009_test_modeSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -439,6 +461,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 			"20170614070757_sup_dem_src.sql": &bintree{dbOctopus_migrations20170614070757_sup_dem_srcSql, map[string]*bintree{}},
 			"20170617091700_report_changes.sql": &bintree{dbOctopus_migrations20170617091700_report_changesSql, map[string]*bintree{}},
 			"20170620083542_demand_supplier_changes.sql": &bintree{dbOctopus_migrations20170620083542_demand_supplier_changesSql, map[string]*bintree{}},
+			"20170814065009_test_mode.sql": &bintree{dbOctopus_migrations20170814065009_test_modeSql, map[string]*bintree{}},
 		}},
 	}},
 }}

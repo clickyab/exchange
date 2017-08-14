@@ -14,12 +14,8 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange/mock_exchange"
 
-	"github.com/clickyab/services/dset"
-	dsetm "github.com/clickyab/services/dset/mock"
-
-	"github.com/clickyab/services/dlock"
-	dlockm "github.com/clickyab/services/dlock/mock"
-
+	"github.com/clickyab/services/kv"
+	mock2 "github.com/clickyab/services/kv/mock"
 	"github.com/golang/mock/gomock"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -83,8 +79,7 @@ type Advertise struct {
 
 func TestSelect(t *testing.T) {
 
-	dset.Register(dsetm.NewMockDsetStore)
-	dlock.Register(dlockm.NewMockDistributedLocker)
+	kv.Register(nil, nil, mock2.NewMockDistributedLocker, mock2.NewMockDsetStore, nil, nil, nil)
 
 	ctrl := gomock.NewController(t)
 

@@ -33,3 +33,7 @@ func (s Supplier) Share() int {
 func (s Supplier) Renderer() exchange.Renderer {
 	panic("not needed")
 }
+
+func (s Supplier) TestMode() bool {
+	return true
+}

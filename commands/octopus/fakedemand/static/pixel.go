@@ -7,12 +7,12 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 )
 
-// PixelHandler return an one by one pixel
-func PixelHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+// pixelHandler return an one by one pixel
+func pixelHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "image/png")
 	w.Write(data)
 	imp := xmux.Param(ctx, "impTrackID")
@@ -21,7 +21,7 @@ func PixelHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		logrus.Debug("both track id and demand are empty")
 		return
 	}
-	k := eav.NewEavStore(slotKeyGen(imp, slot))
+	k := kv.NewEavStore(slotKeyGen(imp, slot))
 	if len(k.AllKeys()) == 0 {
 		return
 	}
