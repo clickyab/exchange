@@ -24,6 +24,7 @@ import (
 
 func newPub(c *gomock.Controller) exchange.Publisher {
 	s := mock_entity.NewMockSupplier(c)
+	s.EXPECT().TestMode().Return(false).AnyTimes()
 	s.EXPECT().ExcludedDemands().Return([]string{}).AnyTimes()
 	tmp := mock_entity.NewMockPublisher(c)
 	tmp.EXPECT().Name().Return("publisher").AnyTimes()
@@ -71,6 +72,7 @@ func TestProviders(t *testing.T) {
 
 				d1 := mock_entity.NewMockDemand(ctrl)
 				d1.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
+				d1.EXPECT().TestMode().Return(false).AnyTimes()
 
 				d1.EXPECT().Name().Return("d1").AnyTimes()
 
@@ -99,6 +101,7 @@ func TestProviders(t *testing.T) {
 
 			Convey("Should return NO ads", func() {
 				d1 := mock_entity.NewMockDemand(ctrl)
+				d1.EXPECT().TestMode().Return(false).AnyTimes()
 				d1.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
 				d1.EXPECT().Name().Return("d1").AnyTimes()
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
@@ -125,6 +128,7 @@ func TestProviders(t *testing.T) {
 
 			Convey("Should return one provider with three ads (timeout test)", func() {
 				d1 := mock_entity.NewMockDemand(ctrl)
+				d1.EXPECT().TestMode().Return(false).AnyTimes()
 				d1.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
 				d1.EXPECT().Name().Return("d1").AnyTimes()
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
@@ -142,6 +146,7 @@ func TestProviders(t *testing.T) {
 					})
 				Register(d1, time.Millisecond*100)
 				d2 := mock_entity.NewMockDemand(ctrl)
+				d2.EXPECT().TestMode().Return(false).AnyTimes()
 				d2.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
 				d2.EXPECT().Name().Return("d2").AnyTimes()
 				d2.EXPECT().Handicap().Return(int64(100)).AnyTimes()
@@ -174,6 +179,7 @@ func TestProviders(t *testing.T) {
 
 			Convey("should panic if provider (name) is NOT unique", func() {
 				demand := mock_entity.NewMockDemand(ctrl)
+				demand.EXPECT().TestMode().Return(false).AnyTimes()
 				demand.EXPECT().Name().Return("test1").AnyTimes()
 				Register(demand, time.Second*2)
 				So(len(allProviders), ShouldEqual, 1)
@@ -188,11 +194,13 @@ func TestProviders(t *testing.T) {
 
 			Convey("should register multiple providers", func() {
 				demand := mock_entity.NewMockDemand(ctrl)
+				demand.EXPECT().TestMode().Return(false).AnyTimes()
 				demand.EXPECT().Name().Return("test1")
 
 				Register(demand, time.Second*2)
 				So(len(allProviders), ShouldEqual, 1)
 				demand2 := mock_entity.NewMockDemand(ctrl)
+				demand.EXPECT().TestMode().Return(false).AnyTimes()
 				demand2.EXPECT().Name().Return("test2")
 				So(func() {
 					Register(
