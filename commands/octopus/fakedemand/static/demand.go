@@ -66,8 +66,8 @@ const (
 	 2. it is not unique on in this request.\n`
 )
 
-// DemandHandler for handling exam (test) account
-func DemandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+// demandHandler for handling exam (test) account
+func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 

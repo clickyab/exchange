@@ -3,42 +3,25 @@ package restful
 import (
 	"context"
 	"encoding/json"
-	"net/http"
-
-	"clickyab.com/exchange/octopus/core"
-	"clickyab.com/exchange/octopus/rtb"
-	"clickyab.com/exchange/octopus/supliers"
-
 	"fmt"
+	"net/http"
 	"time"
 
-	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/kv"
-
+	"clickyab.com/exchange/octopus/core"
 	"clickyab.com/exchange/octopus/exchange/materialize"
-	"github.com/clickyab/services/broker"
-
-	"strings"
-
-	"clickyab.com/exchange/commands/octopus/fakedemand/static"
+	"clickyab.com/exchange/octopus/rtb"
+	"clickyab.com/exchange/octopus/supliers"
 	"github.com/Sirupsen/logrus"
-	"github.com/clickyab/services/config"
+	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/broker"
+	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 )
-
-var testKeys = config.RegisterString("rest.test.keys", "", "")
 
 // GetAd is route to get the ad from a restful endpoint
 func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	dec := json.NewEncoder(w)
 	key := xmux.Param(ctx, "key")
-	logrus.Warn(testKeys)
-	for _, v := range strings.Split(testKeys.String(), ",") {
-		if v == key {
-			static.DemandHandler(ctx, w, r)
-			return
-		}
-	}
 
 	imp, err := supliers.GetImpression(key, r)
 	if err != nil {
