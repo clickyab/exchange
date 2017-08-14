@@ -30,7 +30,7 @@ type providerData struct {
 	callRateTracker int64
 }
 
-// Skip decide if provider should responde to demand or not
+// Skip decide if provider should respond to demand or not
 func (p *providerData) Skip() bool {
 	x := atomic.AddInt64(&p.callRateTracker, 1)
 	return x%100 >= int64(p.provider.CallRate())
@@ -172,6 +172,10 @@ func isExcludedDemands(impression exchange.Impression, data providerData) bool {
 	return contains(impression.Source().Supplier().ExcludedDemands(), data.name)
 }
 
+func isSameMode(impression exchange.Impression, data providerData) bool {
+	return impression.Source().Supplier().TestMode() == data.provider.TestMode()
+}
+
 func contains(s []string, t string) bool {
 	for _, a := range s {
 		if a == t {
@@ -183,6 +187,7 @@ func contains(s []string, t string) bool {
 
 func init() {
 	filters = []func(exchange.Impression, providerData) bool{
+		isSameMode,
 		isSameProvider,
 		notWhitelistCountries,
 		isExcludedDemands,

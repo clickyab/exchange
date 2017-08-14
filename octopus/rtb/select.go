@@ -6,8 +6,7 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/config"
-	"github.com/clickyab/services/dlock"
-	"github.com/clickyab/services/dset"
+	"github.com/clickyab/services/kv"
 )
 
 var (
@@ -27,11 +26,11 @@ var (
 func SelectCPM(imp exchange.Impression, all map[string][]exchange.Advertise) (res map[string]exchange.Advertise) {
 	res = make(map[string]exchange.Advertise)
 
-	lock := dlock.NewDistributedLock("LOCK"+imp.Source().Supplier().Name()+imp.PageTrackID(), pageLock.Duration())
+	lock := kv.NewDistributedLock("LOCK"+imp.Source().Supplier().Name()+imp.PageTrackID(), pageLock.Duration())
 	lock.Lock()
 	defer lock.Unlock()
 
-	set := dset.NewDistributedSet("EXC" + imp.Source().Supplier().Name() + imp.PageTrackID())
+	set := kv.NewDistributedSet("EXC" + imp.Source().Supplier().Name() + imp.PageTrackID())
 	for id := range all {
 		this := moderate(imp.Source(), all[id])
 		sorted := sortedAd(rmDuplicate(set, this))
@@ -75,7 +74,7 @@ func moderate(imp exchange.Rater, ads []exchange.Advertise) []exchange.Advertise
 	return rds
 }
 
-func rmDuplicate(set dset.DistributedSet, ads []exchange.Advertise) []exchange.Advertise {
+func rmDuplicate(set kv.DistributedSet, ads []exchange.Advertise) []exchange.Advertise {
 	all := set.Members()
 	var res []exchange.Advertise
 bigLoop:

@@ -15,7 +15,7 @@ import (
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
 )
 
@@ -126,7 +126,7 @@ func demandRequest(rq request) ([]response, error) {
 		tm.IsFilled = true
 		tm.Landing = host.String()
 
-		ks := eav.NewEavStore(slotKeyGen(tid, v.TID))
+		ks := kv.NewEavStore(slotKeyGen(tid, v.TID))
 
 		cu, cuOk := v.FAttribute["click_url"]
 		cp, cpOk := v.FAttribute["click_parameter"]
@@ -155,7 +155,7 @@ func demandRequest(rq request) ([]response, error) {
 	}
 	r, e := json.MarshalIndent(res, "", "  ")
 	assert.Nil(e)
-	k := eav.NewEavStore(fmt.Sprintf(`%s_%s`, prefixImpression, tid))
+	k := kv.NewEavStore(fmt.Sprintf(`%s_%s`, prefixImpression, tid))
 	k.SetSubKey(slots, strings.Join(stq, ","))
 	k.SetSubKey(raw, string(r))
 	k.Save(expire.Duration())

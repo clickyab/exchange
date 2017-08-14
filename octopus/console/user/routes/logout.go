@@ -8,7 +8,7 @@ import (
 
 	"github.com/clickyab/services/assert"
 
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 )
 
 // logout is for the logout from the system
@@ -27,7 +27,7 @@ func (c Controller) logout(ctx context.Context, w http.ResponseWriter, r *http.R
 			Status: "Already logged out",
 		})
 	}
-	err := eav.NewEavStore(d).Drop()
+	err := kv.NewEavStore(d).Drop()
 	assert.Nil(err)
 
 	c.OKResponse(w, struct {

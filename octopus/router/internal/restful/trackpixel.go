@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 
 	core2 "clickyab.com/exchange/octopus/core"
 
@@ -37,7 +37,7 @@ func TrackPixel(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		//get from store
-		store := eav.NewEavStore("PIXEL_" + trackID).AllKeys()
+		store := kv.NewEavStore("PIXEL_" + trackID).AllKeys()
 		winnerDemand := store["DEMAND"]
 		if winnerDemand != demand {
 			logrus.Debugf("stored demand `%s`!=request demand `%s`", winnerDemand, demand)

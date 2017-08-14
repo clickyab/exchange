@@ -13,7 +13,7 @@ SCRIPT_DIR=$(readlink -f $(dirname ${BASH_SOURCE[0]}))
 cd ${SCRIPT_DIR}/..
 
 DATE=`date +%Y%m%d%H%M%S`
-FILE="db/migrations/${DATE}_${NAME}.sql"
+FILE="db/octopus_migrations/${DATE}_${NAME}.sql"
 
 cat >>$FILE <<-EOGO
 

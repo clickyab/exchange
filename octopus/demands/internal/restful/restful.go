@@ -36,6 +36,7 @@ type demand struct {
 	winPoint           *url.URL
 	country            []string
 	supplier           []string
+	testMode           bool
 }
 
 func (d *demand) WhiteListCountries() []string {
@@ -139,6 +140,10 @@ func (d *demand) Handicap() int64 {
 	return d.handicap
 }
 
+func (d *demand) TestMode() bool {
+	return d.testMode
+}
+
 func (d *demand) hasLimits() bool {
 	if d.minuteLimit == 0 &&
 		d.hourLimit == 0 &&
@@ -197,8 +202,8 @@ func NewRestfulClient(d models.Demand, encoder func(exchange.Impression) interfa
 		handicap:           d.Handicap,
 		country:            d.WhiteListCountries,
 		supplier:           d.ExcludedSuppliers,
-
-		encoder: encoder,
+		testMode:           d.TestMode != 0,
+		encoder:            encoder,
 	}
 	dm.callRate = d.Rate
 	if dm.callRate > 1 {

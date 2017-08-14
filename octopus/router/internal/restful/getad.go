@@ -13,14 +13,14 @@ import (
 	"time"
 
 	"github.com/clickyab/services/assert"
-	"github.com/clickyab/services/eav"
+	"github.com/clickyab/services/kv"
 
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
 
 	"strings"
 
-	"clickyab.com/exchange/octopus/router/static"
+	"clickyab.com/exchange/commands/octopus/fakedemand/static"
 	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/config"
 	"github.com/rs/xmux"
@@ -69,7 +69,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 				i,
 			))
 
-			store := eav.NewEavStore("PIXEL_" + res[i].TrackID())
+			store := kv.NewEavStore("PIXEL_" + res[i].TrackID())
 			store.SetSubKey("IP",
 				imp.IP().String(),
 			).SetSubKey("DEMAND",
