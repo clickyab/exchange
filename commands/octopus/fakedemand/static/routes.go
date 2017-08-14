@@ -6,16 +6,15 @@ import (
 	"github.com/rs/xmux"
 )
 
-// TODO (NOT IMPORTANT! ITS JUST AN IDEA): Add the annotation so the framework generate all this shit
 type initRouter struct {
 }
 
-func (initRouter) Routes(mux *xmux.Mux, mountPoint string) {
+func (initRouter) Routes(mux *xmux.Mux, _ string) {
 	// Exam paths
-	mux.GET(mountPoint+"/exam/pixel/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(pixelHandler))
-	mux.GET(mountPoint+"/exam/show/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(showHandler))
-	mux.GET(mountPoint+"/exam/click/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(clickHandler))
-	// The demand status routes
+	mux.POST("/exam/get/ad", xhandler.HandlerFuncC(demandHandler))
+	mux.GET("/exam/pixel/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(pixelHandler))
+	mux.GET("/exam/show/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(showHandler))
+	mux.GET("/exam/click/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(clickHandler))
 }
 
 func init() {
