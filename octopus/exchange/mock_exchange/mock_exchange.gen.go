@@ -9,7 +9,6 @@ import (
 	gomock "github.com/golang/mock/gomock"
 	net "net"
 	http "net/http"
-	reflect "reflect"
 	time "time"
 )
 
@@ -45,7 +44,7 @@ func (_m *MockImpression) Attributes() map[string]interface{} {
 
 // Attributes indicates an expected call of Attributes
 func (_mr *MockImpressionMockRecorder) Attributes() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Attributes", reflect.TypeOf((*MockImpression)(nil).Attributes))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Attributes")
 }
 
 // Category mocks base method
@@ -57,7 +56,7 @@ func (_m *MockImpression) Category() []exchange.Category {
 
 // Category indicates an expected call of Category
 func (_mr *MockImpressionMockRecorder) Category() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Category", reflect.TypeOf((*MockImpression)(nil).Category))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Category")
 }
 
 // IP mocks base method
@@ -69,7 +68,7 @@ func (_m *MockImpression) IP() net.IP {
 
 // IP indicates an expected call of IP
 func (_mr *MockImpressionMockRecorder) IP() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "IP", reflect.TypeOf((*MockImpression)(nil).IP))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "IP")
 }
 
 // Location mocks base method
@@ -81,7 +80,7 @@ func (_m *MockImpression) Location() exchange.Location {
 
 // Location indicates an expected call of Location
 func (_mr *MockImpressionMockRecorder) Location() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Location", reflect.TypeOf((*MockImpression)(nil).Location))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Location")
 }
 
 // PageTrackID mocks base method
@@ -93,7 +92,7 @@ func (_m *MockImpression) PageTrackID() string {
 
 // PageTrackID indicates an expected call of PageTrackID
 func (_mr *MockImpressionMockRecorder) PageTrackID() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "PageTrackID", reflect.TypeOf((*MockImpression)(nil).PageTrackID))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "PageTrackID")
 }
 
 // Platform mocks base method
@@ -105,7 +104,7 @@ func (_m *MockImpression) Platform() exchange.ImpressionPlatform {
 
 // Platform indicates an expected call of Platform
 func (_mr *MockImpressionMockRecorder) Platform() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Platform", reflect.TypeOf((*MockImpression)(nil).Platform))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Platform")
 }
 
 // Scheme mocks base method
@@ -117,7 +116,7 @@ func (_m *MockImpression) Scheme() string {
 
 // Scheme indicates an expected call of Scheme
 func (_mr *MockImpressionMockRecorder) Scheme() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Scheme", reflect.TypeOf((*MockImpression)(nil).Scheme))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Scheme")
 }
 
 // Slots mocks base method
@@ -129,7 +128,7 @@ func (_m *MockImpression) Slots() []exchange.Slot {
 
 // Slots indicates an expected call of Slots
 func (_mr *MockImpressionMockRecorder) Slots() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Slots", reflect.TypeOf((*MockImpression)(nil).Slots))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Slots")
 }
 
 // Source mocks base method
@@ -141,7 +140,7 @@ func (_m *MockImpression) Source() exchange.Publisher {
 
 // Source indicates an expected call of Source
 func (_mr *MockImpressionMockRecorder) Source() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Source", reflect.TypeOf((*MockImpression)(nil).Source))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Source")
 }
 
 // Time mocks base method
@@ -153,7 +152,7 @@ func (_m *MockImpression) Time() time.Time {
 
 // Time indicates an expected call of Time
 func (_mr *MockImpressionMockRecorder) Time() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Time", reflect.TypeOf((*MockImpression)(nil).Time))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Time")
 }
 
 // TrackID mocks base method
@@ -165,7 +164,7 @@ func (_m *MockImpression) TrackID() string {
 
 // TrackID indicates an expected call of TrackID
 func (_mr *MockImpressionMockRecorder) TrackID() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "TrackID", reflect.TypeOf((*MockImpression)(nil).TrackID))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "TrackID")
 }
 
 // UnderFloor mocks base method
@@ -177,7 +176,7 @@ func (_m *MockImpression) UnderFloor() bool {
 
 // UnderFloor indicates an expected call of UnderFloor
 func (_mr *MockImpressionMockRecorder) UnderFloor() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "UnderFloor", reflect.TypeOf((*MockImpression)(nil).UnderFloor))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "UnderFloor")
 }
 
 // UserAgent mocks base method
@@ -189,7 +188,7 @@ func (_m *MockImpression) UserAgent() string {
 
 // UserAgent indicates an expected call of UserAgent
 func (_mr *MockImpressionMockRecorder) UserAgent() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "UserAgent", reflect.TypeOf((*MockImpression)(nil).UserAgent))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "UserAgent")
 }
 
 // UserTrackID mocks base method
@@ -201,7 +200,7 @@ func (_m *MockImpression) UserTrackID() string {
 
 // UserTrackID indicates an expected call of UserTrackID
 func (_mr *MockImpressionMockRecorder) UserTrackID() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "UserTrackID", reflect.TypeOf((*MockImpression)(nil).UserTrackID))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "UserTrackID")
 }
 
 // MockDemand is a mock of Demand interface
@@ -236,7 +235,7 @@ func (_m *MockDemand) CallRate() int {
 
 // CallRate indicates an expected call of CallRate
 func (_mr *MockDemandMockRecorder) CallRate() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "CallRate", reflect.TypeOf((*MockDemand)(nil).CallRate))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "CallRate")
 }
 
 // ExcludedSuppliers mocks base method
@@ -248,7 +247,7 @@ func (_m *MockDemand) ExcludedSuppliers() []string {
 
 // ExcludedSuppliers indicates an expected call of ExcludedSuppliers
 func (_mr *MockDemandMockRecorder) ExcludedSuppliers() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "ExcludedSuppliers", reflect.TypeOf((*MockDemand)(nil).ExcludedSuppliers))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "ExcludedSuppliers")
 }
 
 // Handicap mocks base method
@@ -260,7 +259,7 @@ func (_m *MockDemand) Handicap() int64 {
 
 // Handicap indicates an expected call of Handicap
 func (_mr *MockDemandMockRecorder) Handicap() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Handicap", reflect.TypeOf((*MockDemand)(nil).Handicap))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Handicap")
 }
 
 // Name mocks base method
@@ -272,7 +271,7 @@ func (_m *MockDemand) Name() string {
 
 // Name indicates an expected call of Name
 func (_mr *MockDemandMockRecorder) Name() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Name", reflect.TypeOf((*MockDemand)(nil).Name))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Name")
 }
 
 // Provide mocks base method
@@ -282,7 +281,7 @@ func (_m *MockDemand) Provide(_param0 context.Context, _param1 exchange.Impressi
 
 // Provide indicates an expected call of Provide
 func (_mr *MockDemandMockRecorder) Provide(arg0, arg1, arg2 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Provide", reflect.TypeOf((*MockDemand)(nil).Provide), arg0, arg1, arg2)
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Provide", arg0, arg1, arg2)
 }
 
 // Status mocks base method
@@ -292,7 +291,19 @@ func (_m *MockDemand) Status(_param0 context.Context, _param1 http.ResponseWrite
 
 // Status indicates an expected call of Status
 func (_mr *MockDemandMockRecorder) Status(arg0, arg1, arg2 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Status", reflect.TypeOf((*MockDemand)(nil).Status), arg0, arg1, arg2)
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Status", arg0, arg1, arg2)
+}
+
+// TestMode mocks base method
+func (_m *MockDemand) TestMode() bool {
+	ret := _m.ctrl.Call(_m, "TestMode")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// TestMode indicates an expected call of TestMode
+func (_mr *MockDemandMockRecorder) TestMode() *gomock.Call {
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "TestMode")
 }
 
 // WhiteListCountries mocks base method
@@ -304,7 +315,7 @@ func (_m *MockDemand) WhiteListCountries() []string {
 
 // WhiteListCountries indicates an expected call of WhiteListCountries
 func (_mr *MockDemandMockRecorder) WhiteListCountries() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "WhiteListCountries", reflect.TypeOf((*MockDemand)(nil).WhiteListCountries))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "WhiteListCountries")
 }
 
 // Win mocks base method
@@ -314,7 +325,7 @@ func (_m *MockDemand) Win(_param0 context.Context, _param1 string, _param2 int64
 
 // Win indicates an expected call of Win
 func (_mr *MockDemandMockRecorder) Win(arg0, arg1, arg2 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Win", reflect.TypeOf((*MockDemand)(nil).Win), arg0, arg1, arg2)
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Win", arg0, arg1, arg2)
 }
 
 // MockAdvertise is a mock of Advertise interface
@@ -349,7 +360,7 @@ func (_m *MockAdvertise) Demand() exchange.Demand {
 
 // Demand indicates an expected call of Demand
 func (_mr *MockAdvertiseMockRecorder) Demand() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Demand", reflect.TypeOf((*MockAdvertise)(nil).Demand))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Demand")
 }
 
 // Height mocks base method
@@ -361,7 +372,7 @@ func (_m *MockAdvertise) Height() int {
 
 // Height indicates an expected call of Height
 func (_mr *MockAdvertiseMockRecorder) Height() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Height", reflect.TypeOf((*MockAdvertise)(nil).Height))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Height")
 }
 
 // ID mocks base method
@@ -373,7 +384,7 @@ func (_m *MockAdvertise) ID() string {
 
 // ID indicates an expected call of ID
 func (_mr *MockAdvertiseMockRecorder) ID() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "ID", reflect.TypeOf((*MockAdvertise)(nil).ID))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "ID")
 }
 
 // Landing mocks base method
@@ -385,7 +396,7 @@ func (_m *MockAdvertise) Landing() string {
 
 // Landing indicates an expected call of Landing
 func (_mr *MockAdvertiseMockRecorder) Landing() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Landing", reflect.TypeOf((*MockAdvertise)(nil).Landing))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Landing")
 }
 
 // MaxCPM mocks base method
@@ -397,7 +408,7 @@ func (_m *MockAdvertise) MaxCPM() int64 {
 
 // MaxCPM indicates an expected call of MaxCPM
 func (_mr *MockAdvertiseMockRecorder) MaxCPM() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "MaxCPM", reflect.TypeOf((*MockAdvertise)(nil).MaxCPM))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "MaxCPM")
 }
 
 // Rates mocks base method
@@ -409,7 +420,7 @@ func (_m *MockAdvertise) Rates() []exchange.Rate {
 
 // Rates indicates an expected call of Rates
 func (_mr *MockAdvertiseMockRecorder) Rates() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Rates", reflect.TypeOf((*MockAdvertise)(nil).Rates))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Rates")
 }
 
 // SetWinnerCPM mocks base method
@@ -419,7 +430,7 @@ func (_m *MockAdvertise) SetWinnerCPM(_param0 int64) {
 
 // SetWinnerCPM indicates an expected call of SetWinnerCPM
 func (_mr *MockAdvertiseMockRecorder) SetWinnerCPM(arg0 interface{}) *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "SetWinnerCPM", reflect.TypeOf((*MockAdvertise)(nil).SetWinnerCPM), arg0)
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "SetWinnerCPM", arg0)
 }
 
 // SlotTrackID mocks base method
@@ -431,7 +442,7 @@ func (_m *MockAdvertise) SlotTrackID() string {
 
 // SlotTrackID indicates an expected call of SlotTrackID
 func (_mr *MockAdvertiseMockRecorder) SlotTrackID() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "SlotTrackID", reflect.TypeOf((*MockAdvertise)(nil).SlotTrackID))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "SlotTrackID")
 }
 
 // TrackID mocks base method
@@ -443,7 +454,7 @@ func (_m *MockAdvertise) TrackID() string {
 
 // TrackID indicates an expected call of TrackID
 func (_mr *MockAdvertiseMockRecorder) TrackID() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "TrackID", reflect.TypeOf((*MockAdvertise)(nil).TrackID))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "TrackID")
 }
 
 // URL mocks base method
@@ -455,7 +466,7 @@ func (_m *MockAdvertise) URL() string {
 
 // URL indicates an expected call of URL
 func (_mr *MockAdvertiseMockRecorder) URL() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "URL", reflect.TypeOf((*MockAdvertise)(nil).URL))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "URL")
 }
 
 // Width mocks base method
@@ -467,7 +478,7 @@ func (_m *MockAdvertise) Width() int {
 
 // Width indicates an expected call of Width
 func (_mr *MockAdvertiseMockRecorder) Width() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Width", reflect.TypeOf((*MockAdvertise)(nil).Width))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Width")
 }
 
 // WinnerCPM mocks base method
@@ -479,7 +490,7 @@ func (_m *MockAdvertise) WinnerCPM() int64 {
 
 // WinnerCPM indicates an expected call of WinnerCPM
 func (_mr *MockAdvertiseMockRecorder) WinnerCPM() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "WinnerCPM", reflect.TypeOf((*MockAdvertise)(nil).WinnerCPM))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "WinnerCPM")
 }
 
 // MockPublisher is a mock of Publisher interface
@@ -514,7 +525,7 @@ func (_m *MockPublisher) Attributes() map[string]interface{} {
 
 // Attributes indicates an expected call of Attributes
 func (_mr *MockPublisherMockRecorder) Attributes() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Attributes", reflect.TypeOf((*MockPublisher)(nil).Attributes))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Attributes")
 }
 
 // FloorCPM mocks base method
@@ -526,7 +537,7 @@ func (_m *MockPublisher) FloorCPM() int64 {
 
 // FloorCPM indicates an expected call of FloorCPM
 func (_mr *MockPublisherMockRecorder) FloorCPM() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "FloorCPM", reflect.TypeOf((*MockPublisher)(nil).FloorCPM))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "FloorCPM")
 }
 
 // Name mocks base method
@@ -538,7 +549,7 @@ func (_m *MockPublisher) Name() string {
 
 // Name indicates an expected call of Name
 func (_mr *MockPublisherMockRecorder) Name() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Name", reflect.TypeOf((*MockPublisher)(nil).Name))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Name")
 }
 
 // Rates mocks base method
@@ -550,7 +561,7 @@ func (_m *MockPublisher) Rates() []exchange.Rate {
 
 // Rates indicates an expected call of Rates
 func (_mr *MockPublisherMockRecorder) Rates() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Rates", reflect.TypeOf((*MockPublisher)(nil).Rates))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Rates")
 }
 
 // SoftFloorCPM mocks base method
@@ -562,7 +573,7 @@ func (_m *MockPublisher) SoftFloorCPM() int64 {
 
 // SoftFloorCPM indicates an expected call of SoftFloorCPM
 func (_mr *MockPublisherMockRecorder) SoftFloorCPM() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "SoftFloorCPM", reflect.TypeOf((*MockPublisher)(nil).SoftFloorCPM))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "SoftFloorCPM")
 }
 
 // Supplier mocks base method
@@ -574,7 +585,7 @@ func (_m *MockPublisher) Supplier() exchange.Supplier {
 
 // Supplier indicates an expected call of Supplier
 func (_mr *MockPublisherMockRecorder) Supplier() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Supplier", reflect.TypeOf((*MockPublisher)(nil).Supplier))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Supplier")
 }
 
 // MockLocation is a mock of Location interface
@@ -609,7 +620,7 @@ func (_m *MockLocation) Country() exchange.Country {
 
 // Country indicates an expected call of Country
 func (_mr *MockLocationMockRecorder) Country() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Country", reflect.TypeOf((*MockLocation)(nil).Country))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Country")
 }
 
 // LatLon mocks base method
@@ -621,7 +632,7 @@ func (_m *MockLocation) LatLon() exchange.LatLon {
 
 // LatLon indicates an expected call of LatLon
 func (_mr *MockLocationMockRecorder) LatLon() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "LatLon", reflect.TypeOf((*MockLocation)(nil).LatLon))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "LatLon")
 }
 
 // Province mocks base method
@@ -633,7 +644,7 @@ func (_m *MockLocation) Province() exchange.Province {
 
 // Province indicates an expected call of Province
 func (_mr *MockLocationMockRecorder) Province() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Province", reflect.TypeOf((*MockLocation)(nil).Province))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Province")
 }
 
 // MockSlot is a mock of Slot interface
@@ -668,7 +679,7 @@ func (_m *MockSlot) Attributes() map[string]string {
 
 // Attributes indicates an expected call of Attributes
 func (_mr *MockSlotMockRecorder) Attributes() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Attributes", reflect.TypeOf((*MockSlot)(nil).Attributes))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Attributes")
 }
 
 // Fallback mocks base method
@@ -680,7 +691,7 @@ func (_m *MockSlot) Fallback() string {
 
 // Fallback indicates an expected call of Fallback
 func (_mr *MockSlotMockRecorder) Fallback() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Fallback", reflect.TypeOf((*MockSlot)(nil).Fallback))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Fallback")
 }
 
 // Height mocks base method
@@ -692,7 +703,7 @@ func (_m *MockSlot) Height() int {
 
 // Height indicates an expected call of Height
 func (_mr *MockSlotMockRecorder) Height() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Height", reflect.TypeOf((*MockSlot)(nil).Height))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Height")
 }
 
 // TrackID mocks base method
@@ -704,7 +715,7 @@ func (_m *MockSlot) TrackID() string {
 
 // TrackID indicates an expected call of TrackID
 func (_mr *MockSlotMockRecorder) TrackID() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "TrackID", reflect.TypeOf((*MockSlot)(nil).TrackID))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "TrackID")
 }
 
 // Width mocks base method
@@ -716,7 +727,7 @@ func (_m *MockSlot) Width() int {
 
 // Width indicates an expected call of Width
 func (_mr *MockSlotMockRecorder) Width() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Width", reflect.TypeOf((*MockSlot)(nil).Width))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Width")
 }
 
 // MockSupplier is a mock of Supplier interface
@@ -751,7 +762,7 @@ func (_m *MockSupplier) ExcludedDemands() []string {
 
 // ExcludedDemands indicates an expected call of ExcludedDemands
 func (_mr *MockSupplierMockRecorder) ExcludedDemands() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "ExcludedDemands", reflect.TypeOf((*MockSupplier)(nil).ExcludedDemands))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "ExcludedDemands")
 }
 
 // FloorCPM mocks base method
@@ -763,7 +774,7 @@ func (_m *MockSupplier) FloorCPM() int64 {
 
 // FloorCPM indicates an expected call of FloorCPM
 func (_mr *MockSupplierMockRecorder) FloorCPM() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "FloorCPM", reflect.TypeOf((*MockSupplier)(nil).FloorCPM))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "FloorCPM")
 }
 
 // Name mocks base method
@@ -775,7 +786,7 @@ func (_m *MockSupplier) Name() string {
 
 // Name indicates an expected call of Name
 func (_mr *MockSupplierMockRecorder) Name() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Name", reflect.TypeOf((*MockSupplier)(nil).Name))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Name")
 }
 
 // Renderer mocks base method
@@ -787,7 +798,7 @@ func (_m *MockSupplier) Renderer() exchange.Renderer {
 
 // Renderer indicates an expected call of Renderer
 func (_mr *MockSupplierMockRecorder) Renderer() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Renderer", reflect.TypeOf((*MockSupplier)(nil).Renderer))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Renderer")
 }
 
 // Share mocks base method
@@ -799,7 +810,7 @@ func (_m *MockSupplier) Share() int {
 
 // Share indicates an expected call of Share
 func (_mr *MockSupplierMockRecorder) Share() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "Share", reflect.TypeOf((*MockSupplier)(nil).Share))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "Share")
 }
 
 // SoftFloorCPM mocks base method
@@ -811,5 +822,17 @@ func (_m *MockSupplier) SoftFloorCPM() int64 {
 
 // SoftFloorCPM indicates an expected call of SoftFloorCPM
 func (_mr *MockSupplierMockRecorder) SoftFloorCPM() *gomock.Call {
-	return _mr.mock.ctrl.RecordCallWithMethodType(_mr.mock, "SoftFloorCPM", reflect.TypeOf((*MockSupplier)(nil).SoftFloorCPM))
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "SoftFloorCPM")
+}
+
+// TestMode mocks base method
+func (_m *MockSupplier) TestMode() bool {
+	ret := _m.ctrl.Call(_m, "TestMode")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// TestMode indicates an expected call of TestMode
+func (_mr *MockSupplierMockRecorder) TestMode() *gomock.Call {
+	return _mr.mock.ctrl.RecordCall(_mr.mock, "TestMode")
 }

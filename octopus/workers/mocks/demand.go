@@ -45,3 +45,7 @@ func (d *Demand) WhiteListCountries() []string {
 func (*Demand) ExcludedSuppliers() []string {
 	panic("implement me")
 }
+
+func (*Demand) TestMode() bool {
+	return false
+}

@@ -172,8 +172,8 @@ func isExcludedDemands(impression exchange.Impression, data providerData) bool {
 	return contains(impression.Source().Supplier().ExcludedDemands(), data.name)
 }
 
-func isSameMode(impression exchange.Impression, data providerData) bool {
-	return impression.Source().Supplier().TestMode() == data.provider.TestMode()
+func isNotSameMode(impression exchange.Impression, data providerData) bool {
+	return impression.Source().Supplier().TestMode() != data.provider.TestMode()
 }
 
 func contains(s []string, t string) bool {
@@ -187,7 +187,7 @@ func contains(s []string, t string) bool {
 
 func init() {
 	filters = []func(exchange.Impression, providerData) bool{
-		isSameMode,
+		isNotSameMode,
 		isSameProvider,
 		notWhitelistCountries,
 		isExcludedDemands,

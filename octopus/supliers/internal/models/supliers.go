@@ -74,6 +74,7 @@ func (s Supplier) Share() int {
 	return s.SShare
 }
 
+// TestMode return true if this is a test demand
 func (s Supplier) TestMode() bool {
 	return s.Test != 0
 }
