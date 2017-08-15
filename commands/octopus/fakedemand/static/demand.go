@@ -25,7 +25,7 @@ const webTempl = `<!DOCTYPE html>
     .show {position: absolute; top : -1000px; left : -1000px}
     </style>
 </head>
-<body style="margin: 0; padding: 0;">
+<body style="margin: 0; padding: 0; display:flex; width:100%;">
     <img class="show" src="{{.Pixel}}" alt="">
     <div id="adhere">
 <iframe id="thirdad_frame" width="{{.Width}}" height="{{.Height}}" frameborder=0 marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no"
@@ -45,7 +45,6 @@ func render(s codeModel) string {
 }
 
 var (
-	host       = config.RegisterString("exam.host", "", "")
 	expire     = config.RegisterDuration("exam.expire", 1*time.Hour, "")
 	mountPoint = config.RegisterString("services.framework.controller.mount_point", "", "")
 )
@@ -57,6 +56,7 @@ const (
 	slots    = "s"
 	clickURL = "u"
 	raw      = "r"
+	org      = "o"
 )
 
 const (
@@ -68,10 +68,12 @@ const (
 
 // demandHandler for handling exam (test) account
 func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 
 	rq := &request{}
+	rq.Host = r.Host
 	e := d.Decode(rq)
 	if e != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -85,6 +87,8 @@ func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) 
 	w.WriteHeader(http.StatusOK)
 	w.Write(jr)
 }
+
+var chaosMonkey = config.RegisterBoolean("fake_demand.chaos", false, "")
 
 func demandRequest(rq request) ([]response, error) {
 	tid := <-random.ID
@@ -106,36 +110,41 @@ func demandRequest(rq request) ([]response, error) {
 		tm.Height = v.H
 		tm.Width = v.W
 
-		// Just to send some slots empty
-		if inRange(1, 10)%5 == 0 {
-			tm.Code = v.FallbackURL
-			tm.IsFilled = false
-			res = append(res, tm)
-			continue
+		if chaosMonkey.Bool() {
+			// Just to send some slots empty
+			if inRange(1, 10)%5 == 0 {
+				tm.Code = v.FallbackURL
+				tm.IsFilled = false
+				res = append(res, tm)
+				continue
+			}
 		}
+
 		stq = append(stq, v.TID)
 		tm.Winner = inRange(int(min)+1, int(min)+500)
 		tm.AdTrackID = <-random.ID
 		tm.Code = render(codeModel{
 			Width:  v.W,
 			Height: v.H,
-			Show:   fmt.Sprintf(`%s://%s/%s/exam/show/%s/%s`, rq.Scheme, host, mountPoint.String(), tid, tm.TrackID),
-			Pixel:  fmt.Sprintf(`%s://%s/%s/exam/pixel/%s/%s`, rq.Scheme, host, mountPoint.String(), tid, tm.TrackID),
+			Show:   fmt.Sprintf(`%s://%s%s/exam/show/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
+			Pixel:  fmt.Sprintf(`%s://%s%s/exam/pixel/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
 		})
 
 		tm.IsFilled = true
-		tm.Landing = host.String()
+		tm.Landing = rq.Host
 
 		ks := kv.NewEavStore(slotKeyGen(tid, v.TID))
 
 		cu, cuOk := v.FAttribute["click_url"]
 		cp, cpOk := v.FAttribute["click_parameter"]
 		ct := v.FAttribute["type"]
-		curl := fmt.Sprintf(`%s://%s/%s/exam/click/%s/%s`, rq.Scheme, host, mountPoint.String(), tid, tm.TrackID)
+		curl := fmt.Sprintf(`%s://%s%s/exam/click/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID)
 		if cuOk && cpOk {
 			curl = base64.URLEncoding.WithPadding('.').EncodeToString([]byte(curl))
 
 			if ct == "replace" {
+				curl = strings.Replace(cu, cp, curl, -1)
+			} else {
 				tu, e := url.Parse(cu)
 				if e != nil {
 					return nil, fmt.Errorf("not valid url")
@@ -144,8 +153,6 @@ func demandRequest(rq request) ([]response, error) {
 				tq.Set(cp, curl)
 				tu.RawQuery = tq.Encode()
 				curl = tu.String()
-			} else {
-				curl = strings.Replace(cu, cp, curl, -1)
 			}
 
 		}
@@ -157,6 +164,9 @@ func demandRequest(rq request) ([]response, error) {
 	assert.Nil(e)
 	k := kv.NewEavStore(fmt.Sprintf(`%s_%s`, prefixImpression, tid))
 	k.SetSubKey(slots, strings.Join(stq, ","))
+	o, _ := json.MarshalIndent(rq, "", "  ")
+
+	k.SetSubKey(org, string(o))
 	k.SetSubKey(raw, string(r))
 	k.Save(expire.Duration())
 
