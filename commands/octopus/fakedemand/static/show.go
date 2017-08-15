@@ -15,21 +15,33 @@ import (
 
 var showAd = `
 <style>
+body {
+display:flex;
+
+}
 .cyb-cnt {
 display: block;
 display: flex;
-width: 100px;
-background:#d00;
+width:100%;
+
+background:#620;
+}
+a {
 color:#eee;
+
+    text-decoration: none;
+    align-self: center;
+    padding: 10px;
+    width: 100%;
+        text-align: center;
+
 }
 .landing {
-text-align: center;
-text-decoration: none;
 font-weight: 500;
 }
 </style>
 <div class="cyb-cnt">
-<a class="landing" href="{{.URL}}">
+<a target="_blank" class="landing" href="{{.URL}}">
 {{.Message}}
 </a>
 </div>

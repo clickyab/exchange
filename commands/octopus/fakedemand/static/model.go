@@ -50,6 +50,7 @@ type request struct {
 		FallbackURL string            `json:"fallback_url"`
 		FAttribute  map[string]string `json:"attributes"`
 	} `json:"slots"`
+	Host string
 }
 
 type response struct {
