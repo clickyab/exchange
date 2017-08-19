@@ -16,6 +16,8 @@ import (
 	"github.com/clickyab/services/assert"
 )
 
+const typeWeb = "web"
+
 type categories string
 
 func getSupplierDemo(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +26,7 @@ func getSupplierDemo(w http.ResponseWriter, r *http.Request) {
 		logrus.Fatal(err)
 	}
 	fmt.Println(dir)
-	t, err := template.ParseFiles("../commands/tessup/index.html")
+	t, err := template.New("index").Parse(index)
 	assert.Nil(err)
 	t.Execute(w, nil)
 }
@@ -49,9 +51,15 @@ func postSupplierDemo(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	data := r.Form
 	rType := data["type"][0]
+	if rType != typeWeb {
+		rType = typeWeb
+	}
 	refferer := data["refferer"][0]
 	parent := data["parent"][0]
 	userAgent := data["user_agent"][0]
+	if userAgent == "" {
+		userAgent = r.UserAgent()
+	}
 	res := requestBody{}
 	for i := range data["width[]"] {
 		if data["width[]"][i] != "" {
@@ -74,9 +82,18 @@ func postSupplierDemo(w http.ResponseWriter, r *http.Request) {
 
 	}
 	floorCPM, _ := strconv.ParseInt(data["floor_cpm"][0], 10, 0)
+	if floorCPM == 0 {
+		floorCPM = 0
+	}
 	softFloor, _ := strconv.ParseInt(data["soft_floor"][0], 10, 0)
+	if softFloor == 0 {
+		softFloor = floorCPM
+	}
 	res.UnderFloor = true
 	res.IP = data["ip"][0]
+	if res.IP == "" {
+		res.IP = "46.209.239.50"
+	}
 	res.Categories = cats
 	res.Source = &restPublisher{
 		PubFloorCPM:     floorCPM,
@@ -88,15 +105,16 @@ func postSupplierDemo(w http.ResponseWriter, r *http.Request) {
 	res.UserTrackID = data["user_track_id"][0]
 	res.Scheme = "http"
 	switch rType {
-	case "web":
+	case typeWeb:
 		res.Web.Referrer = refferer
 		res.Web.Parent = parent
 		res.Web.UserAgent = userAgent
 	}
 	res.Slots = resSlots
-	resData, err := json.Marshal(res)
+	resData, err := json.MarshalIndent(res, "\t", "\t")
 	assert.Nil(err)
-	request, err := http.NewRequest("POST", "http://127.0.0.1:8090/rest/get/0dba30250c24738bd7a7acbf31b859de", bytes.NewBuffer(resData))
+	logrus.Debug(string(resData))
+	request, err := http.NewRequest("POST", "http://exchange.clickyab.com/api/rest/get/7f423ad4ccaf4ddf84d0227d584b7f9c", bytes.NewBuffer(resData))
 	if err != nil {
 		return
 	}
@@ -105,16 +123,19 @@ func postSupplierDemo(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 	resp, err := client.Do(request)
 	if err != nil {
+		logrus.Debug(err)
 		return
 	}
 	defer resp.Body.Close()
 	responseData, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+
 		return
 	}
+	logrus.Debug(string(responseData))
 	err = json.Unmarshal(responseData, &respon)
 	assert.Nil(err)
-	t, err := template.ParseFiles("../commands/tessup/show.tmpl")
+	t, err := template.New("show").Parse(show)
 	assert.Nil(err)
 	w.Header().Set("Content-Type", "text/html")
 	logrus.Warn(t.Execute(w, respon))

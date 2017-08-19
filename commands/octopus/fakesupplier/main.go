@@ -1,22 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/shell"
 )
 
 var (
-	port = config.RegisterString("test.config", ":3500", "desc")
+	port = config.RegisterString("test.config", ":3501", "desc")
 )
 
 func main() {
+	// TODO : use framework
 	config.Initialize("test", "test", "test")
 	http.HandleFunc("/start", getSupplierDemo)
 	http.HandleFunc("/send", postSupplierDemo)
-	fmt.Println(port.String())
-	http.ListenAndServe(port.String(), nil)
+
+	assert.Nil(http.ListenAndServe(port.String(), nil))
 	shell.WaitExitSignal()
 }
