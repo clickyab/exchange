@@ -59,13 +59,6 @@ const (
 	org      = "o"
 )
 
-const (
-	warningMsg        = `this field is temporary and will not appear on real request\n`
-	setSlotTrackIDMsg = `Slot TrackID has been set by system. possible reason
-	 1. it was empty.
-	 2. it is not unique on in this request.\n`
-)
-
 // demandHandler for handling exam (test) account
 func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
@@ -94,7 +87,7 @@ func demandRequest(rq request) ([]response, error) {
 	tid := <-random.ID
 
 	res := make([]response, 0)
-	code := make(map[string]string)
+	//code := make(map[string]string)
 	min := rq.Publisher.PubSoftFloorCPM
 	if min == 0 {
 		min = rq.Publisher.PubFloorCPM
@@ -103,12 +96,13 @@ func demandRequest(rq request) ([]response, error) {
 	for _, v := range rq.Slots {
 
 		tm := response{}
-		if _, ok := code[v.TID]; ok || v.TID == "" {
-			v.TID = <-random.ID
-			tm.Description += warningMsg + setSlotTrackIDMsg
-		}
+		//if _, ok := code[v.TID]; ok || v.TID == "" {
+		//	v.TID = <-random.ID
+		//	tm.Description += warningMsg + setSlotTrackIDMsg
+		//}
 		tm.Height = v.H
 		tm.Width = v.W
+		tm.TrackID = v.TID
 
 		if chaosMonkey.Bool() {
 			// Just to send some slots empty
