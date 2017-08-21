@@ -11,3 +11,6 @@ include $(ROOT)/bin/build/codegen.mk
 include $(ROOT)/bin/build/services.mk
 include $(ROOT)/bin/build/cleanup.mk
 include $(ROOT)/bin/build/test.mk
+
+run-server: all
+	$(BIN)/octopus
