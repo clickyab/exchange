@@ -57,7 +57,18 @@ const (
 	clickURL = "u"
 	raw      = "r"
 	org      = "o"
+	ad       = "a"
 )
+
+type Result struct {
+	ID          string `json:"id"`
+	MaxCPM      int64  `json:"max_cpm"`
+	Width       int    `json:"width"`
+	Height      int    `json:"height"`
+	URL         string `json:"url"`
+	Landing     string `json:"landing"`
+	SlotTrackID string `json:"slot_track_id"`
+}
 
 // demandHandler for handling exam (test) account
 func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -81,89 +92,83 @@ func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) 
 	w.Write(jr)
 }
 
-var chaosMonkey = config.RegisterBoolean("fake_demand.chaos", false, "")
-
-func demandRequest(rq request) ([]response, error) {
+func demandRequest(rq request) ([]Result, error) {
 	tid := <-random.ID
-
-	res := make([]response, 0)
+	res := make([]Result, 0)
 	//code := make(map[string]string)
 	min := rq.Publisher.PubSoftFloorCPM
 	if min == 0 {
 		min = rq.Publisher.PubFloorCPM
 	}
-	stq := make([]string, 0)
 	for _, v := range rq.Slots {
-
-		tm := response{}
-		//if _, ok := code[v.TID]; ok || v.TID == "" {
-		//	v.TID = <-random.ID
-		//	tm.Description += warningMsg + setSlotTrackIDMsg
-		//}
-		tm.Height = v.H
-		tm.Width = v.W
-		tm.TrackID = v.TID
-
-		if chaosMonkey.Bool() {
-			// Just to send some slots empty
-			if inRange(1, 10)%5 == 0 {
-				tm.Code = v.FallbackURL
-				tm.IsFilled = false
-				res = append(res, tm)
-				continue
-			}
-		}
-
-		stq = append(stq, v.TID)
-		tm.Winner = inRange(int(min)+1, int(min)+500)
-		tm.AdTrackID = <-random.ID
-		tm.Code = render(codeModel{
-			Width:  v.W,
-			Height: v.H,
-			Show:   fmt.Sprintf(`%s://%s%s/exam/show/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
-			Pixel:  fmt.Sprintf(`%s://%s%s/exam/pixel/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
-		})
-
-		tm.IsFilled = true
-		tm.Landing = rq.Host
-
-		ks := kv.NewEavStore(slotKeyGen(tid, v.TID))
-
-		cu, cuOk := v.FAttribute["click_url"]
-		cp, cpOk := v.FAttribute["click_parameter"]
-		ct := v.FAttribute["type"]
-		curl := fmt.Sprintf(`%s://%s%s/exam/click/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID)
-		if cuOk && cpOk {
-			curl = base64.URLEncoding.WithPadding('.').EncodeToString([]byte(curl))
-
-			if ct == "replace" {
-				curl = strings.Replace(cu, cp, curl, -1)
-			} else {
-				tu, e := url.Parse(cu)
-				if e != nil {
-					return nil, fmt.Errorf("not valid url")
-				}
-				tq := tu.Query()
-				tq.Set(cp, curl)
-				tu.RawQuery = tq.Encode()
-				curl = tu.String()
-			}
-
-		}
-		res = append(res, tm)
-		ks.SetSubKey(clickURL, curl)
-		ks.Save(expire.Duration())
+		tk := slotKeyGen(tid, v.TID)
+		sk := kv.NewEavStore(tk)
+		res = append(res, addSlot(v, rq, min, tid))
+		prepareShow(sk, v, rq, min, tid)
+		prepareClickURL(sk, v, rq, min, tid)
+		sk.Save(expire.Duration())
 	}
-	r, e := json.MarshalIndent(res, "", "  ")
-	assert.Nil(e)
-	k := kv.NewEavStore(fmt.Sprintf(`%s_%s`, prefixImpression, tid))
-	k.SetSubKey(slots, strings.Join(stq, ","))
-	o, _ := json.MarshalIndent(rq, "", "  ")
-
-	k.SetSubKey(org, string(o))
-	k.SetSubKey(raw, string(r))
-	k.Save(expire.Duration())
-
 	return res, nil
 
+}
+
+func addSlot(v Slot, rq request, cpm int64, tid string) Result {
+
+	return Result{
+		SlotTrackID: v.TID,
+		Height:      v.H,
+		Width:       v.W,
+		ID:          <-random.ID,
+		Landing:     fmt.Sprintf(`%s://%s`, rq.Scheme, rq.Host),
+		MaxCPM:      cpm,
+		URL:         fmt.Sprintf(`%s://%s%s/exam/ad/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
+	}
+}
+
+func prepareClickURL(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) error {
+	cu, cuOk := v.FAttribute["click_url"]
+	cp, cpOk := v.FAttribute["click_parameter"]
+	ct := v.FAttribute["type"]
+	curl := fmt.Sprintf(`%s://%s%s/exam/click/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID)
+	if cuOk && cpOk {
+		curl = base64.URLEncoding.WithPadding('.').EncodeToString([]byte(curl))
+		if ct == "replace" {
+			curl = strings.Replace(cu, cp, curl, -1)
+		} else {
+			tu, e := url.Parse(cu)
+			if e != nil {
+				return fmt.Errorf("not valid url")
+			}
+			tq := tu.Query()
+			tq.Set(cp, curl)
+			tu.RawQuery = tq.Encode()
+			curl = tu.String()
+		}
+	}
+	k.SetSubKey(clickURL, curl)
+	return nil
+}
+
+func prepareShow(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) {
+	tm := response{
+		IsFilled: true,
+		Height:   v.H,
+		Width:    v.W,
+		TrackID:  v.TID,
+		Winner:   cpm,
+	}
+
+	tm.AdTrackID = <-random.ID
+
+	tm.Code = render(codeModel{
+
+		Width:  v.W,
+		Height: v.H,
+		Show:   fmt.Sprintf(`%s://%s%s/exam/show/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
+		Pixel:  fmt.Sprintf(`%s://%s%s/exam/pixel/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
+	})
+	tmj, e := json.Marshal(tm)
+	assert.Nil(e)
+
+	k.SetSubKey(ad, string(tmj))
 }
