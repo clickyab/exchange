@@ -10,7 +10,7 @@ func slotKeyGen(imp, slot string) string {
 	return fmt.Sprintf(`%s_%s_%s`, prefixSlot, imp, slot)
 }
 
-func inRange(min, max int) int {
+func inRange(min, max int64) int64 {
 	rand.Seed(int64(time.Now().Nanosecond()))
-	return rand.Intn(max-min) + min
+	return rand.Int63n(max-min) + min
 }
