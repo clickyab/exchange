@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"html/template"
 	"net/http"
-	"text/template"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
@@ -47,6 +47,24 @@ font-weight: 500;
 </div>
 
 `
+
+// showHandler handle show url for exam
+func adHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
+	imp := xmux.Param(ctx, "impTrackID")
+	slot := xmux.Param(ctx, "slotTrackId")
+	if imp == "" || slot == "" {
+		logrus.Debug("both track id and demand are empty")
+		return
+	}
+	k := kv.NewEavStore(slotKeyGen(imp, slot))
+	if len(k.AllKeys()) == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write(filler("#", "NOT FOUND"))
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(k.SubKey(ad)))
+}
 
 // showHandler handle show url for exam
 func showHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
