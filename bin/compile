@@ -49,9 +49,9 @@ export_env_dir $3
 source ${BUILD}/bin/env_check
 
 cd ${CACHE}
-wget -c http://static.clickyab.com/IP-COUNTRY-REGION-CITY.BIN.gz
-gunzip -k IP-COUNTRY-REGION-CITY.BIN.gz
-rm -f IP-COUNTRY-REGION-CITY.BIN.md5 && wget -c http://static.clickyab.com/IP-COUNTRY-REGION-CITY.BIN.md5
-md5sum -c IP-COUNTRY-REGION-CITY.BIN.md5
+wget -c http://static.clickyab.com/IP-COUNTRY-REGION-CITY-ISP.BIN.gz
+gunzip -k IP-COUNTRY-REGION-CITY-ISP.BIN.gz
+rm -f IP-COUNTRY-REGION-CITY-ISP.BIN.md5 && wget -c http://static.clickyab.com/IP-COUNTRY-REGION-CITY-ISP.BIN.md5
+md5sum -c IP-COUNTRY-REGION-CITY-ISP.BIN.md5
 
-mv ${CACHE}/IP-COUNTRY-REGION-CITY.BIN ${BUILD}/bin/IP-COUNTRY-REGION-CITY.BIN
+mv ${CACHE}/IP-COUNTRY-REGION-CITY-ISP.BIN.md5 ${BUILD}/bin/IP-COUNTRY-REGION-CITY-ISP.BIN.md5
