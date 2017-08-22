@@ -22,11 +22,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network "forwarded_port", guest: 9898,      host: 9898     # ssh server
   config.vm.network "forwarded_port", guest: 8090,      host: 8090     # console
   config.vm.network "forwarded_port", guest: 3500,      host: 3500     # supplier
+  config.vm.network "forwarded_port", guest: 5000,      host: 5000     # debug octopus
   config.vm.synced_folder ".", "/home/develop/go/src/clickyab.com/exchange", owner: "develop", group: "develop", create: true
 
   config.vm.provider "docker" do |d|
     d.image = "registry.clickyab.ae/clickyab/baseimage-go"
+    d.privileged = true
     d.has_ssh = true
     d.cmd = ["/bin/bash", "/home/develop/go/src/clickyab.com/exchange/bin/init.sh"]
   end
 end
+

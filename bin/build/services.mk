@@ -15,3 +15,5 @@ rabbitmq-setup: needroot
 	rabbitmqadmin declare exchange name=dlx-exchange type=topic
 	rabbitmqctl set_policy DLX ".*" '{"dead-letter-exchange":"dlx-exchange"}' --apply-to queues
 	rabbitmqadmin declare binding source="dlx-exchange" destination_type="queue" destination="dlx-queue" routing_key="#"
+
+setup: tools-migrate octopus_migup
