@@ -1,7 +1,6 @@
 package static
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
@@ -9,7 +8,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"text/template"
 	"time"
 
 	"github.com/clickyab/services/assert"
@@ -18,44 +16,15 @@ import (
 	"github.com/clickyab/services/random"
 )
 
-const webTempl = `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><title>clickyab.com</title>
-<style>#adhere iframe {max-width:100%;margin: 0 auto;}
-    .show {position: absolute; top : -1000px; left : -1000px}
-    </style>
-</head>
-<body style="margin: 0; padding: 0; display:flex; width:100%;">
-    <img class="show" src="{{.Pixel}}" alt="">
-    <div id="adhere">
-<iframe id="thirdad_frame" width="{{.Width}}" height="{{.Height}}" frameborder=0 marginwidth="0" marginheight="0" vspace="0" hspace="0" allowtransparency="true" scrolling="no"
- src="{{.Show}}" class="thirdad thrdadok">
- </iframe>
- </div></body>
- </html>`
-
-func render(s codeModel) string {
-	t, e := template.New("webTempl").Parse(webTempl)
-	assert.Nil(e)
-	buf := &bytes.Buffer{}
-
-	e = t.Execute(buf, s)
-	assert.Nil(e)
-	return buf.String()
-}
-
 var (
 	expire     = config.RegisterDuration("exam.expire", 1*time.Hour, "")
 	mountPoint = config.RegisterString("services.framework.controller.mount_point", "", "")
 )
 
 const (
-	prefixImpression = "EXAM_IMP"
-	prefixSlot       = "EXAM_SLOT"
+	prefixSlot = "EXAM_SLOT"
 
-	clickURL = "u"
-	raw      = "r"
-	org      = "o"
-	ad       = "a"
+	ad = "a"
 )
 
 type exchangeResponse struct {
@@ -93,7 +62,6 @@ func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) 
 func demandRequest(rq request) ([]exchangeResponse, error) {
 	tid := <-random.ID
 	res := make([]exchangeResponse, 0)
-	//code := make(map[string]string)
 	min := rq.Publisher.PubSoftFloorCPM
 	if min == 0 {
 		min = rq.Publisher.PubFloorCPM
@@ -103,8 +71,12 @@ func demandRequest(rq request) ([]exchangeResponse, error) {
 		tk := slotKeyGen(tid, v.TID)
 		sk := kv.NewEavStore(tk)
 		res = append(res, addSlot(v, rq, min, tid))
-		prepareShow(sk, v, rq, min, tid)
-		prepareClickURL(sk, v, rq, min, tid)
+		clu, e := prepareClickURL(sk, v, rq, min, tid)
+		if e != nil {
+			return nil, e
+		}
+		prepareShow(sk, v, rq, min, tid, clu)
+
 		sk.Save(expire.Duration())
 	}
 	return res, nil
@@ -120,11 +92,11 @@ func addSlot(v Slot, rq request, cpm int64, tid string) exchangeResponse {
 		ID:          <-random.ID,
 		Landing:     fmt.Sprintf(`%s://%s`, rq.Scheme, rq.Host),
 		MaxCPM:      cpm,
-		URL:         fmt.Sprintf(`%s://%s%s/exam/ad/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
+		URL:         fmt.Sprintf(`%s://%s%s/exam/ad/%s/%s/%d/%d`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID, v.W, v.H),
 	}
 }
 
-func prepareClickURL(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) error {
+func prepareClickURL(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) (string, error) {
 	cu, cuOk := v.FAttribute["click_url"]
 	cp, cpOk := v.FAttribute["click_parameter"]
 	ct := v.FAttribute["type"]
@@ -136,7 +108,7 @@ func prepareClickURL(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) error
 		} else {
 			tu, e := url.Parse(cu)
 			if e != nil {
-				return fmt.Errorf("not valid url")
+				return "", fmt.Errorf("not valid url")
 			}
 			tq := tu.Query()
 			tq.Set(cp, curl)
@@ -144,11 +116,11 @@ func prepareClickURL(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) error
 			curl = tu.String()
 		}
 	}
-	k.SetSubKey(clickURL, curl)
-	return nil
+
+	return curl, nil
 }
 
-func prepareShow(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) {
+func prepareShow(k kv.Kiwi, v Slot, rq request, cpm int64, tid, clu string) {
 	tm := response{
 		IsFilled: true,
 		Height:   v.H,
@@ -159,15 +131,7 @@ func prepareShow(k kv.Kiwi, v Slot, rq request, cpm int64, tid string) {
 
 	tm.AdTrackID = <-random.ID
 
-	tm.Code = render(codeModel{
+	tm.Code = string(filler(clu, "SlotID:"+v.TID, fmt.Sprintf("%d", v.W), fmt.Sprintf("%d", v.H)))
 
-		Width:  v.W,
-		Height: v.H,
-		Show:   fmt.Sprintf(`%s://%s%s/exam/show/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
-		Pixel:  fmt.Sprintf(`%s://%s%s/exam/pixel/%s/%s`, rq.Scheme, rq.Host, mountPoint.String(), tid, v.TID),
-	})
-	tmj, e := json.Marshal(tm)
-	assert.Nil(e)
-
-	k.SetSubKey(ad, string(tmj))
+	k.SetSubKey(ad, tm.Code)
 }
