@@ -11,11 +11,8 @@ type initRouter struct {
 
 func (initRouter) Routes(mux *xmux.Mux, _ string) {
 	// Exam paths
-
 	mux.POST("/exam/get/ad", xhandler.HandlerFuncC(demandHandler))
-	mux.GET("/exam/ad/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(adHandler))
-	mux.GET("/exam/pixel/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(pixelHandler))
-	mux.GET("/exam/show/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(showHandler))
+	mux.GET("/exam/ad/:impTrackID/:slotTrackId/:width/:height", xhandler.HandlerFuncC(adHandler))
 	mux.GET("/exam/click/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(clickHandler))
 }
 

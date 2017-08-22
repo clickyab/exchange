@@ -3,9 +3,8 @@ package static
 import (
 	"bytes"
 	"context"
-	"fmt"
-	"html/template"
 	"net/http"
+	"text/template"
 
 	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
@@ -22,7 +21,8 @@ display:flex;
 .cyb-cnt {
 display: block;
 display: flex;
-width:100%;
+width:{{.Width}};
+height:{{.Height}};
 
 background:#620;
 }
@@ -52,6 +52,7 @@ font-weight: 500;
 func adHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
 	imp := xmux.Param(ctx, "impTrackID")
 	slot := xmux.Param(ctx, "slotTrackId")
+
 	if imp == "" || slot == "" {
 		logrus.Debug("both track id and demand are empty")
 		return
@@ -59,42 +60,29 @@ func adHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
 	k := kv.NewEavStore(slotKeyGen(imp, slot))
 	if len(k.AllKeys()) == 0 {
 		w.WriteHeader(http.StatusNotFound)
-		w.Write(filler("#", "NOT FOUND"))
+		w.Write(filler("#", "NOT FOUND", "250", "250"))
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+	//w.Write(filler(k.SubKey(clickURL), fmt.Sprintf("Slot ID: %s", slot), wd, ht))
 	w.Write([]byte(k.SubKey(ad)))
 }
 
-// showHandler handle show url for exam
-func showHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
-	imp := xmux.Param(ctx, "impTrackID")
-	slot := xmux.Param(ctx, "slotTrackId")
-	if imp == "" || slot == "" {
-		logrus.Debug("both track id and demand are empty")
-		return
-	}
-	k := kv.NewEavStore(slotKeyGen(imp, slot))
-	if len(k.AllKeys()) == 0 {
-		w.WriteHeader(http.StatusNotFound)
-		w.Write(filler("#", "NOT FOUND"))
-		return
-	}
-	w.WriteHeader(http.StatusOK)
-	w.Write(filler(k.SubKey(clickURL), fmt.Sprintf("Slot ID: %s", slot)))
-}
-
-func filler(u, m string) []byte {
+func filler(u, m string, w, h string) []byte {
 	at := template.Template{}
 	t, e := at.Parse(showAd)
 	assert.Nil(e)
 	b := &bytes.Buffer{}
 	t.Execute(b, struct {
 		Message,
-		URL string
+		URL,
+		Width,
+		Height string
 	}{
 		m,
 		u,
+		w,
+		h,
 	})
 	return b.Bytes()
 }

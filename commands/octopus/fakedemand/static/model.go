@@ -67,10 +67,3 @@ type response struct {
 	Landing     string `json:"landing"`
 	Description string `json:"description,omitempty"`
 }
-
-type codeModel struct {
-	Width,
-	Height int
-	Pixel,
-	Show string
-}

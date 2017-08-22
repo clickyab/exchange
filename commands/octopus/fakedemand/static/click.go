@@ -24,17 +24,8 @@ func clickHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
-	o := kv.NewEavStore(fmt.Sprintf(`%s_%s`, prefixImpression, imp))
-	r := o.SubKey(raw)
-	q := o.SubKey(org)
-	if q != "" {
-		q = "Original request: " + q
-	}
-	if r != "" {
-		r = "Response: " + r
-	}
 
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(fmt.Sprintf("Request: %s\nSlot: %s\nStatus: Successful\nTime: %s\n%s\n\n%s", imp, slot,
-		time.Now().Format("2006-02-03 04:05:06 -07:00"), r, q)))
+	w.Write([]byte(fmt.Sprintf("Request: %s\nSlot: %s\nStatus: Successful\nTime: %s", imp, slot,
+		time.Now().Format("2006-02-03 04:05:06 -07:00"))))
 }
