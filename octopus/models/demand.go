@@ -223,7 +223,8 @@ func (m *Manager) updateDemandReport(t time.Time) {
 								ad_out_bid,
 								deliver_count,
 								deliver_bid,
-								profit
+								profit,
+								click
 								)
 
 							SELECT demand,
@@ -235,7 +236,8 @@ func (m *Manager) updateDemandReport(t time.Time) {
 							sum(ad_out_bid),
 							sum(deliver_count),
 							sum(deliver_bid),
-							sum(profit)
+							sum(profit),
+							sum(click)
 								FROM sup_dem_src WHERE time_id BETWEEN %d AND %d
 							GROUP BY demand
 
@@ -249,7 +251,8 @@ func (m *Manager) updateDemandReport(t time.Time) {
 							  ad_out_bid=VALUES(ad_out_bid),
 							  deliver_count=VALUES(deliver_count),
 							  deliver_bid=VALUES(deliver_bid),
-							  profit=values(profit)`, td, from, to)
+							  profit=values(profit),
+							  click=values(click)`, td, from, to)
 
 	_, err := NewManager().GetRDbMap().Exec(q)
 	assert.Nil(err)
