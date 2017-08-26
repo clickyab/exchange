@@ -18,14 +18,16 @@ func (m *Manager) updateSupplierReport(t time.Time) {
 								impression_in_count,
 								ad_out_count,
 								delivered_count,
-								earn
+								earn,
+								click
 								)
 							SELECT supplier,
 							"%s",
 							sum(imp_in_count),
 							sum(ad_out_count),
 							sum(deliver_count),
-							sum(deliver_bid)
+							sum(deliver_bid),
+							sum(click)
 								FROM %s WHERE time_id BETWEEN %d AND %d
 							GROUP BY supplier
 							 ON DUPLICATE KEY UPDATE
@@ -34,7 +36,8 @@ func (m *Manager) updateSupplierReport(t time.Time) {
 							  impression_in_count=VALUES(impression_in_count),
 							  ad_out_count=VALUES(ad_out_count),
 							  delivered_count=VALUES(delivered_count),
-							  earn=VALUES(earn)`, SupplierReportTableName, td, SupplierTableName, from, to)
+							  earn=VALUES(earn),
+							  click=VALUES(click)`, SupplierReportTableName, td, SupplierTableName, from, to)
 
 	_, err := NewManager().GetRDbMap().Exec(q)
 	assert.Nil(err)

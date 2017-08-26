@@ -35,6 +35,8 @@ type TableModel struct {
 	DeliverBid         int64 //show
 	Profit             int64 //show
 
+	Click int64
+
 	Acknowledger Acknowledger
 	WorkerID     string
 }

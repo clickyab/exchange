@@ -33,6 +33,7 @@ type SupplierSourceDemand struct {
 	AdOutBid        int64  `json:"ad_out_bid" db:"ad_out_bid"`
 	DeliverCount    int64  `json:"deliver_count" db:"deliver_count"`
 	DeliverBid      int64  `json:"deliver_bid" db:"deliver_bid"`
+	Click           int64  `json:"click" db:"click"`
 }
 
 // SupplierSource supplier_source
@@ -47,6 +48,7 @@ type SupplierSource struct {
 	DeliverCount   int64  `json:"deliver_count" db:"deliver_count"`
 	DeliverBid     int64  `json:"deliver_bid" db:"deliver_bid"`
 	Profit         int64  `json:"profit" db:"profit"`
+	Click          int64  `json:"click" db:"click"`
 }
 
 // TimeTable TimeTable
@@ -72,6 +74,7 @@ type ExchangeReport struct {
 	Earn                  int64     `json:"earn" db:"earn"`
 	Spent                 int64     `json:"spent" db:"spent"`
 	Income                int64     `json:"income" db:"income"`
+	Click                 int64     `json:"click" db:"click"`
 }
 
 // Parts is a multi query trick
@@ -96,6 +99,7 @@ type DemandReport struct {
 	SuccessRate     float64   `json:"success_rate" db:"success_rate"`
 	DeliverRate     float64   `json:"deliver_rate" db:"deliver_rate"`
 	WinRate         float64   `json:"win_rate" db:"win_rate"`
+	Click           int64     `json:"click" db:"click"`
 }
 
 // SupplierReporter table
@@ -109,6 +113,7 @@ type SupplierReporter struct {
 	Earn           int64     `json:"earn" db:"earn"`
 	SuccessRate    float64   `json:"success_rate" db:"success_rate"`
 	DeliverRate    float64   `json:"deliver_rate" db:"deliver_rate"`
+	Click          int64     `json:"click" db:"click"`
 }
 
 // MultiQuery is a hack to run multiple query in one transaction

@@ -39,5 +39,5 @@ func init() {
 	address = config.RegisterString("services.redis.address", fmt.Sprintf("%s:%s", host, port), "redis address host:port")
 	password = config.RegisterString("services.redis.password", pass, "redis password")
 	poolsize = config.RegisterInt("services.redis.poolsize", 200, "redis pool size")
-	db = config.RegisterInt("services.redis.db", 0, "redis db number")
+	db = config.RegisterInt("services.redis.db", 1, "redis db number")
 }
