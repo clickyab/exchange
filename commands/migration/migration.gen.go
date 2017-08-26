@@ -13,6 +13,7 @@
 // db/octopus_migrations/20170617091700_report_changes.sql
 // db/octopus_migrations/20170620083542_demand_supplier_changes.sql
 // db/octopus_migrations/20170814065009_test_mode.sql
+// db/octopus_migrations/20170826071056_addclicks.sql
 // db/octopus_migrations/20170911055851_supplier_click_mode.sql
 // DO NOT EDIT!
 
@@ -341,6 +342,26 @@ func dbOctopus_migrations20170814065009_test_modeSql() (*asset, error) {
 	return a, nil
 }
 
+var _dbOctopus_migrations20170826071056_addclicksSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\xac\x91\x41\x4b\xc3\x30\x1c\xc5\xef\xfd\x14\xef\x36\x45\x06\xee\xec\xa9\x9a\x0a\x42\x6c\x75\x26\xe7\x2d\x26\x7f\xd6\xb0\x36\x0d\x49\xca\xf6\xf1\xa5\x8a\x42\xe7\x64\xc3\xee\x98\xf0\xfe\x3f\x1e\xef\x97\xcd\xe7\xb8\x69\xed\x26\xa8\x44\x90\x7e\x78\xbe\xbd\x72\x58\x87\x48\x3a\xd9\xce\x61\x26\xfd\x0c\x36\x82\xf6\xa4\xfb\x44\x06\xbb\x9a\x1c\x52\x6d\x23\xbe\xee\x86\x90\x8d\x50\xde\x37\x96\x4c\x96\x73\x51\x2c\x21\xf2\x7b\x5e\x20\xf6\x7e\x15\x83\x46\xce\x18\x1e\x2a\x2e\x9f\x4b\xac\x75\x63\xf5\x76\x8d\xa7\x52\x5c\x2d\x16\xd7\x28\x2b\x81\x52\x72\x0e\x56\x3c\xe6\x92\x0b\xdc\xde\xfd\x42\x18\x6a\xa7\x62\x0c\xb5\xca\x99\x55\x20\xdf\x85\x34\x05\x44\x7b\x5d\x2b\xb7\xa1\x0b\xa0\x62\xff\x39\x59\xf8\x27\x6a\xa4\x8e\x75\x3b\xf7\x2d\xef\xc7\xdc\xf0\x79\x96\xbb\xd0\x35\x0d\x19\xbc\x2b\xbd\x3d\xea\x8f\x2d\xab\x97\x83\x6a\x7f\x5b\x3a\x19\x1e\xbb\x38\x19\x3f\x5c\xfc\x9c\x32\xa3\x5d\x8f\x1e\x64\x1f\x01\x00\x00\xff\xff\x11\x14\xc8\xdb\xfa\x02\x00\x00"
+
+func dbOctopus_migrations20170826071056_addclicksSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbOctopus_migrations20170826071056_addclicksSql,
+		"db/octopus_migrations/20170826071056_addclicks.sql",
+	)
+}
+
+func dbOctopus_migrations20170826071056_addclicksSql() (*asset, error) {
+	bytes, err := dbOctopus_migrations20170826071056_addclicksSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/octopus_migrations/20170826071056_addclicks.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 var _dbOctopus_migrations20170911055851_supplier_click_modeSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x8c\xce\xc1\x4a\xc4\x30\x10\xc6\xf1\x7b\x9e\xe2\xbb\x55\x91\x05\x3d\xef\x29\x6e\x2a\x1e\x62\xab\x31\xf1\x2a\x35\x19\xdc\x61\xb3\x49\x68\xb2\xd4\xc7\x97\x2a\x0a\x22\x82\xc7\xf9\x33\x1f\xfc\xc4\x66\x83\x8b\x23\xbf\xce\x53\x23\xb8\xb2\x9e\x8f\x0f\x1a\x9c\x50\xc9\x37\xce\x09\x9d\x2b\x1d\xb8\x82\xde\xc8\x9f\x1a\x05\x2c\x7b\x4a\x68\x7b\xae\xf8\xdc\xad\x4f\x5c\x31\x95\x12\x99\x82\x10\x52\xdb\xde\xc0\xca\x6b\xdd\xa3\x9e\x3e\xea\x5c\x21\x95\xc2\x6e\xd4\xee\x6e\x80\x8f\xec\x0f\xcf\xc7\x1c\x08\x4f\xd2\xec\x6e\xa5\x39\xbb\xba\x3c\xc7\x30\x5a\x0c\x4e\x6b\xa8\xfe\x46\x3a\x6d\xd1\xa5\x9c\xa8\xdb\x8a\x1f\x46\x95\x97\xf4\xa5\xfc\x26\xae\xf1\x5f\xc8\x39\xc7\x48\x01\x2f\x93\x3f\xfc\x05\x55\x66\xbc\xff\x2d\xdd\x8a\xf7\x00\x00\x00\xff\xff\x7e\xef\xd9\x88\x2a\x01\x00\x00"
 
 func dbOctopus_migrations20170911055851_supplier_click_modeSqlBytes() ([]byte, error) {
@@ -426,6 +447,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/octopus_migrations/20170617091700_report_changes.sql": dbOctopus_migrations20170617091700_report_changesSql,
 	"db/octopus_migrations/20170620083542_demand_supplier_changes.sql": dbOctopus_migrations20170620083542_demand_supplier_changesSql,
 	"db/octopus_migrations/20170814065009_test_mode.sql": dbOctopus_migrations20170814065009_test_modeSql,
+	"db/octopus_migrations/20170826071056_addclicks.sql": dbOctopus_migrations20170826071056_addclicksSql,
 	"db/octopus_migrations/20170911055851_supplier_click_mode.sql": dbOctopus_migrations20170911055851_supplier_click_modeSql,
 }
 
@@ -484,6 +506,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 			"20170617091700_report_changes.sql": &bintree{dbOctopus_migrations20170617091700_report_changesSql, map[string]*bintree{}},
 			"20170620083542_demand_supplier_changes.sql": &bintree{dbOctopus_migrations20170620083542_demand_supplier_changesSql, map[string]*bintree{}},
 			"20170814065009_test_mode.sql": &bintree{dbOctopus_migrations20170814065009_test_modeSql, map[string]*bintree{}},
+			"20170826071056_addclicks.sql": &bintree{dbOctopus_migrations20170826071056_addclicksSql, map[string]*bintree{}},
 			"20170911055851_supplier_click_mode.sql": &bintree{dbOctopus_migrations20170911055851_supplier_click_modeSql, map[string]*bintree{}},
 		}},
 	}},

@@ -51,8 +51,9 @@ func (m *Manager) updateExchangeReport(t time.Time) {
 				demand_impression_out,
 				earn,
 				spent,
-				income)
-				VALUES(?,?,?,?,?,?,?,?)
+				income,
+				click)
+				VALUES(?,?,?,?,?,?,?,?,?)
 				ON DUPLICATE KEY UPDATE
 				supplier_impression_in = VALUES(supplier_impression_in),
 				supplier_impression_out = VALUES(supplier_impression_out),
@@ -60,11 +61,12 @@ func (m *Manager) updateExchangeReport(t time.Time) {
 				demand_impression_out = VALUES(demand_impression_out),
 				earn = VALUES(earn),
 				spent = VALUES(spent),
-				income = VALUES(income)
+				income = VALUES(income),
+				click = VALUES(click)
 				`, ExchangeReportTableName)
 	_, err := m.GetRDbMap().Exec(q, td, sup.SupplierImpressionIN,
 		sup.SupplierImpressionOUT, dem.DemandImpressionIN, dem.DemandImpressionOUT,
-		sup.Spent, dem.Earn, dem.Earn-sup.Spent)
+		sup.Spent, dem.Earn, dem.Earn-sup.Spent, dem.Click+sup.Click)
 	assert.Nil(err)
 }
 
