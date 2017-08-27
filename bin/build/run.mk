@@ -4,11 +4,14 @@ debug-octopus: all
 debug-fakedemand: all
 	PORT=6000 $(BIN)/dlv --listen=:5000 --headless=true --api-version=2 exec $(BIN)/fakedemand
 
+debug-fakesupplier: all
+	PORT=6000 $(BIN)/dlv --listen=:5000 --headless=true --api-version=2 exec $(BIN)/supplier
+
 run-octopus: all
 	$(BIN)/octopus
 
 run-fakedemand: all
-	$(BIN)/fakedemand
+	PORT=6000 $(BIN)/fakedemand
 
 
 install-debugger:
