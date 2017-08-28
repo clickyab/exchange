@@ -5,11 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"net"
 	"net/http"
 	"regexp"
 	"strings"
+
+	"io/ioutil"
 
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
@@ -82,7 +83,9 @@ func handler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			return "http"
 		}()
 	}
-
+	if rq.Web.UserAgent == "" {
+		rq.Web.UserAgent = r.UserAgent()
+	}
 	if rq.PageTrackID == "" {
 		rq.PageTrackID = <-random.ID
 	}
@@ -96,9 +99,27 @@ func handler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	res, e := http.Post(url, "application/json", bytes.NewBuffer(js))
 	assert.Nil(e)
 	w.WriteHeader(res.StatusCode)
-	io.Copy(w, res.Body)
+	b, e := ioutil.ReadAll(res.Body)
+	assert.Nil(e)
+	defer res.Body.Close()
+
+	f := response{Request: *rq}
+
+	fmt.Println(string(b))
+	var ex interface{}
+	json.Unmarshal(b, &ex)
+	f.Result = ex
+	x, e := json.Marshal(f)
+	assert.Nil(e)
+	w.Write(x)
+
 }
 
 func init() {
 	router.Register(&initRouter{})
+}
+
+type response struct {
+	Request request     `json:"request"`
+	Result  interface{} `json:"result"`
 }

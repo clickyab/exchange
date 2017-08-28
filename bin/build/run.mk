@@ -13,6 +13,8 @@ run-octopus: all
 run-fakedemand: all
 	PORT=6000 $(BIN)/fakedemand
 
+run-fakesupplier: all
+	$(BIN)/supplier
 
 install-debugger:
 	$(GO) get -v github.com/derekparker/delve/cmd/dlv
