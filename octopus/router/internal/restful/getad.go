@@ -71,6 +71,14 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 				fmt.Sprintf("%d", int64(imp.Source().Supplier().Share())*res[i].WinnerCPM()/100),
 			)
 			assert.Nil(store.Save(1 * time.Hour))
+
+			// TODO: need dara's click worker PR
+			megaImpStore := kv.NewEavStore("MEGA_IMP_" + res[i].TrackID() + imp.TrackID())
+			store.SetSubKey("URL",
+				res[i].URL(),
+			)
+			assert.Nil(megaImpStore.Save(24 * time.Hour))
+
 		}
 	}
 	err = imp.Source().Supplier().Renderer().Render(imp, res, w)

@@ -57,7 +57,7 @@ func (rf restful) Render(imp exchange.Impression, in map[string]exchange.Adverti
 			IsFilled:  true,
 		}
 
-		winURL := in[slotTrackID].URL()
+		winURL := imp.Scheme() + host.String() + "click/" + in[slotTrackID].TrackID() + ":" + imp.TrackID()
 		win, err := url.Parse(winURL)
 		if err == nil {
 			q := win.Query()
