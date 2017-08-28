@@ -2,11 +2,11 @@ package main
 
 import (
 	"clickyab.com/exchange/commands"
-	_ "clickyab.com/exchange/commands/octopus/supplier/logic"
-	"github.com/Sirupsen/logrus"
+	_ "clickyab.com/exchange/commands/octopus/supplier/rest"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/shell"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
