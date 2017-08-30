@@ -11,11 +11,11 @@ import (
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"clickyab.com/exchange/octopus/rtb"
 	"clickyab.com/exchange/octopus/supliers"
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/broker"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 // GetAd is route to get the ad from a restful endpoint

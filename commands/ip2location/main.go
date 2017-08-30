@@ -11,8 +11,8 @@ import (
 	"github.com/clickyab/services/ip2location"
 
 	"clickyab.com/exchange/commands"
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/shell"
+	"github.com/sirupsen/logrus"
 )
 
 var (

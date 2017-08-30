@@ -5,7 +5,7 @@ import (
 
 	"github.com/clickyab/services/broker"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 type show struct {

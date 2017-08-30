@@ -1,5 +1,10 @@
 package commands
 
+import (
+	// Fluentd service to hook the logrus commands
+	_ "github.com/clickyab/services/fluentd"
+)
+
 const (
 	// AppName the application name
 	AppName string = "exchange"

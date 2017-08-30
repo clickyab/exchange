@@ -3,12 +3,12 @@ package main
 import (
 	"clickyab.com/exchange/commands"
 	_ "clickyab.com/exchange/octopus/console/report/generator"
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/initializer"
 	_ "github.com/clickyab/services/kv/redis"
 	_ "github.com/clickyab/services/mysql/connection/mysql"
 	"github.com/clickyab/services/shell"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

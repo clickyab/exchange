@@ -13,8 +13,8 @@ import (
 	"errors"
 
 	"clickyab.com/exchange/octopus/exchange/materialize"
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/broker"
+	"github.com/sirupsen/logrus"
 )
 
 var (

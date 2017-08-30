@@ -15,7 +15,7 @@ import (
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 var (

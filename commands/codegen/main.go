@@ -15,9 +15,9 @@ import (
 	_ "github.com/clickyab/services/codegen/swagger"  // Raml plugin
 	_ "github.com/clickyab/services/codegen/validate" // Validateor
 
-	"github.com/Sirupsen/logrus"
 	"github.com/goraz/humanize"
 	"github.com/ogier/pflag"
+	"github.com/sirupsen/logrus"
 )
 
 var (

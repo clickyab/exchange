@@ -6,7 +6,7 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/broker"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 type demand struct {
