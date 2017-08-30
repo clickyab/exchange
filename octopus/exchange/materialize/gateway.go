@@ -6,7 +6,7 @@ import (
 	"github.com/clickyab/services/broker"
 	"github.com/clickyab/services/config"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 const (

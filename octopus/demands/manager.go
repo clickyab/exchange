@@ -11,7 +11,7 @@ import (
 	"clickyab.com/exchange/octopus/demands/internal/restful"
 	"github.com/clickyab/services/mysql"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 type demandManager struct {

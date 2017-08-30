@@ -16,8 +16,8 @@ import (
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 const message = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII="

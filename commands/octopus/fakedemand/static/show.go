@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"text/template"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 var showAd = `

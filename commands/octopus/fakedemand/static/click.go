@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 // clickHandler for exam

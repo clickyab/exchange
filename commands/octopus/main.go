@@ -14,8 +14,8 @@ import (
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/shell"
 
-	"github.com/Sirupsen/logrus"
 	_ "github.com/clickyab/services/mysql/connection/mysql"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {

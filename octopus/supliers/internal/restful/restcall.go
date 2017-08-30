@@ -8,7 +8,7 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 type requestBody struct {

@@ -8,8 +8,8 @@ import (
 
 	"github.com/clickyab/services/framework"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/rs/xhandler"
+	"github.com/sirupsen/logrus"
 )
 
 type dummyWriter struct {
