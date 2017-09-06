@@ -50,7 +50,7 @@ func (rf restful) Render(imp exchange.Impression, in map[string]exchange.Adverti
 		d := &dumbAd{
 			TrackID:   slotTrackID,
 			AdTrackID: in[slotTrackID].TrackID(),
-			Winner:    in[slotTrackID].WinnerCPM() * int64(100-rf.sup.Share()) / 100,
+			Winner:    in[slotTrackID].WinnerCPM() * 100 / int64(100+rf.sup.Share()),
 			Width:     in[slotTrackID].Width(),
 			Height:    in[slotTrackID].Height(),
 			Landing:   in[slotTrackID].Landing(),

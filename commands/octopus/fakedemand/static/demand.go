@@ -63,7 +63,7 @@ func demandRequest(rq request) ([]exchangeResponse, error) {
 	tid := <-random.ID
 	res := make([]exchangeResponse, 0)
 	min := rq.Publisher.PubSoftFloorCPM
-	if min == 0 {
+	if min < rq.Publisher.PubFloorCPM {
 		min = rq.Publisher.PubFloorCPM
 	}
 	min = inRange(min+1, min+200)
