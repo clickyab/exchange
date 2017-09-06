@@ -44,7 +44,7 @@ func TestSupplier(t *testing.T) {
 
 	Convey("reder test", t, func() {
 		supplier := mock_exchange.NewMockSupplier(ctrl)
-		supplier.EXPECT().Share().Return(100).AnyTimes()
+		supplier.EXPECT().Share().Return(10).AnyTimes()
 
 		impression := mock_exchange.NewMockImpression(ctrl)
 
@@ -114,7 +114,7 @@ var expected = []map[string]interface{}{
 		"landing":     "clickyab.ir",
 		"track_id":    "aaa",
 		"ad_track_id": "aaa",
-		"winner":      int64(0),
+		"winner":      int64(90),
 		"width":       20,
 		"height":      15,
 		"code":        "",
@@ -124,7 +124,7 @@ var expected = []map[string]interface{}{
 		"landing":     "clickyab.ir",
 		"track_id":    "bbb",
 		"ad_track_id": "bbb",
-		"winner":      int64(0),
+		"winner":      int64(90),
 		"width":       20,
 		"height":      15,
 		"code":        "",
@@ -134,7 +134,7 @@ var expected = []map[string]interface{}{
 		"landing":     "clickyab.ir",
 		"track_id":    "ccc",
 		"ad_track_id": "ccc",
-		"winner":      int64(0),
+		"winner":      int64(90),
 		"width":       20,
 		"height":      15,
 		"code":        "",

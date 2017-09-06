@@ -3,7 +3,7 @@ convey:
 	$(GO) install -v github.com/smartystreets/goconvey
 
 mockgen:
-	#$(GO) get -v github.com/golang/mock/mockgen
+	$(GO) get -v github.com/golang/mock/mockgen
 	$(GO) install -v github.com/golang/mock/mockgen
 
 mockentity: $(LINTER) mockgen
