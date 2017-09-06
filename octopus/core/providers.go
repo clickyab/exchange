@@ -49,7 +49,7 @@ func (p *providerData) watch(ctx context.Context, imp exchange.Impression) (res 
 	}()
 
 	logrus.Debugf("Watch in for %s", p.provider.Name())
-	defer logrus.Debugf("Watch out for %s", p.provider.Name())
+	defer logrus.WithField("uid", imp.TrackID()).Debugf("Watch out for %s", p.provider.Name())
 	done := ctx.Done()
 	assert.NotNil(done)
 
