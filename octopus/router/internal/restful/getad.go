@@ -30,22 +30,7 @@ func log(imp exchange.Impression) *logrus.Entry {
 	})
 }
 
-// GetAd is route to get the ad from a restful endpoint
-func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	dec := json.NewEncoder(w)
-	key := xmux.Param(ctx, "key")
-
-	imp, err := suppliers.GetImpression(key, r)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		dec.Encode(struct {
-			Error error
-		}{
-			Error: err,
-		})
-		return
-	}
-
+func modifyClicks(imp exchange.Impression) {
 	// Change the click url
 	for _, s := range imp.Slots() {
 		att := s.Attributes()
@@ -61,20 +46,13 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		}
 		s.SetAttribute("_click_url", att["click_url"])
 		s.SetAttribute("_click_parameter", att["click_parameter"])
-		s.SetAttribute("click_parameter", "ref")
+		s.SetAttribute("click_parameter", "return")
 		s.SetAttribute("click_url", exchangeClickURL.String())
 		s.SetAttribute("type", "parameter")
 	}
+}
 
-	// OK push it to broker
-	jImp := materialize.ImpressionJob(imp)
-	broker.Publish(jImp)
-	nCtx, cnl := context.WithCancel(ctx)
-	defer cnl()
-	ads := core.Call(nCtx, imp)
-	log(imp).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
-	res := rtb.SelectCPM(imp, ads)
-	log(imp).WithField("count", len(res)).Debug("ads is passed the system select")
+func storeKeys(imp exchange.Impression, res map[string]exchange.Advertise) {
 	for _, s := range imp.Slots() {
 		i := s.TrackID()
 		// Publish them into message broker
@@ -116,6 +94,36 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			assert.Nil(megaImpStore.Save(72 * time.Hour)) // TODO : Config
 		}
 	}
+}
+
+// GetAd is route to get the ad from a restful endpoint
+func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	dec := json.NewEncoder(w)
+	key := xmux.Param(ctx, "key")
+
+	imp, err := suppliers.GetImpression(key, r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		dec.Encode(struct {
+			Error error
+		}{
+			Error: err,
+		})
+		return
+	}
+	modifyClicks(imp)
+	// OK push it to broker
+	jImp := materialize.ImpressionJob(imp)
+	broker.Publish(jImp)
+	nCtx, cnl := context.WithCancel(ctx)
+	defer cnl()
+	ads := core.Call(nCtx, imp)
+	log(imp).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
+	res := rtb.SelectCPM(imp, ads)
+	log(imp).WithField("count", len(res)).Debug("ads is passed the system select")
+
+	storeKeys(imp, res)
+
 	err = imp.Source().Supplier().Renderer().Render(imp, res, w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

@@ -55,8 +55,8 @@ func (p *providerData) watch(ctx context.Context, imp exchange.Impression) (res 
 		broker.Publish(jDem)
 	}()
 
-	log(imp).WithField("provider", p.provider.Name()).Debugf("Watch IN for provider")
-	defer log(imp).WithField("provider", p.provider.Name()).Debugf("Watch OUT for provider")
+	log(imp).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
+	defer log(imp).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
 	done := ctx.Done()
 	assert.NotNil(done)
 
