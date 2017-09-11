@@ -6,6 +6,11 @@ type Location struct {
 	LCountry  exchange.Country
 	LProvince exchange.Province
 	LLatLon   exchange.LatLon
+	LISP      exchange.ISP
+}
+
+func (l Location) ISP() exchange.ISP {
+	return l.LISP
 }
 
 func (l Location) Country() exchange.Country {

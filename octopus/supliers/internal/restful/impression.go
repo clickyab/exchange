@@ -43,6 +43,11 @@ type location struct {
 	TheCountry  exchange.Country  `json:"country"`
 	TheProvince exchange.Province `json:"province"`
 	TheLatLon   exchange.LatLon   `json:"latlon"`
+	TheISP      exchange.ISP      `json:"isp"`
+}
+
+func (l location) ISP() exchange.ISP {
+	return l.TheISP
 }
 
 func (l location) Country() exchange.Country {
@@ -134,6 +139,11 @@ func (ir *impressionRest) extractData() {
 		},
 
 		TheLatLon: ir.latlon,
+
+		TheISP: exchange.ISP{
+			Valid: d.ISP != "-",
+			Name:  d.ISP,
+		},
 	}
 
 }
