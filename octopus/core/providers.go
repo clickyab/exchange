@@ -30,6 +30,13 @@ type providerData struct {
 	callRateTracker int64
 }
 
+func log(imp exchange.Impression) *logrus.Entry {
+	return logrus.WithFields(logrus.Fields{
+		"track_id": imp.TrackID(),
+		"type":     "provider",
+	})
+}
+
 // Skip decide if provider should respond to demand or not
 func (p *providerData) Skip() bool {
 	x := atomic.AddInt64(&p.callRateTracker, 1)
@@ -48,8 +55,8 @@ func (p *providerData) watch(ctx context.Context, imp exchange.Impression) (res 
 		broker.Publish(jDem)
 	}()
 
-	logrus.Debugf("Watch in for %s", p.provider.Name())
-	defer logrus.WithField("uid", imp.TrackID()).Debugf("Watch out for %s", p.provider.Name())
+	log(imp).WithField("provider", p.provider.Name()).Debugf("Watch IN for provider")
+	defer log(imp).WithField("provider", p.provider.Name()).Debugf("Watch OUT for provider")
 	done := ctx.Done()
 	assert.NotNil(done)
 
@@ -91,7 +98,7 @@ func Register(provider exchange.Demand, timeout time.Duration) {
 		callRateTracker: rand.Int63n(100),
 	}
 
-	logrus.Debugf("demand with name %s is registered", name)
+	logrus.WithField("type", "register_demand").Debugf("demand with name %s is registered", name)
 }
 
 // ResetProviders remove all providers
@@ -134,10 +141,10 @@ func Call(ctx context.Context, imp exchange.Impression) map[string][]exchange.Ad
 	if !imp.UnderFloor() {
 		limit = imp.Source().FloorCPM()
 	}
-	logrus.Debugf("the limit is %d", limit)
+	log(imp).WithField("limit", limit).Debug("the limit")
 	res := make(map[string][]exchange.Advertise)
 	for provided := range allRes {
-		logrus.Debugf("get a result contain %d ads ", len(provided))
+		log(imp).WithField("count", len(provided)).Debug("result from demand")
 		for j := range provided {
 			if provided[j].MaxCPM() >= limit {
 				res[j] = append(res[j], provided[j])

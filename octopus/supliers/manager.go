@@ -53,7 +53,7 @@ func (sm *supplierManager) Initialize() {
 	signal.Notify(reloadChan, syscall.SIGHUP)
 	go func() {
 		for i := range reloadChan {
-			logrus.Infof("Reloding supplier config, due to signal %s", i)
+			logrus.Infof("Reloading supplier config, due to signal %s", i)
 			sm.loadSuppliers()
 		}
 	}()
