@@ -20,6 +20,12 @@ type LatLon struct {
 	Lon   float64 `json:"lon"`
 }
 
+// ISP network holder
+type ISP struct {
+	Valid bool   `json:"valid"`
+	Name  string `json:"name"`
+}
+
 // Location is the location provider
 type Location interface {
 	// Country get the country if available
@@ -28,4 +34,6 @@ type Location interface {
 	Province() Province
 	// LatLon return the latitude longitude if any
 	LatLon() LatLon
+	// ISP return the client network
+	ISP() ISP
 }
