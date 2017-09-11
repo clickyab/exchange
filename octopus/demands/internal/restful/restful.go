@@ -78,7 +78,7 @@ func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan e
 		logrus.Debug(err)
 		return
 	}
-	log(imp).WithField("key", d.key).Debugf("calling demand")
+	log(imp).WithField("key", d.key).Debug("calling demand")
 	resp, err := d.client.Do(req.WithContext(ctx))
 	if err != nil {
 		logrus.Debug(err)
@@ -93,8 +93,7 @@ func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan e
 	data, err := ioutil.ReadAll(resp.Body)
 	assert.Nil(err)
 	reader := bytes.NewReader(data)
-	log(imp).WithField("key", d.key).Debug(string(data))
-	log(imp).WithField("key", d.key).Debug("Call done")
+	log(imp).WithField("key", d.key).WithField("result", string(data)).Debug("Call done")
 
 	ads := []*restAd{}
 	dec := json.NewDecoder(reader)

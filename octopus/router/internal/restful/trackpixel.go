@@ -54,18 +54,18 @@ func TrackPixel(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		profit := store["PROFIT"]
 		profitInt, err := strconv.ParseInt(profit, 10, 0)
 		if err != nil {
-			logrus.Debugf("profit key is not integer : %s", err)
+			logrus.WithError(err).Debug("profit key is not integer")
 			return
 		}
 		winnerInt, err := strconv.ParseInt(winnerBID, 10, 0)
 		if err != nil {
-			logrus.Debugf("winner key is not integer : %s", err)
+			logrus.WithError(err).Debug("winner key is not integer")
 			return
 		}
 		//set winner
 		d, err := core2.GetDemand(winnerDemand)
 		if err != nil {
-			logrus.Debugf("can not find winner demand `%s` : %s", winnerDemand, err)
+			logrus.WithError(err).Debugf("can not find winner demand `%s`", winnerDemand)
 			return
 		}
 		broker.Publish(materialize.ShowJob(

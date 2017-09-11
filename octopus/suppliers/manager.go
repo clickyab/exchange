@@ -71,7 +71,7 @@ func GetSupplierByKey(key string) (exchange.Supplier, error) {
 	return nil, fmt.Errorf("supplier with key %s not found", key)
 }
 
-// GetSupplierByKey return a single supplier by its id
+// GetSupplierByName return a single supplier by its name
 func GetSupplierByName(name string) (exchange.Supplier, error) {
 	sm.lock.RLock()
 	defer sm.lock.RUnlock()
