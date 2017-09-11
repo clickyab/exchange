@@ -10,4 +10,7 @@ type Slot interface {
 	// Fallback returns slots fallback url
 	Fallback() string
 	Attributes() map[string]string
+	// SetAttribute is a way to set attributes on the slot
+	// TODO : this is a workaround for click url backup. think it again.
+	SetAttribute(string, string)
 }

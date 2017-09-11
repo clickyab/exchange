@@ -48,7 +48,7 @@ func newImp(c *gomock.Controller, count int) exchange.Impression {
 	m.EXPECT().Slots().Return(tmp).AnyTimes()
 	m.EXPECT().Source().Return(newPub(c)).AnyTimes()
 	m.EXPECT().UnderFloor().Return(false).AnyTimes()
-
+	m.EXPECT().TrackID().Return("HAHAHA").AnyTimes()
 	return m
 }
 

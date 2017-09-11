@@ -51,6 +51,7 @@ func TestDemandProvide(t *testing.T) {
 			ctx, cl := context.WithTimeout(context.Background(), time.Second*2)
 			defer cl()
 			imp := mock_entity.NewMockImpression(ctrl)
+			imp.EXPECT().TrackID().Return("HAHAHA").AnyTimes()
 			res := make(chan exchange.Advertise)
 			d := demand{
 				client:     &http.Client{},

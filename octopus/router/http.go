@@ -10,13 +10,12 @@ import (
 	"github.com/rs/xmux"
 )
 
-// TODO (NOT IMPORTANT! ITS JUST AN IDEA): Add the annotation so the framework generate all this shit
 type initRouter struct {
 }
 
 func (initRouter) Routes(mux *xmux.Mux, mountPoint string) {
 	mux.POST(mountPoint+"/rest/get/:key", xhandler.HandlerFuncC(restful.GetAd))
-	mux.GET(mountPoint+"/click/:key", xhandler.HandlerFuncC(restful.GetAd))
+	mux.GET(mountPoint+"/click/:supplier/:trackID", xhandler.HandlerFuncC(restful.Click))
 	mux.GET(mountPoint+"/pixel/:demand/:trackID", xhandler.HandlerFuncC(restful.TrackPixel))
 
 	// The demand status routes

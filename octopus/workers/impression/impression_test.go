@@ -25,6 +25,10 @@ var (
 )
 
 func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impression {
+	slots := make([]*mocks.Slot, slotCount)
+	for i := range slots {
+		slots[i] = &mocks.Slot{}
+	}
 	return mocks.Impression{
 		ITime: t,
 		ISource: mocks.Publisher{
@@ -33,7 +37,7 @@ func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impr
 				SName: sup,
 			},
 		},
-		ISlots: make([]mocks.Slot, slotCount),
+		ISlots: slots,
 	}
 }
 

@@ -5,19 +5,23 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"time"
 
 	"clickyab.com/exchange/octopus/core"
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"clickyab.com/exchange/octopus/rtb"
-	"clickyab.com/exchange/octopus/supliers"
+	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/broker"
+	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
 )
+
+var host = config.RegisterString("octopus.host.name", "exchange-dev.3rdad.com", "the exchange root")
 
 func log(imp exchange.Impression) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
@@ -31,7 +35,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	dec := json.NewEncoder(w)
 	key := xmux.Param(ctx, "key")
 
-	imp, err := supliers.GetImpression(key, r)
+	imp, err := suppliers.GetImpression(key, r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		dec.Encode(struct {
@@ -41,6 +45,25 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	// Change the click url
+	for _, s := range imp.Slots() {
+		att := s.Attributes()
+		if att == nil {
+			continue
+		}
+		exchangeClickURL := &url.URL{
+			Scheme: imp.Scheme(),
+			Host:   host.String(),
+			Path:   fmt.Sprintf("/click/%s/%s", imp.Source().Supplier().Name(), s.TrackID()),
+		}
+		s.SetAttribute("_click_url", att["click_url"])
+		s.SetAttribute("_click_parameter", att["_click_parameter"])
+		s.SetAttribute("click_parameter", "ref")
+		s.SetAttribute("click_url", exchangeClickURL.String())
+		s.SetAttribute("type", "parameter")
+	}
+
 	// OK push it to broker
 	jImp := materialize.ImpressionJob(imp)
 	broker.Publish(jImp)
@@ -50,15 +73,17 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	log(imp).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
 	res := rtb.SelectCPM(imp, ads)
 	log(imp).WithField("count", len(res)).Debug("ads is passed the system select")
-	// Publish them into message broker
-	for i := range res {
-		// TODO : why this happen?
+	for _, s := range imp.Slots() {
+		i := s.TrackID()
+		// Publish them into message broker
 		if res[i] != nil {
 			broker.Publish(materialize.WinnerJob(
 				imp,
 				res[i],
 				i,
 			))
+			att := s.Attributes()
+			assert.NotNil(att)
 
 			store := kv.NewEavStore("PIXEL_" + res[i].TrackID())
 			store.SetSubKey("IP",
@@ -78,15 +103,15 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			).SetSubKey("PROFIT",
 				fmt.Sprintf("%d", int64(imp.Source().Supplier().Share())*res[i].WinnerCPM()/100),
 			)
-			assert.Nil(store.Save(1 * time.Hour))
+			assert.Nil(store.Save(1 * time.Hour)) // TODO : Config
 
-			// TODO: need dara's click worker PR
-			megaImpStore := kv.NewEavStore("MEGA_IMP_" + res[i].TrackID() + imp.TrackID())
-			store.SetSubKey("URL",
-				res[i].URL(),
+			megaImpStore := kv.NewEavStore("SUP_CLICK_" + imp.Source().Supplier().Name() + res[i].TrackID())
+			megaImpStore.SetSubKey("SUP_URL",
+				att["_click_url"],
+			).SetSubKey("SUP_PARAM",
+				att["_click_parameter"],
 			)
-			assert.Nil(megaImpStore.Save(24 * time.Hour))
-
+			assert.Nil(megaImpStore.Save(72 * time.Hour)) // TODO : Config
 		}
 	}
 	err = imp.Source().Supplier().Renderer().Render(imp, res, w)

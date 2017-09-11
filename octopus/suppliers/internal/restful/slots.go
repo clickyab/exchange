@@ -27,3 +27,7 @@ func (sr slotRest) Height() int {
 func (sr slotRest) TrackID() string {
 	return sr.TID
 }
+
+func (sr *slotRest) SetAttribute(att string, v string) {
+	sr.FAttribute[att] = v
+}
