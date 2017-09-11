@@ -39,6 +39,13 @@ type demand struct {
 	testMode           bool
 }
 
+func log(imp exchange.Impression) *logrus.Entry {
+	return logrus.WithFields(logrus.Fields{
+		"track_id": imp.TrackID(),
+		"type":     "provider",
+	})
+}
+
 func (d *demand) WhiteListCountries() []string {
 	return d.country
 }
@@ -71,7 +78,7 @@ func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan e
 		logrus.Debug(err)
 		return
 	}
-	logrus.Debugf("calling demand %s", d.key)
+	log(imp).WithField("key", d.key).Debugf("calling demand")
 	resp, err := d.client.Do(req.WithContext(ctx))
 	if err != nil {
 		logrus.Debug(err)
@@ -80,14 +87,14 @@ func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan e
 	if resp.StatusCode != http.StatusOK {
 		body, _ := ioutil.ReadAll(resp.Body)
 		resp.Body.Close()
-		logrus.Debugf("status code is %d, message was %s", resp.StatusCode, string(body))
+		log(imp).WithField("status", resp.StatusCode).Debug(string(body))
 		return
 	}
 	data, err := ioutil.ReadAll(resp.Body)
 	assert.Nil(err)
 	reader := bytes.NewReader(data)
-	logrus.Debugf("calling demand %s DONE", d.key)
-	logrus.Debugf("result was %s", string(data))
+	log(imp).WithField("key", d.key).Debug(string(data))
+	log(imp).WithField("key", d.key).Debug("Call done")
 
 	ads := []*restAd{}
 	dec := json.NewDecoder(reader)
@@ -97,7 +104,7 @@ func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan e
 		return
 	}
 
-	logrus.Debugf("selected %d ad from pool", len(ads))
+	log(imp).WithField("count", len(ads)).Debug("selected ad from pool")
 	for i := range ads {
 		ads[i].demand = d
 		ch <- ads[i]
@@ -129,7 +136,7 @@ func (d *demand) Win(ctx context.Context, id string, cpm int64) {
 		return
 	}
 
-	logrus.Debugf("winner call status was %d", resp.StatusCode)
+	logrus.WithField("status", resp.StatusCode).Debug("winner call status code")
 }
 
 func (d demand) CallRate() int {

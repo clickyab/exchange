@@ -39,9 +39,9 @@ func Logger(next xhandler.HandlerFuncC) xhandler.HandlerFuncC {
 		// Process request
 		logrus.WithFields(
 			logrus.Fields{
-				"Method":   r.Method,
-				"Path":     r.URL.Path,
-				"ClientIP": ip,
+				"method":    r.Method,
+				"path":      r.URL.Path,
+				"client_ip": ip,
 			},
 		).Debug("STARTED")
 		dummy := &dummyWriter{w: w, status: http.StatusOK}
@@ -49,11 +49,11 @@ func Logger(next xhandler.HandlerFuncC) xhandler.HandlerFuncC {
 		latency := time.Since(start)
 		logrus.WithFields(
 			logrus.Fields{
-				"Method":   r.Method,
-				"Path":     r.URL.Path,
-				"Latency":  latency,
-				"ClientIP": ip,
-				"Status":   dummy.status,
+				"method":    r.Method,
+				"path":      r.URL.Path,
+				"latency":   latency,
+				"client_ip": ip,
+				"status":    dummy.status,
 			},
 		).Debug("DONE WITH: " + http.StatusText(dummy.status))
 	}

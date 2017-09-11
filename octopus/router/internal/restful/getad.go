@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"clickyab.com/exchange/octopus/core"
+	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"clickyab.com/exchange/octopus/rtb"
 	"clickyab.com/exchange/octopus/supliers"
@@ -17,6 +18,13 @@ import (
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
 )
+
+func log(imp exchange.Impression) *logrus.Entry {
+	return logrus.WithFields(logrus.Fields{
+		"track_id": imp.TrackID(),
+		"type":     "provider",
+	})
+}
 
 // GetAd is route to get the ad from a restful endpoint
 func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
@@ -39,9 +47,9 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	nCtx, cnl := context.WithCancel(ctx)
 	defer cnl()
 	ads := core.Call(nCtx, imp)
-	logrus.Debugf("%d ads is passed the system from exchange calls", len(ads))
+	log(imp).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
 	res := rtb.SelectCPM(imp, ads)
-	logrus.Debugf("%d ads is passed the system select", len(res))
+	log(imp).WithField("count", len(res)).Debug("ads is passed the system select")
 	// Publish them into message broker
 	for i := range res {
 		// TODO : why this happen?
