@@ -1,6 +1,8 @@
 package models
 
 import (
+	"strings"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
@@ -22,8 +24,9 @@ type Supplier struct {
 	SShare        int                   `json:"-" db:"share"`
 	SActive       int                   `json:"-" db:"active"`
 
-	UserID int64 `json:"user_id" db:"user_id"`
-	Test   int   `json:"test_mode" db:"test_mode"`
+	UserID int64  `json:"user_id" db:"user_id"`
+	Test   int    `json:"test_mode" db:"test_mode"`
+	Click  string `json:"click_mode" db:"click_mode"`
 
 	r exchange.Renderer
 }
@@ -77,6 +80,16 @@ func (s Supplier) Share() int {
 // TestMode return true if this is a test demand
 func (s Supplier) TestMode() bool {
 	return s.Test != 0
+}
+
+// ClickMode return the click mode supported by this supplier
+func (s Supplier) ClickMode() exchange.SupplierClickMode {
+	c := strings.ToLower(s.Click)
+	switch exchange.SupplierClickMode(c) {
+	case exchange.SupplierClickModeReplaceB64, exchange.SupplierClickModeReplace, exchange.SupplierClickModeQueryParam, exchange.SupplierClickModeNone:
+		return exchange.SupplierClickMode(c)
+	}
+	return exchange.SupplierClickModeNone
 }
 
 // GetSuppliers return all suppliers

@@ -17,7 +17,7 @@ type Impression struct {
 	ISource      Publisher
 	ILocation    Location
 	IAttributes  map[string]interface{}
-	ISlots       []Slot
+	ISlots       []*Slot
 	ICategory    []exchange.Category
 	IPlatform    exchange.ImpressionPlatform
 	IUnderFloor  bool

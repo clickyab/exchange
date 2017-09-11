@@ -37,3 +37,11 @@ func (s Supplier) Renderer() exchange.Renderer {
 func (s Supplier) TestMode() bool {
 	return true
 }
+
+func (s Supplier) ClickMode() exchange.SupplierClickMode {
+	return exchange.SupplierClickModeNone
+}
+
+func (s Supplier) Type() string {
+	return "rest"
+}

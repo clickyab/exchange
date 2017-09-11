@@ -47,6 +47,7 @@ func TestSupplier(t *testing.T) {
 		supplier.EXPECT().Share().Return(10).AnyTimes()
 
 		impression := mock_exchange.NewMockImpression(ctrl)
+		impression.EXPECT().TrackID().Return("HAHAHA").AnyTimes()
 
 		trackIDs := []string{"aaa", "bbb", "ccc"}
 		slots := []exchange.Slot{}

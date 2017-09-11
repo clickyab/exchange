@@ -26,3 +26,7 @@ func (s Slot) TrackID() string {
 func (s Slot) Fallback() string {
 	return s.SFallback
 }
+
+func (s *Slot) SetAttribute(att string, v string) {
+	s.Attribute[att] = v
+}

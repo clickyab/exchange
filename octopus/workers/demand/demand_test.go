@@ -31,9 +31,9 @@ func newDemand(name string, rate int, handicap int64) exchange.Demand {
 }
 
 func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impression {
-	a := make([]mocks.Slot, 0)
+	a := make([]*mocks.Slot, 0)
 	for i := 1; i <= slotCount; i++ {
-		a = append(a, mocks.Slot{
+		a = append(a, &mocks.Slot{
 			SWidth:   300,
 			SHeight:  250,
 			STRackID: <-random.ID,

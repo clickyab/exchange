@@ -1,4 +1,4 @@
-package supliers
+package suppliers
 
 import (
 	"fmt"
@@ -9,9 +9,9 @@ import (
 	"syscall"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/supliers/internal/models"
-	"clickyab.com/exchange/octopus/supliers/internal/restful"
-	"clickyab.com/exchange/octopus/supliers/internal/restful/renderer"
+	"clickyab.com/exchange/octopus/suppliers/internal/models"
+	"clickyab.com/exchange/octopus/suppliers/internal/restful"
+	"clickyab.com/exchange/octopus/suppliers/internal/restful/renderer"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
 
@@ -59,8 +59,8 @@ func (sm *supplierManager) Initialize() {
 	}()
 }
 
-// getSupplier return a single supplier by its id
-func getSupplier(key string) (*models.Supplier, error) {
+// GetSupplier return a single supplier by its id
+func GetSupplier(key string) (exchange.Supplier, error) {
 	sm.lock.RLock()
 	defer sm.lock.RUnlock()
 
@@ -73,17 +73,18 @@ func getSupplier(key string) (*models.Supplier, error) {
 
 // GetImpression try to get an impression from a http request
 func GetImpression(key string, r *http.Request) (exchange.Impression, error) {
-	sup, err := getSupplier(key)
+	sup, err := GetSupplier(key)
 	if err != nil {
 		return nil, err
 	}
+
 	// Make sure the profit margin is added to the request
-	switch sup.SType {
+	switch sup.Type() {
 	case "rest":
 		return restful.GetImpression(sup, r)
 	default:
-		logrus.Panicf("Not a supported type: %s", sup.SType)
-		return nil, fmt.Errorf("not supported type: %s", sup.SType)
+		logrus.Panicf("Not a supported type: %s", sup.Type())
+		return nil, fmt.Errorf("not supported type: %s", sup.Type())
 	}
 }
 

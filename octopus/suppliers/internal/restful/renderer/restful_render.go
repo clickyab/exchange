@@ -57,19 +57,18 @@ func (rf restful) Render(imp exchange.Impression, in map[string]exchange.Adverti
 			IsFilled:  true,
 		}
 
-		winURL := imp.Scheme() + host.String() + "click/" + in[slotTrackID].TrackID() + ":" + imp.TrackID()
+		trackURL := &url.URL{
+			Scheme: imp.Scheme(),
+			Host:   host.String(),
+			Path:   fmt.Sprintf(rf.pixelPattern, in[slotTrackID].Demand().Name(), in[slotTrackID].TrackID()),
+		}
+		winURL := in[slotTrackID].URL()
 		win, err := url.Parse(winURL)
 		if err == nil {
 			q := win.Query()
 			q.Set("win", fmt.Sprint(in[slotTrackID].WinnerCPM()))
 			win.RawQuery = q.Encode()
 			winURL = win.String()
-		}
-
-		trackURL := &url.URL{
-			Scheme: imp.Scheme(),
-			Host:   host.String(),
-			Path:   fmt.Sprintf(rf.pixelPattern, in[slotTrackID].Demand().Name(), in[slotTrackID].TrackID()),
 		}
 
 		ctx := templateContext{

@@ -14,6 +14,7 @@ import (
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/random"
+	"github.com/sirupsen/logrus"
 )
 
 var (
@@ -46,10 +47,13 @@ func demandHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) 
 	rq := &request{}
 	rq.Host = r.Host
 	e := d.Decode(rq)
+
 	if e != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(e.Error()))
 	}
+	data, err := json.MarshalIndent(rq, "", "\t")
+	logrus.WithField("err", err).Debug(string(data))
 	res, err := demandRequest(*rq)
 	assert.Nil(err)
 	jr, e := json.Marshal(res)

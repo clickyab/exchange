@@ -4,18 +4,37 @@ import (
 	"context"
 	"net/http"
 
+	"encoding/base64"
+
+	"encoding/json"
+
+	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 )
 
-// Click is the rouute for click worker
+// Click is the route for click worker
 func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	trackIDs := xmux.Param(ctx, "key")
-	megaImpStore := kv.NewEavStore("MEGA_IMP_" + trackIDs)
+	supplier := xmux.Param(ctx, "supplier")
+	trackID := xmux.Param(ctx, "trackID")
+	url := r.FormValue("url")
+	translated := make([]byte, len([]byte(url))+1)
+	_, err := base64.URLEncoding.WithPadding('.').Decode(translated, []byte(url))
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("invalid url"))
+		return
+	}
 
-	winURL := megaImpStore.SubKey("URL")
+	sup, err := suppliers.GetSupplier(supplier)
+	if err != nil {
+		http.Redirect(w, r, string(translated), http.StatusFound)
+		return
+	}
 
-	// TODO: calling click worker
+	megaImpStore := kv.NewEavStore("SUP_CLICK_" + sup.Name() + trackID)
 
-	http.Redirect(w, r, winURL, http.StatusTemporaryRedirect)
+	j := json.NewEncoder(w)
+	j.SetIndent("", "\t")
+	j.Encode(megaImpStore.AllKeys())
 }
