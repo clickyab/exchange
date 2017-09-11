@@ -59,8 +59,8 @@ func (sm *supplierManager) Initialize() {
 	}()
 }
 
-// GetSupplier return a single supplier by its id
-func GetSupplier(key string) (exchange.Supplier, error) {
+// GetSupplierByKey return a single supplier by its id
+func GetSupplierByKey(key string) (exchange.Supplier, error) {
 	sm.lock.RLock()
 	defer sm.lock.RUnlock()
 
@@ -71,9 +71,22 @@ func GetSupplier(key string) (exchange.Supplier, error) {
 	return nil, fmt.Errorf("supplier with key %s not found", key)
 }
 
+// GetSupplierByKey return a single supplier by its id
+func GetSupplierByName(name string) (exchange.Supplier, error) {
+	sm.lock.RLock()
+	defer sm.lock.RUnlock()
+	for i := range sm.suppliers {
+		if sm.suppliers[i].Name() == name {
+			return sm.suppliers[i], nil
+		}
+	}
+
+	return nil, fmt.Errorf("supplier with name %s not found", name)
+}
+
 // GetImpression try to get an impression from a http request
 func GetImpression(key string, r *http.Request) (exchange.Impression, error) {
-	sup, err := GetSupplier(key)
+	sup, err := GetSupplierByKey(key)
 	if err != nil {
 		return nil, err
 	}

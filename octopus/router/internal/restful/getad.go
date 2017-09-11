@@ -21,7 +21,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var host = config.RegisterString("octopus.host.name", "exchange-dev.3rdad.com", "the exchange root")
+var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange root")
 
 func log(imp exchange.Impression) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
@@ -52,13 +52,15 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		if att == nil {
 			continue
 		}
+
+		// TODO : Mount point is hard coded here, use the config
 		exchangeClickURL := &url.URL{
 			Scheme: imp.Scheme(),
 			Host:   host.String(),
-			Path:   fmt.Sprintf("/click/%s/%s", imp.Source().Supplier().Name(), s.TrackID()),
+			Path:   fmt.Sprintf("/api/click/%s/%s/%s", imp.Source().Supplier().Name(), imp.TrackID(), s.TrackID()),
 		}
 		s.SetAttribute("_click_url", att["click_url"])
-		s.SetAttribute("_click_parameter", att["_click_parameter"])
+		s.SetAttribute("_click_parameter", att["click_parameter"])
 		s.SetAttribute("click_parameter", "ref")
 		s.SetAttribute("click_url", exchangeClickURL.String())
 		s.SetAttribute("type", "parameter")
@@ -105,7 +107,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			)
 			assert.Nil(store.Save(1 * time.Hour)) // TODO : Config
 
-			megaImpStore := kv.NewEavStore("SUP_CLICK_" + imp.Source().Supplier().Name() + res[i].TrackID())
+			megaImpStore := kv.NewEavStore("SUP_CLICK_" + imp.TrackID() + imp.Source().Supplier().Name() + s.TrackID())
 			megaImpStore.SetSubKey("SUP_URL",
 				att["_click_url"],
 			).SetSubKey("SUP_PARAM",
