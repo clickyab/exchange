@@ -33,6 +33,8 @@ type rawLocation struct {
 	Province exchange.Province `json:"province"`
 	// LatLon return the latitude longitude if any
 	LatLon exchange.LatLon `json:"lat_lon"`
+	// ISP return the isp
+	ISP exchange.ISP `json:"isp"`
 }
 
 func getRawLocation(in exchange.Location) rawLocation {
@@ -40,6 +42,7 @@ func getRawLocation(in exchange.Location) rawLocation {
 		LatLon:   in.LatLon(),
 		Province: in.Province(),
 		Country:  in.Country(),
+		ISP:      in.ISP(),
 	}
 }
 
