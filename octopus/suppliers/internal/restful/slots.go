@@ -29,5 +29,8 @@ func (sr slotRest) TrackID() string {
 }
 
 func (sr *slotRest) SetAttribute(att string, v string) {
+	if sr.FAttribute == nil {
+		sr.FAttribute = make(map[string]string)
+	}
 	sr.FAttribute[att] = v
 }
