@@ -39,7 +39,7 @@ func (m *Manager) updateSupplierReport(t time.Time) {
 							  earn=VALUES(earn),
 							  click=VALUES(click)`, SupplierReportTableName, td, SupplierTableName, from, to)
 
-	_, err := NewManager().GetRDbMap().Exec(q)
+	_, err := NewManager().GetWDbMap().Exec(q)
 	assert.Nil(err)
 }
 

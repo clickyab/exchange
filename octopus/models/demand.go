@@ -254,7 +254,7 @@ func (m *Manager) updateDemandReport(t time.Time) {
 							  profit=values(profit),
 							  click=values(click)`, td, from, to)
 
-	_, err := NewManager().GetRDbMap().Exec(q)
+	_, err := NewManager().GetWDbMap().Exec(q)
 	assert.Nil(err)
 }
 

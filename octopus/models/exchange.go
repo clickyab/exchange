@@ -64,7 +64,7 @@ func (m *Manager) updateExchangeReport(t time.Time) {
 				income = VALUES(income),
 				click = VALUES(click)
 				`, ExchangeReportTableName)
-	_, err := m.GetRDbMap().Exec(q, td, sup.SupplierImpressionIN,
+	_, err := m.GetWDbMap().Exec(q, td, sup.SupplierImpressionIN,
 		sup.SupplierImpressionOUT, dem.DemandImpressionIN, dem.DemandImpressionOUT,
 		sup.Spent, dem.Earn, dem.Earn-sup.Spent, dem.Click+sup.Click)
 	assert.Nil(err)
