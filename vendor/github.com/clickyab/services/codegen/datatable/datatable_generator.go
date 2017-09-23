@@ -28,21 +28,19 @@ type PermCode struct {
 }
 
 type dataTable struct {
-	pkg         humanize.Package
-	file        humanize.File
-	Ann         annotate.Annotate
-	typ         humanize.TypeName
-	format      []string
-	Type        string
-	Column      []ColumnDef
-	Columns     template.HTML
-	Actions     map[string]*PermCode
-	Fill        string
-	View        *PermCode
-	Entity      string
-	URL         string
-	Checkable   string
-	Multiselect string
+	pkg     humanize.Package
+	file    humanize.File
+	Ann     annotate.Annotate
+	typ     humanize.TypeName
+	format  []string
+	Type    string
+	Column  []ColumnDef
+	Columns template.HTML
+	Actions map[string]*PermCode
+	Fill    string
+	View    *PermCode
+	Entity  string
+	URL     string
 }
 
 type context []dataTable
@@ -55,7 +53,6 @@ type ColumnDef struct {
 	Visible         bool              `json:"visible"`
 	Filter          bool              `json:"filter"`
 	Title           string            `json:"title"`
-	Type            string            `json:"type"`
 	Format          bool              `json:"-"`
 	Perm            *PermCode         `json:"-"`
 	HasPerm         bool              `json:"-"`
@@ -86,7 +83,7 @@ type (
 
 {{ range $m := .Data }}
 
-func ({{ $m.Type|getvar }}a {{ $m.Type }}Array) Filter(u permission.Interface){{ $m.Type }}Array {
+func ({{ $m.Type|getvar }}a {{ $m.Type }}Array) Filter(u base.PermInterface){{ $m.Type }}Array {
 	res := make({{ $m.Type }}Array, len({{ $m.Type|getvar }}a))
 	for i := range {{ $m.Type|getvar }}a {
 		res[i] = {{ $m.Type|getvar }}a[i].Filter(u)
@@ -96,7 +93,7 @@ func ({{ $m.Type|getvar }}a {{ $m.Type }}Array) Filter(u permission.Interface){{
 }
 
 // Filter is for filtering base on permission
-func ({{ $m.Type|getvar }} {{ $m.Type }}) Filter(u permission.Interface) {{ $m.Type }} {
+func ({{ $m.Type|getvar }} {{ $m.Type }}) Filter(u base.PermInterface) {{ $m.Type }} {
 	action :=[]string{}
 	res := {{ $m.Type }}{}
 	{{ range $clm := $m.Column }}
@@ -126,14 +123,14 @@ func ({{ $m.Type|getvar }} {{ $m.Type }}) Filter(u permission.Interface) {{ $m.T
 
 func init () {
 	{{ range $act, $perm := $m.Actions }}
-	permission.RegisterPermission("{{ $perm.Perm }}", "{{ $perm.Perm }}");
+	base.RegisterPermission("{{ $perm.Perm }}", "{{ $perm.Perm }}");
 	{{ end }}
 	{{ range $c:= $m.Column }}
 		{{ if $c.Perm }}
-		permission.RegisterPermission("{{ $c.Perm.Perm }}", "{{ $c.Perm.Perm }}");
+		base.RegisterPermission("{{ $c.Perm.Perm }}", "{{ $c.Perm.Perm }}");
 		{{ end }}
 		{{ if $c.Edit}}
-		permission.RegisterPermission("{{ $c.Edit.Perm }}", "{{ $c.Edit.Perm }}");
+		base.RegisterPermission("{{ $c.Edit.Perm }}", "{{ $c.Edit.Perm }}");
 		{{ end }}
 	{{ end }}
 }
@@ -151,9 +148,8 @@ package {{ .ControllerPackageName }}
 import (
 	"modules/user/aaa"
 	"modules/user/middlewares"
-	"github.com/clickyab/services/permission"
-	"github.com/rs/xmux"
 	"net/http"
+	"gopkg.in/labstack/echo.v3"
 	"{{ .Model  }}"
 )
 
@@ -162,20 +158,10 @@ type list{{ .Data.Entity|ucfirst }}Response struct {
 	Data    {{ .PackageName }}.{{ .Data.Type }}Array ` + "`json:\"data\"`" + `
 	Page    int                    ` + "`json:\"page\"`" + `
 	PerPage int                    ` + "`json:\"per_page\"`" + `
-	Hash    string            		` + "`json:\"hash\"`" + `
+	Definition base.Columns           ` + "`json:\"definition\"`" + `
 }
 
-type list{{ .Data.Entity|ucfirst }}DefResponse struct{
-	Hash    string            		` + "`json:\"hash\"`" + `
-	Checkable    bool            		` + "`json:\"checkable\"`" + `
-	Multiselect    bool            		` + "`json:\"multiselect\"`" + `
-	Columns permission.Columns      ` + "`json:\"columns\"`" + `
-}
-
-var (
-	list{{ .Data.Entity|ucfirst }}Definition permission.Columns
-	tmp = []byte{}
-)
+var list{{ .Data.Entity|ucfirst }}Definition base.Columns
 
 // @Route {
 // 		url = {{ .Data.URL }}
@@ -186,18 +172,18 @@ var (
 //		_sort_ = string, the sort and order like id:asc or id:desc available column {{ .ValidSorts }}{{end}}{{ range $f := .Data.Column }}{{ if $f.Filter }}
 //		_{{ $f.Data }}_ = string , filter the {{ $f.Data }} field valid values are {{ $f.FilterValid }}{{ end }}{{ end }}{{ range $f := .Data.Column }}{{ if $f.Searchable }}
 //		_{{ $f.Data }}_ = string , search the {{ $f.Data }} field {{ end }}{{ end }}
+//		_def_ = bool, show definition in result?
 //		200 = list{{ .Data.Entity|ucfirst }}Response
 // }
-func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx echo.Context) error {
 	m :=  {{ .PackageName }}.New{{ .PackageName|ucfirst }}Manager()
 	usr := authz.MustGetUser(ctx)
-	domain:=domain.MustGetDomain(ctx)
-	p, c := framework.GetPageAndCount(r, false)
+	p, c := httplib.GetPageAndCount(ctx.Request(), true)
 
 	filter := make(map[string]string)
 	{{ range $f := .Data.Column }}
 	{{ if $f.Filter }}
-	if e := r.URL.Query().Get("{{ $f.Data }}"); e != "" && {{ $.PackageName }}.{{ $f.FieldTypeString }}(e).IsValid() {
+	if e := ctx.Request().URL.Query().Get("{{ $f.Data }}"); e != "" && {{ $.PackageName }}.{{ $f.FieldTypeString }}(e).IsValid() {
 		filter["{{ if ne $f.Transform "" }}{{ $f.Transform }}{{else}}{{ $f.Data }}{{end}}"] = e
 	}
 	{{ end }}
@@ -205,13 +191,13 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 	search := make(map[string]string)
 	{{ range $f := .Data.Column }}
 	{{ if $f.Searchable }}
-	if e := r.URL.Query().Get("{{ $f.Data }}"); e != "" {
+	if e := ctx.Request().URL.Query().Get("{{ $f.Data }}"); e != "" {
 		search["{{ if ne $f.Transform "" }}{{ $f.Transform }}{{else}}{{ $f.Data }}{{end}}"] = e
 	}
 	{{ end }}
 	{{ end }}
 	{{ if .HasSort }}
-	s := r.URL.Query().Get("sort")
+	s := ctx.Request().URL.Query().Get("sort")
 	parts := strings.SplitN(s, ":", 2)
 	if len(parts) != 2 {
 		parts = append(parts, "asc")
@@ -230,11 +216,11 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 	{{ end }}
 
 	params := make(map[string]string)
-	for _, i := range xmux.Params(ctx) {
-		params[i.Name] = xmux.Param(ctx,i.Name)
+	for _, i := range ctx.ParamNames() {
+		params[i] = ctx.Param(i)
 	}
 
-	pc := permission.NewInterfaceComplete(usr, usr.ID, "{{ .Data.View.Perm }}", "{{ .Data.View.Scope }}",domain.ID)
+	pc := base.NewPermInterfaceComplete(usr, usr.ID, "{{ .Data.View.Perm }}", "{{ .Data.View.Scope }}")
 	dt, cnt := m.{{ .Data.Fill }}(pc, filter, search, params, sort, order, p, c)
 	res := 		list{{ .Data.Entity|ucfirst }}Response{
 		Total:   cnt,
@@ -242,35 +228,17 @@ func (u *Controller) list{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.
 		Page:    p,
 		PerPage: c,
 	}
-
-	h := sha1.New()
-	_, _ = h.Write(tmp)
-	res.Hash = fmt.Sprintf("%x", h.Sum(nil))
-
-	u.OKResponse(
-		w,
+	if ctx.Request().URL.Query().Get("def") == "true" {
+		res.Definition = list{{ .Data.Entity|ucfirst }}Definition
+	}
+	return u.OKResponse(
+		ctx,
 		res,
 	)
 }
 
-// @Route {
-// 		url = {{ .Data.URL }}/definition
-//		method = get
-//		resource = {{ .Data.View.Total }}
-//		200 = list{{ .Data.Entity|ucfirst }}DefResponse
-// }
-func (u *Controller) def{{ .Data.Entity|ucfirst }}(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	h := sha1.New()
-	_, _ = h.Write(tmp)
-	hash := fmt.Sprintf("%x", h.Sum(nil))
-	u.OKResponse(
-		w,
-		list{{ .Data.Entity|ucfirst }}DefResponse{Checkable:{{ .Data.Checkable }},Multiselect:{{ .Data.Multiselect }},Hash:hash,Columns:list{{ .Data.Entity|ucfirst }}Definition},
-	)
-}
-
 func init() {
-	tmp = []byte(` + "` {{ .Data.Columns }} `" + `)
+	tmp := []byte(` + "` {{ .Data.Columns }} `" + `)
 	assert.Nil(json.Unmarshal(tmp, &list{{ .Data.Entity|ucfirst }}Definition))
 }
 
@@ -290,9 +258,9 @@ var (
 func scopeArg(s string) template.HTML {
 	switch s {
 	case "parent":
-		return template.HTML(`,permission.ScopeParent, permission.ScopeGlobal`)
+		return template.HTML(`,base.ScopeParent, base.ScopeGlobal`)
 	case "global":
-		return template.HTML(`,permission.ScopeGlobal`)
+		return template.HTML(`,base.ScopeGlobal`)
 	}
 	return ""
 }
@@ -399,7 +367,6 @@ func handleField(p humanize.Package, f humanize.Field, mapPrefix string) (Column
 	}
 	clm.Data = tag
 	clm.Name = f.Name
-	clm.Type = f.Tags.Get("type")
 	clm.Searchable = strings.ToLower(f.Tags.Get("search")) == "true"
 	clm.Sortable = strings.ToLower(f.Tags.Get("sort")) == "true"
 	clm.Filter = strings.ToLower(f.Tags.Get("filter")) == "true"
@@ -617,8 +584,6 @@ func (r *dataTablePlugin) ProcessStructure(
 
 	dt.Entity = a.Items["entity"]
 	dt.URL = a.Items["url"]
-	dt.Checkable = a.Items["checkable"]
-	dt.Multiselect = a.Items["multiselect"]
 
 	for i := range pkg.Files {
 		for _, fn := range pkg.Files[i].Functions {
