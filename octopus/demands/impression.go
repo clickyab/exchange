@@ -56,7 +56,7 @@ type rawSlot struct {
 	Attributes map[string]string `json:"attributes"`
 }
 
-func getRawSlots(in []exchange.Slot) []rawSlot {
+func getRawSlots(in []exchange.Impression) []rawSlot {
 	res := make([]rawSlot, len(in))
 	for i := range in {
 		res[i] = rawSlot{

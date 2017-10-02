@@ -33,7 +33,7 @@ func newPub(c *gomock.Controller) exchange.Publisher {
 	return tmp
 }
 func newImp(c *gomock.Controller, count int) exchange.BidRequest {
-	tmp := make([]exchange.Slot, count)
+	tmp := make([]exchange.Impression, count)
 	for i := range tmp {
 		s := mock_entity.NewMockSlot(c)
 		s.EXPECT().TrackID().Return(<-random.ID).AnyTimes()

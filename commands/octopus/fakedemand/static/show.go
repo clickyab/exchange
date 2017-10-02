@@ -64,7 +64,7 @@ func adHandler(ctx context.Context, w http.ResponseWriter, _ *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	//w.Write(filler(k.SubKey(clickURL), fmt.Sprintf("Slot ID: %s", slot), wd, ht))
+	//w.Write(filler(k.SubKey(clickURL), fmt.Sprintf("Impression ID: %s", slot), wd, ht))
 	w.Write([]byte(k.SubKey(ad)))
 }
 

@@ -1,7 +1,7 @@
 package exchange
 
-// Slot is the slot of the app
-type Slot interface {
+// Impression is the slot of the app
+type Impression interface {
 	// Size return the primary size of this slot
 	Width() int
 	Height() int

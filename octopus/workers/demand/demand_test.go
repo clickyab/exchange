@@ -52,7 +52,7 @@ func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidR
 	}
 }
 
-func newAds(slots []exchange.Slot, demand exchange.Demand) map[string]exchange.Advertise {
+func newAds(slots []exchange.Impression, demand exchange.Demand) map[string]exchange.Advertise {
 	a := make(map[string]exchange.Advertise, 0)
 	for i := range slots {
 		a[slots[i].TrackID()] = &mocks.Ads{

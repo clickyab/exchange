@@ -75,7 +75,7 @@ func locationToMap(loc exchange.Location) map[string]interface{} {
 	}
 }
 
-func slotsToMap(slots []exchange.Slot, ads map[string]exchange.Advertise) []map[string]interface{} {
+func slotsToMap(slots []exchange.Impression, ads map[string]exchange.Advertise) []map[string]interface{} {
 	resSlots := make([]map[string]interface{}, 0)
 	for i := range slots {
 		data := map[string]interface{}{

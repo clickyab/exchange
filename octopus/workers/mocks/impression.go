@@ -60,8 +60,8 @@ func (i Impression) Attributes() map[string]interface{} {
 	return i.IAttributes
 }
 
-func (i Impression) Slots() []exchange.Slot {
-	res := make([]exchange.Slot, len(i.ISlots))
+func (i Impression) Slots() []exchange.Impression {
+	res := make([]exchange.Impression, len(i.ISlots))
 	for j := range i.ISlots {
 		res[j] = i.ISlots[j]
 	}

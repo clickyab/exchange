@@ -45,7 +45,7 @@ type BidRequest interface {
 	// Attributes is the generic attribute system
 	Attributes() map[string]interface{}
 	// Slots is the slot for this request
-	Slots() []Slot
+	Slots() []Impression
 	// Category returns category obviously
 	Category() []Category
 	// Platform return the publisher type
