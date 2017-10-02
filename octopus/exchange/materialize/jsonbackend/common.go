@@ -4,7 +4,7 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 )
 
-func impressionToMap(imp exchange.Impression, ads map[string]exchange.Advertise) map[string]interface{} {
+func impressionToMap(imp exchange.BidRequest, ads map[string]exchange.Advertise) map[string]interface{} {
 	return map[string]interface{}{
 		"track_id":    imp.TrackID(),
 		"ip":          imp.IP(),
@@ -95,7 +95,7 @@ func slotsToMap(slots []exchange.Slot, ads map[string]exchange.Advertise) []map[
 	return resSlots
 }
 
-func winnerToMap(imp exchange.Impression, ad exchange.Advertise, slotID string) map[string]interface{} {
+func winnerToMap(imp exchange.BidRequest, ad exchange.Advertise, slotID string) map[string]interface{} {
 	m := make(map[string]exchange.Advertise)
 	m[slotID] = ad
 	return map[string]interface{}{

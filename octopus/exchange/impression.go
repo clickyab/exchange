@@ -24,11 +24,8 @@ const (
 	ImpressionPlatformWeb
 )
 
-// ImpressionAttributes is the imp attr key
-type ImpressionAttributes string
-
-// Impression is the single impression object
-type Impression interface {
+// BidRequest is the single impression object
+type BidRequest interface {
 	// TrackID return the random id of this imp object
 	TrackID() string
 	// IP return the client ip

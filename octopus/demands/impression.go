@@ -93,7 +93,7 @@ type rawImp struct {
 	UnderFloor bool `json:"under_floor"`
 }
 
-func getRawImpression(imp exchange.Impression) interface{} {
+func getRawImpression(imp exchange.BidRequest) interface{} {
 	checkIP := func() string {
 		if i := imp.IP(); i != nil {
 			return i.String()

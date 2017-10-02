@@ -49,7 +49,7 @@ type requestBody struct {
 }
 
 // GetImpression try to create an impression object from a request
-func GetImpression(sup exchange.Supplier, r *http.Request) (exchange.Impression, error) {
+func GetImpression(sup exchange.Supplier, r *http.Request) (exchange.BidRequest, error) {
 	dec := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 

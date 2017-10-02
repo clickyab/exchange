@@ -32,7 +32,7 @@ func newPub(c *gomock.Controller) exchange.Publisher {
 	tmp.EXPECT().FloorCPM().Return(int64(100)).AnyTimes()
 	return tmp
 }
-func newImp(c *gomock.Controller, count int) exchange.Impression {
+func newImp(c *gomock.Controller, count int) exchange.BidRequest {
 	tmp := make([]exchange.Slot, count)
 	for i := range tmp {
 		s := mock_entity.NewMockSlot(c)
@@ -79,7 +79,7 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 						for _, s := range imp.Slots() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)
 							tmp.EXPECT().MaxCPM().Return(int64(200)).AnyTimes()
@@ -107,7 +107,7 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 						time.Sleep(time.Millisecond * 150)
 						for _, s := range imp.Slots() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)
@@ -134,7 +134,7 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 						time.Sleep(time.Millisecond * 100)
 						for _, s := range imp.Slots() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)
@@ -152,7 +152,7 @@ func TestProviders(t *testing.T) {
 				d2.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d2.EXPECT().CallRate().Return(100).AnyTimes()
 				d2.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 						time.Sleep(time.Millisecond * 10)
 						for _, s := range imp.Slots() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)

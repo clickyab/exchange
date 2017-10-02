@@ -10,7 +10,7 @@ import (
 )
 
 type demand struct {
-	imp exchange.Impression
+	imp exchange.BidRequest
 	dmn exchange.Demand
 	ads map[string]exchange.Advertise
 
@@ -56,7 +56,7 @@ func (d demand) Report() func(error) {
 
 // DemandJob returns a job for demand
 // TODO : add a duration to this. for better view this is important
-func DemandJob(imp exchange.Impression, dmn exchange.Demand, ads map[string]exchange.Advertise) broker.Job {
+func DemandJob(imp exchange.BidRequest, dmn exchange.Demand, ads map[string]exchange.Advertise) broker.Job {
 	return &demand{
 		imp: imp,
 		dmn: dmn,

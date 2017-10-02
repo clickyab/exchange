@@ -30,7 +30,7 @@ func newDemand(name string, rate int, handicap int64) exchange.Demand {
 	}
 }
 
-func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impression {
+func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
 	a := make([]*mocks.Slot, 0)
 	for i := 1; i <= slotCount; i++ {
 		a = append(a, &mocks.Slot{
@@ -65,7 +65,7 @@ func newAds(slots []exchange.Slot, demand exchange.Demand) map[string]exchange.A
 	return a
 }
 
-func demToDelivery(i exchange.Impression, dem exchange.Demand, ads map[string]exchange.Advertise) broker.Delivery {
+func demToDelivery(i exchange.BidRequest, dem exchange.Demand, ads map[string]exchange.Advertise) broker.Delivery {
 	job := materialize.DemandJob(i, dem, ads)
 	d, err := job.Encode()
 	assert.Nil(err)

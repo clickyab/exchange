@@ -24,7 +24,7 @@ var (
 	//t3, _ = time.Parse("2006-01-02T15:04:05.000Z", "2017-03-21T02:01:00.000Z")
 )
 
-func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impression {
+func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
 	slots := make([]*mocks.Slot, slotCount)
 	for i := range slots {
 		slots[i] = &mocks.Slot{}
@@ -41,7 +41,7 @@ func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impr
 	}
 }
 
-func impToDelivery(in exchange.Impression) broker.Delivery {
+func impToDelivery(in exchange.BidRequest) broker.Delivery {
 	job := materialize.ImpressionJob(in)
 	d, err := job.Encode()
 	assert.Nil(err)

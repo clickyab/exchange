@@ -23,14 +23,14 @@ import (
 
 var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange root")
 
-func log(imp exchange.Impression) *logrus.Entry {
+func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
 		"track_id": imp.TrackID(),
 		"type":     "provider",
 	})
 }
 
-func modifyClicks(imp exchange.Impression) {
+func modifyClicks(imp exchange.BidRequest) {
 	// Change the click url
 	for _, s := range imp.Slots() {
 		att := s.Attributes()
@@ -52,7 +52,7 @@ func modifyClicks(imp exchange.Impression) {
 	}
 }
 
-func storeKeys(imp exchange.Impression, res map[string]exchange.Advertise) {
+func storeKeys(imp exchange.BidRequest, res map[string]exchange.Advertise) {
 	for _, s := range imp.Slots() {
 		i := s.TrackID()
 		// Publish them into message broker

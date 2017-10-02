@@ -11,7 +11,7 @@ run-octopus: all
 	$(BIN)/octopus
 
 run-fakedemand: all
-	PORT=6000 $(BIN)/fakedemand
+	PORT=9898 $(BIN)/fakedemand
 
 run-fakesupplier: all
 	$(BIN)/supplier

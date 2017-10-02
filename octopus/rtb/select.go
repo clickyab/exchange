@@ -23,7 +23,7 @@ var (
 )
 
 // SelectCPM is the simplest way to bid. sort the value, return the
-func SelectCPM(imp exchange.Impression, all map[string][]exchange.Advertise) (res map[string]exchange.Advertise) {
+func SelectCPM(imp exchange.BidRequest, all map[string][]exchange.Advertise) (res map[string]exchange.Advertise) {
 	res = make(map[string]exchange.Advertise)
 
 	lock := kv.NewDistributedLock("LOCK"+imp.Source().Supplier().Name()+imp.PageTrackID(), pageLock.Duration())

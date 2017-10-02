@@ -61,7 +61,7 @@ func TestDemandProvide(t *testing.T) {
 				hourLimit:  1000,
 				weekLimit:  1000,
 				endPoint:   "http://127.0.0.1:9898",
-				encoder: func(imp exchange.Impression) interface{} {
+				encoder: func(imp exchange.BidRequest) interface{} {
 					return imp
 				},
 			}

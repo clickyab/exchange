@@ -20,7 +20,7 @@ import (
 var (
 	allProviders = make(map[string]providerData)
 	lock         = &sync.RWMutex{}
-	filters      []func(exchange.Impression, providerData) bool
+	filters      []func(exchange.BidRequest, providerData) bool
 )
 
 type providerData struct {
@@ -30,7 +30,7 @@ type providerData struct {
 	callRateTracker int64
 }
 
-func log(imp exchange.Impression) *logrus.Entry {
+func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
 		"track_id": imp.TrackID(),
 		"type":     "provider",
@@ -43,7 +43,7 @@ func (p *providerData) Skip() bool {
 	return x%100 >= int64(p.provider.CallRate())
 }
 
-func (p *providerData) watch(ctx context.Context, imp exchange.Impression) (res map[string]exchange.Advertise) {
+func (p *providerData) watch(ctx context.Context, imp exchange.BidRequest) (res map[string]exchange.Advertise) {
 	//in := time.Now()
 	defer func() {
 		//out := time.Since(in)
@@ -110,7 +110,7 @@ func ResetProviders() {
 }
 
 // Call is for getting the current ads for this imp
-func Call(ctx context.Context, imp exchange.Impression) map[string][]exchange.Advertise {
+func Call(ctx context.Context, imp exchange.BidRequest) map[string][]exchange.Advertise {
 	rCtx, cnl := context.WithTimeout(ctx, maximumTimeout)
 	defer cnl()
 
@@ -155,7 +155,7 @@ func Call(ctx context.Context, imp exchange.Impression) map[string][]exchange.Ad
 	return res
 }
 
-func demandIsAllowed(m exchange.Impression, d providerData) bool {
+func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
 	for _, f := range filters {
 		if f(m, d) {
 			return false
@@ -164,22 +164,22 @@ func demandIsAllowed(m exchange.Impression, d providerData) bool {
 	return true
 }
 
-func isSameProvider(impression exchange.Impression, data providerData) bool {
+func isSameProvider(impression exchange.BidRequest, data providerData) bool {
 	return impression.Source().Name() == data.name
 }
 
-func notWhitelistCountries(impression exchange.Impression, data providerData) bool {
+func notWhitelistCountries(impression exchange.BidRequest, data providerData) bool {
 	if len(data.provider.WhiteListCountries()) == 0 {
 		return false
 	}
 	return !contains(data.provider.WhiteListCountries(), impression.Location().Country().ISO)
 }
 
-func isExcludedDemands(impression exchange.Impression, data providerData) bool {
+func isExcludedDemands(impression exchange.BidRequest, data providerData) bool {
 	return contains(impression.Source().Supplier().ExcludedDemands(), data.name)
 }
 
-func isNotSameMode(impression exchange.Impression, data providerData) bool {
+func isNotSameMode(impression exchange.BidRequest, data providerData) bool {
 	return impression.Source().Supplier().TestMode() != data.provider.TestMode()
 }
 
@@ -193,7 +193,7 @@ func contains(s []string, t string) bool {
 }
 
 func init() {
-	filters = []func(exchange.Impression, providerData) bool{
+	filters = []func(exchange.BidRequest, providerData) bool{
 		isNotSameMode,
 		isSameProvider,
 		notWhitelistCountries,

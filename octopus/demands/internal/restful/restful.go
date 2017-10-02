@@ -23,7 +23,7 @@ type demand struct {
 	client             *http.Client
 	callRate           int
 	dayLimit           int64
-	encoder            func(exchange.Impression) interface{}
+	encoder            func(exchange.BidRequest) interface{}
 	endPoint           string
 	handicap           int64
 	hourLimit          int64
@@ -39,7 +39,7 @@ type demand struct {
 	testMode           bool
 }
 
-func log(imp exchange.Impression) *logrus.Entry {
+func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
 		"track_id": imp.TrackID(),
 		"type":     "provider",
@@ -62,7 +62,7 @@ func (d *demand) Name() string {
 	return d.key
 }
 
-func (d *demand) Provide(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+func (d *demand) Provide(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 	defer close(ch)
 	if !d.hasLimits() {
 		return
@@ -187,7 +187,7 @@ func (d *demand) createConnection() {
 }
 
 // NewRestfulClient return a new client for restful call
-func NewRestfulClient(d models.Demand, encoder func(exchange.Impression) interface{}) exchange.Demand {
+func NewRestfulClient(d models.Demand, encoder func(exchange.BidRequest) interface{}) exchange.Demand {
 	var win *url.URL
 	var err error
 	if d.WinURL.Valid {
