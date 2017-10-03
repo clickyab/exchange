@@ -85,7 +85,7 @@ func (ir impressionRest) UserAgent() string {
 	return ir.UA
 }
 
-func (ir impressionRest) Source() exchange.Publisher {
+func (ir impressionRest) Source() exchange.Inventory {
 	return ir.Pub
 }
 

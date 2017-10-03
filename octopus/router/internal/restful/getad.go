@@ -25,14 +25,14 @@ var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange
 
 func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
-		"track_id": imp.TrackID(),
+		"track_id": imp.ID(),
 		"type":     "provider",
 	})
 }
 
 func modifyClicks(imp exchange.BidRequest) {
 	// Change the click url
-	for _, s := range imp.Slots() {
+	for _, s := range imp.Imp() {
 		att := s.Attributes()
 		if att == nil {
 			continue
@@ -42,7 +42,7 @@ func modifyClicks(imp exchange.BidRequest) {
 		exchangeClickURL := &url.URL{
 			Scheme: imp.Scheme(),
 			Host:   host.String(),
-			Path:   fmt.Sprintf("/api/click/%s/%s/%s", imp.Source().Supplier().Name(), imp.TrackID(), s.TrackID()),
+			Path:   fmt.Sprintf("/api/click/%s/%s/%s", imp.Source().Supplier().Name(), imp.ID(), s.TrackID()),
 		}
 		s.SetAttribute("_click_url", att["click_url"])
 		s.SetAttribute("_click_parameter", att["click_parameter"])
@@ -53,7 +53,7 @@ func modifyClicks(imp exchange.BidRequest) {
 }
 
 func storeKeys(imp exchange.BidRequest, res map[string]exchange.Advertise) {
-	for _, s := range imp.Slots() {
+	for _, s := range imp.Imp() {
 		i := s.TrackID()
 		// Publish them into message broker
 		if res[i] != nil {
@@ -85,7 +85,7 @@ func storeKeys(imp exchange.BidRequest, res map[string]exchange.Advertise) {
 			)
 			assert.Nil(store.Save(1 * time.Hour)) // TODO : Config
 
-			megaImpStore := kv.NewEavStore("SUP_CLICK_" + imp.TrackID() + imp.Source().Supplier().Name() + s.TrackID())
+			megaImpStore := kv.NewEavStore("SUP_CLICK_" + imp.ID() + imp.Source().Supplier().Name() + s.TrackID())
 			megaImpStore.SetSubKey("SUP_URL",
 				att["_click_url"],
 			).SetSubKey("SUP_PARAM",

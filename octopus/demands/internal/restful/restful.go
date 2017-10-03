@@ -41,7 +41,7 @@ type demand struct {
 
 func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
-		"track_id": imp.TrackID(),
+		"track_id": imp.ID(),
 		"type":     "provider",
 	})
 }

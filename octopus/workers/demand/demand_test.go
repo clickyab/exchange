@@ -89,7 +89,7 @@ func TestDemand(t *testing.T) {
 		d := newDemand("test_demand", 100, 50)
 		imp := newImpression(t1, 2, "test_source", "test_supplier")
 		//slots:=newSlots(2)
-		ads := newAds(imp.Slots(), d)
+		ads := newAds(imp.Imp(), d)
 		ctx, cnl := context.WithCancel(base)
 		defer cnl()
 		dem := consumer{ctx: ctx}

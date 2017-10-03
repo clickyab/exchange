@@ -30,7 +30,7 @@ type restful struct {
 
 func (rf restful) Render(imp exchange.BidRequest, in map[string]exchange.Advertise, w http.ResponseWriter) error {
 	res := make([]*dumbAd, 0)
-	slots := imp.Slots()
+	slots := imp.Imp()
 	for k := range slots {
 		slotTrackID := slots[k].TrackID()
 		if in[slotTrackID] == nil {

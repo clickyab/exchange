@@ -32,7 +32,7 @@ type providerData struct {
 
 func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
-		"track_id": imp.TrackID(),
+		"track_id": imp.ID(),
 		"type":     "provider",
 	})
 }
@@ -64,7 +64,7 @@ func (p *providerData) watch(ctx context.Context, imp exchange.BidRequest) (res 
 	// the cancel is not required here. the parent is the hammer :)
 	rCtx, _ := context.WithTimeout(ctx, p.timeout)
 
-	chn := make(chan exchange.Advertise, len(imp.Slots()))
+	chn := make(chan exchange.Advertise, len(imp.Imp()))
 	go p.provider.Provide(rCtx, imp, chn)
 	for {
 		select {

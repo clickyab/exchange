@@ -16,7 +16,7 @@ type rawPub struct {
 	Supplier string `json:"supplier"`
 }
 
-func getRawPub(in exchange.Publisher) rawPub {
+func getRawPub(in exchange.Inventory) rawPub {
 	return rawPub{
 		Name:         in.Name(),
 		Attributes:   in.Attributes(),
@@ -50,7 +50,7 @@ type rawSlot struct {
 	// Size return the primary size of this slot
 	Width  int `json:"width"`
 	Height int `json:"height"`
-	// TrackID is an string for this slot, its a random at first but the value is not changed at all other calls
+	// ID is an string for this slot, its a random at first but the value is not changed at all other calls
 	TrackID string `json:"track_id"`
 	// data needed for supplier and it's optional
 	Attributes map[string]string `json:"attributes"`
@@ -83,7 +83,7 @@ type rawImp struct {
 	Location rawLocation `json:"location"`
 	// Attributes is the generic attribute system
 	Attributes map[string]interface{} `json:"attributes"`
-	// Slots is the slot for this request
+	// Imp is the slot for this request
 	Slots []rawSlot `json:"slots"`
 	// Category returns category obviously
 	Category []exchange.Category `json:"category"`
@@ -101,7 +101,7 @@ func getRawImpression(imp exchange.BidRequest) interface{} {
 		return ""
 	}
 	return rawImp{
-		TrackID:     imp.TrackID(),
+		TrackID:     imp.ID(),
 		Scheme:      imp.Scheme(),
 		PageTrackID: imp.PageTrackID(),
 		UserTrackID: imp.UserTrackID(),
@@ -111,7 +111,7 @@ func getRawImpression(imp exchange.BidRequest) interface{} {
 		Category:    imp.Category(),
 		Platform:    imp.Platform().String(),
 		UnderFloor:  imp.UnderFloor(),
-		Slots:       getRawSlots(imp.Slots()),
+		Slots:       getRawSlots(imp.Imp()),
 		Location:    getRawLocation(imp.Location()),
 		Source:      getRawPub(imp.Source()),
 	}

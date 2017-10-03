@@ -48,7 +48,7 @@ func (i Impression) UserAgent() string {
 	return i.IUserAgent
 }
 
-func (i Impression) Source() exchange.Publisher {
+func (i Impression) Source() exchange.Inventory {
 	return i.ISource
 }
 

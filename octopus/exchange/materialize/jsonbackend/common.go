@@ -6,13 +6,13 @@ import (
 
 func impressionToMap(imp exchange.BidRequest, ads map[string]exchange.Advertise) map[string]interface{} {
 	return map[string]interface{}{
-		"track_id":    imp.TrackID(),
+		"track_id":    imp.ID(),
 		"ip":          imp.IP(),
 		"user_agent":  imp.UserAgent(),
 		"source":      sourceToMap(imp.Source()),
 		"location":    locationToMap(imp.Location()),
 		"attributes":  imp.Attributes(),
-		"slots":       slotsToMap(imp.Slots(), ads),
+		"slots":       slotsToMap(imp.Imp(), ads),
 		"category":    imp.Category(),
 		"platform":    imp.Platform(),
 		"under_floor": imp.UnderFloor(),
@@ -47,7 +47,7 @@ func advertiseToMap(ad exchange.Advertise) map[string]interface{} {
 	}
 }
 
-func sourceToMap(pub exchange.Publisher) map[string]interface{} {
+func sourceToMap(pub exchange.Inventory) map[string]interface{} {
 	return map[string]interface{}{
 		"name":           pub.Name(),
 		"soft_floor_cpm": pub.SoftFloorCPM(),
