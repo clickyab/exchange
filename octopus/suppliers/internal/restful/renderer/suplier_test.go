@@ -50,7 +50,7 @@ func TestSupplier(t *testing.T) {
 		impression.EXPECT().TrackID().Return("HAHAHA").AnyTimes()
 
 		trackIDs := []string{"aaa", "bbb", "ccc"}
-		slots := []exchange.Slot{}
+		slots := []exchange.Impression{}
 		ads := map[string]exchange.Advertise{}
 
 		// generating slots and ads

@@ -22,7 +22,7 @@ import (
 	"gopkg.in/fzerorubigd/onion.v2"
 )
 
-func newPub(c *gomock.Controller) exchange.Publisher {
+func newPub(c *gomock.Controller) exchange.Inventory {
 	s := mock_entity.NewMockSupplier(c)
 	s.EXPECT().TestMode().Return(false).AnyTimes()
 	s.EXPECT().ExcludedDemands().Return([]string{}).AnyTimes()
@@ -32,8 +32,8 @@ func newPub(c *gomock.Controller) exchange.Publisher {
 	tmp.EXPECT().FloorCPM().Return(int64(100)).AnyTimes()
 	return tmp
 }
-func newImp(c *gomock.Controller, count int) exchange.Impression {
-	tmp := make([]exchange.Slot, count)
+func newImp(c *gomock.Controller, count int) exchange.BidRequest {
+	tmp := make([]exchange.Impression, count)
 	for i := range tmp {
 		s := mock_entity.NewMockSlot(c)
 		s.EXPECT().TrackID().Return(<-random.ID).AnyTimes()
@@ -79,8 +79,8 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
-						for _, s := range imp.Slots() {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
+						for _, s := range imp.Imp() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)
 							tmp.EXPECT().MaxCPM().Return(int64(200)).AnyTimes()
 							tmp.EXPECT().SlotTrackID().Return(s.TrackID()).AnyTimes()
@@ -94,8 +94,8 @@ func TestProviders(t *testing.T) {
 
 				ads := Call(bk, im)
 				So(len(ads), ShouldEqual, 2)
-				So(len(ads[im.Slots()[0].TrackID()]), ShouldEqual, 1)
-				So(len(ads[im.Slots()[1].TrackID()]), ShouldEqual, 1)
+				So(len(ads[im.Imp()[0].TrackID()]), ShouldEqual, 1)
+				So(len(ads[im.Imp()[1].TrackID()]), ShouldEqual, 1)
 
 			})
 
@@ -107,9 +107,9 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 						time.Sleep(time.Millisecond * 150)
-						for _, s := range imp.Slots() {
+						for _, s := range imp.Imp() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)
 							tmp.EXPECT().MaxCPM().Return(int64(200))
 							tmp.EXPECT().SlotTrackID().Return(s.TrackID())
@@ -134,9 +134,9 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 						time.Sleep(time.Millisecond * 100)
-						for _, s := range imp.Slots() {
+						for _, s := range imp.Imp() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)
 							tmp.EXPECT().MaxCPM().Return(int64(200))
 							tmp.EXPECT().SlotTrackID().Return(s.TrackID())
@@ -152,9 +152,9 @@ func TestProviders(t *testing.T) {
 				d2.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d2.EXPECT().CallRate().Return(100).AnyTimes()
 				d2.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
-					Do(func(ctx context.Context, imp exchange.Impression, ch chan exchange.Advertise) {
+					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
 						time.Sleep(time.Millisecond * 10)
-						for _, s := range imp.Slots() {
+						for _, s := range imp.Imp() {
 							tmp := mock_entity.NewMockAdvertise(ctrl)
 							tmp.EXPECT().MaxCPM().Return(int64(200))
 							tmp.EXPECT().SlotTrackID().Return(s.TrackID())
@@ -168,9 +168,9 @@ func TestProviders(t *testing.T) {
 
 				ads := Call(bk, im)
 				So(len(ads), ShouldEqual, 3)
-				So(len(ads[im.Slots()[0].TrackID()]), ShouldEqual, 1)
-				So(len(ads[im.Slots()[1].TrackID()]), ShouldEqual, 1)
-				So(len(ads[im.Slots()[2].TrackID()]), ShouldEqual, 1)
+				So(len(ads[im.Imp()[0].TrackID()]), ShouldEqual, 1)
+				So(len(ads[im.Imp()[1].TrackID()]), ShouldEqual, 1)
+				So(len(ads[im.Imp()[2].TrackID()]), ShouldEqual, 1)
 			})
 
 		})

@@ -4,15 +4,15 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 )
 
-func impressionToMap(imp exchange.Impression, ads map[string]exchange.Advertise) map[string]interface{} {
+func impressionToMap(imp exchange.BidRequest, ads map[string]exchange.Advertise) map[string]interface{} {
 	return map[string]interface{}{
-		"track_id":    imp.TrackID(),
+		"track_id":    imp.ID(),
 		"ip":          imp.IP(),
 		"user_agent":  imp.UserAgent(),
 		"source":      sourceToMap(imp.Source()),
 		"location":    locationToMap(imp.Location()),
 		"attributes":  imp.Attributes(),
-		"slots":       slotsToMap(imp.Slots(), ads),
+		"slots":       slotsToMap(imp.Imp(), ads),
 		"category":    imp.Category(),
 		"platform":    imp.Platform(),
 		"under_floor": imp.UnderFloor(),
@@ -47,7 +47,7 @@ func advertiseToMap(ad exchange.Advertise) map[string]interface{} {
 	}
 }
 
-func sourceToMap(pub exchange.Publisher) map[string]interface{} {
+func sourceToMap(pub exchange.Inventory) map[string]interface{} {
 	return map[string]interface{}{
 		"name":           pub.Name(),
 		"soft_floor_cpm": pub.SoftFloorCPM(),
@@ -75,7 +75,7 @@ func locationToMap(loc exchange.Location) map[string]interface{} {
 	}
 }
 
-func slotsToMap(slots []exchange.Slot, ads map[string]exchange.Advertise) []map[string]interface{} {
+func slotsToMap(slots []exchange.Impression, ads map[string]exchange.Advertise) []map[string]interface{} {
 	resSlots := make([]map[string]interface{}, 0)
 	for i := range slots {
 		data := map[string]interface{}{
@@ -95,7 +95,7 @@ func slotsToMap(slots []exchange.Slot, ads map[string]exchange.Advertise) []map[
 	return resSlots
 }
 
-func winnerToMap(imp exchange.Impression, ad exchange.Advertise, slotID string) map[string]interface{} {
+func winnerToMap(imp exchange.BidRequest, ad exchange.Advertise, slotID string) map[string]interface{} {
 	m := make(map[string]exchange.Advertise)
 	m[slotID] = ad
 	return map[string]interface{}{

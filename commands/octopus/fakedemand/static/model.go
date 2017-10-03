@@ -47,7 +47,7 @@ type request struct {
 	Host  string
 }
 
-// Slot of request
+// Impression of request
 type Slot struct {
 	W           int               `json:"width"`
 	H           int               `json:"height"`

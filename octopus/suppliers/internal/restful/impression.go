@@ -27,7 +27,7 @@ type impressionRest struct {
 
 	Attr map[string]interface{} `json:"attributes"`
 
-	dum    []exchange.Slot
+	dum    []exchange.Impression
 	latlon exchange.LatLon
 }
 
@@ -85,7 +85,7 @@ func (ir impressionRest) UserAgent() string {
 	return ir.UA
 }
 
-func (ir impressionRest) Source() exchange.Publisher {
+func (ir impressionRest) Source() exchange.Inventory {
 	return ir.Pub
 }
 
@@ -97,9 +97,9 @@ func (ir impressionRest) Attributes() map[string]interface{} {
 	return ir.Attr
 }
 
-func (ir *impressionRest) Slots() []exchange.Slot {
+func (ir *impressionRest) Slots() []exchange.Impression {
 	if ir.dum == nil {
-		ir.dum = make([]exchange.Slot, len(ir.ImpSlots))
+		ir.dum = make([]exchange.Impression, len(ir.ImpSlots))
 		for i := range ir.ImpSlots {
 			ir.dum[i] = ir.ImpSlots[i]
 		}
