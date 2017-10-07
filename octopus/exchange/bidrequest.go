@@ -8,7 +8,7 @@ type AuctionType int
 
 const (
 	// AuctionTypeFirstPrice is when the price is the first price. not supported by us
-	AuctionTypeFirstPrice AuctionType = 1
+	AuctionTypeFirstPrice AuctionType = iota + 1
 	// AuctionTypeSecondPrice second biding pricing
 	AuctionTypeSecondPrice
 )
