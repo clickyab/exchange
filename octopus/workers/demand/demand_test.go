@@ -30,7 +30,7 @@ func newDemand(name string, rate int, handicap int64) exchange.Demand {
 	}
 }
 
-func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impression {
+func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
 	a := make([]*mocks.Slot, 0)
 	for i := 1; i <= slotCount; i++ {
 		a = append(a, &mocks.Slot{
@@ -52,7 +52,7 @@ func newImpression(t time.Time, slotCount int, source, sup string) exchange.Impr
 	}
 }
 
-func newAds(slots []exchange.Slot, demand exchange.Demand) map[string]exchange.Advertise {
+func newAds(slots []exchange.Impression, demand exchange.Demand) map[string]exchange.Advertise {
 	a := make(map[string]exchange.Advertise, 0)
 	for i := range slots {
 		a[slots[i].TrackID()] = &mocks.Ads{
@@ -65,7 +65,7 @@ func newAds(slots []exchange.Slot, demand exchange.Demand) map[string]exchange.A
 	return a
 }
 
-func demToDelivery(i exchange.Impression, dem exchange.Demand, ads map[string]exchange.Advertise) broker.Delivery {
+func demToDelivery(i exchange.BidRequest, dem exchange.Demand, ads map[string]exchange.Advertise) broker.Delivery {
 	job := materialize.DemandJob(i, dem, ads)
 	d, err := job.Encode()
 	assert.Nil(err)
@@ -89,7 +89,7 @@ func TestDemand(t *testing.T) {
 		d := newDemand("test_demand", 100, 50)
 		imp := newImpression(t1, 2, "test_source", "test_supplier")
 		//slots:=newSlots(2)
-		ads := newAds(imp.Slots(), d)
+		ads := newAds(imp.Imp(), d)
 		ctx, cnl := context.WithCancel(base)
 		defer cnl()
 		dem := consumer{ctx: ctx}

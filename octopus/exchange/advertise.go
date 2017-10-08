@@ -1,5 +1,35 @@
 package exchange
 
+type (
+	CreativeAttribute int
+	CreativeType      int
+)
+
+const (
+	CreativeAttributeAudioAdAutoPlay                 CreativeAttribute = 1
+	CreativeAttributeAudioAdUserInitiated                              = 2
+	CreativeAttributeExpandableAuto                                    = 3
+	CreativeAttributeExpandableUserInitiatedClick                      = 4
+	CreativeAttributeExpandableUserInitiatedRollover                   = 5
+	CreativeAttributeInBannerVideoAdAutoPlay                           = 6
+	CreativeAttributeInBannerVideoAdUserInitiated                      = 7
+	CreativeAttributePop                                               = 8
+	CreativeAttributeProvocativeOrSuggestiveImagery                    = 9
+	CreativeAttributeExtremeAnimation                                  = 10
+	CreativeAttributeSurveys                                           = 11
+	CreativeAttributeTextOnly                                          = 12
+	CreativeAttributeUserInitiated                                     = 13
+	CreativeAttributeWindowsDialogOrAlert                              = 14
+	CreativeAttributeHasAudioWithPlayer                                = 15
+	CreativeAttributeAdProvidesSkipButton                              = 16
+	CreativeAttributeAdobeFlash                                        = 17
+
+	BannerTypeXHTMLText CreativeType = 1
+	BannerTypeXHTML                  = 2
+	BannerTypeJS                     = 3
+	BannerTypeFrame                  = 4
+)
+
 // Advertise is the single advertise interface
 type Advertise interface {
 	// GetID return the id of advertise

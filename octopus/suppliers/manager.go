@@ -85,7 +85,7 @@ func GetSupplierByName(name string) (exchange.Supplier, error) {
 }
 
 // GetImpression try to get an impression from a http request
-func GetImpression(key string, r *http.Request) (exchange.Impression, error) {
+func GetImpression(key string, r *http.Request) (exchange.BidRequest, error) {
 	sup, err := GetSupplierByKey(key)
 	if err != nil {
 		return nil, err
