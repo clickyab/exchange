@@ -12,8 +12,6 @@ import (
 
 	"errors"
 
-	"clickyab.com/exchange/octopus/exchange/materialize"
-	"github.com/clickyab/services/broker"
 	"github.com/sirupsen/logrus"
 )
 
@@ -43,9 +41,10 @@ func (p *providerData) Skip() bool {
 	return x%100 >= int64(p.provider.CallRate())
 }
 
-func (p *providerData) watch(ctx context.Context, imp exchange.BidRequest) (res map[string]exchange.Advertise) {
+func (p *providerData) watch(ctx context.Context, imp exchange.BidRequest) exchange.BidResponse {
 	//in := time.Now()
-	defer func() {
+	// TODO uncomment this
+	/*	defer func() {
 		//out := time.Since(in)
 		jDem := materialize.DemandJob(
 			imp,
@@ -53,33 +52,20 @@ func (p *providerData) watch(ctx context.Context, imp exchange.BidRequest) (res 
 			res,
 		)
 		broker.Publish(jDem)
-	}()
+	}()*/
 
 	log(imp).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
 	defer log(imp).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
 	done := ctx.Done()
 	assert.NotNil(done)
 
-	res = make(map[string]exchange.Advertise)
 	// the cancel is not required here. the parent is the hammer :)
 	rCtx, _ := context.WithTimeout(ctx, p.timeout)
 
-	chn := make(chan exchange.Advertise, len(imp.Imp()))
+	chn := make(chan exchange.BidResponse, 1)
 	go p.provider.Provide(rCtx, imp, chn)
-	for {
-		select {
-		case <-done:
-			// request is canceled
-			return res
-		case data, open := <-chn:
-			if data != nil {
-				res[data.SlotTrackID()] = data
-			}
-			if !open {
-				return res
-			}
-		}
-	}
+
+	return <-chn
 }
 
 // Register is used to handle new layer in system
@@ -110,23 +96,23 @@ func ResetProviders() {
 }
 
 // Call is for getting the current ads for this imp
-func Call(ctx context.Context, imp exchange.BidRequest) map[string][]exchange.Advertise {
+func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	rCtx, cnl := context.WithTimeout(ctx, maximumTimeout)
 	defer cnl()
 
 	wg := sync.WaitGroup{}
 	l := len(allProviders)
 	wg.Add(l)
-	allRes := make(chan map[string]exchange.Advertise, l)
+	var allRes chan exchange.BidResponse
 	lock.RLock()
 	for i := range allProviders {
 		go func(inner string) {
 			defer wg.Done()
-			if !demandIsAllowed(imp, allProviders[inner]) {
+			if !demandIsAllowed(req, allProviders[inner]) {
 				return
 			}
 			p := allProviders[inner]
-			res := p.watch(rCtx, imp)
+			res := p.watch(rCtx, req)
 			if res != nil {
 				allRes <- res
 			}
@@ -137,22 +123,13 @@ func Call(ctx context.Context, imp exchange.BidRequest) map[string][]exchange.Ad
 	wg.Wait()
 	// The close is essential here.
 	close(allRes)
-	var limit int64
-	if !imp.UnderFloor() {
-		limit = imp.Source().FloorCPM()
-	}
-	log(imp).WithField("limit", limit).Debug("the limit")
-	res := make(map[string][]exchange.Advertise)
-	for provided := range allRes {
-		log(imp).WithField("count", len(provided)).Debug("result from demand")
-		for j := range provided {
-			if provided[j].MaxCPM() >= limit {
-				res[j] = append(res[j], provided[j])
-			}
-		}
+
+	response := []exchange.BidResponse{}
+	for i := range allRes {
+		response = append(response, i)
 	}
 
-	return res
+	return response
 }
 
 func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
@@ -164,23 +141,23 @@ func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
 	return true
 }
 
-func isSameProvider(impression exchange.BidRequest, data providerData) bool {
-	return impression.Source().Name() == data.name
+func isSameProvider(request exchange.BidRequest, data providerData) bool {
+	return request.Inventory().Name() == data.name
 }
 
-func notWhitelistCountries(impression exchange.BidRequest, data providerData) bool {
+func notWhitelistCountries(request exchange.BidRequest, data providerData) bool {
 	if len(data.provider.WhiteListCountries()) == 0 {
 		return false
 	}
-	return !contains(data.provider.WhiteListCountries(), impression.Location().Country().ISO)
+	return !contains(data.provider.WhiteListCountries(), request.Device().Geo().Country().ISO)
 }
 
-func isExcludedDemands(impression exchange.BidRequest, data providerData) bool {
-	return contains(impression.Source().Supplier().ExcludedDemands(), data.name)
+func isExcludedDemands(request exchange.BidRequest, data providerData) bool {
+	return contains(request.WhiteList(), data.name)
 }
 
 func isNotSameMode(impression exchange.BidRequest, data providerData) bool {
-	return impression.Source().Supplier().TestMode() != data.provider.TestMode()
+	return impression.Test() != data.provider.TestMode()
 }
 
 func contains(s []string, t string) bool {
