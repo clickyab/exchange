@@ -1,7 +1,6 @@
 package exchange
 
 import (
-	"net/http"
 	"io"
 )
 

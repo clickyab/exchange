@@ -1,5 +1,20 @@
 package exchange
 
+const (
+	ExcuseUnknown = iota
+	ExcuseTechnical
+	ExcuseInvalid
+	ExcuseKnownWebSpider
+	ExcuseSuspectedNonHumanTraffic
+	ExcuseCloudDataCenterProxyIP
+	ExcuseUnsupportedDevice
+	ExcuseBlockedPublisherSite
+	ExcuseUnmatchedUser
+	ExcuseDailyReaderCapMet
+	ExcuseDailyDomainCapMet
+)
+
+
 // BidResponse is the response of bid request (demand to exchange, exchange to publisher)
 type BidResponse interface {
 	// ID returns the id of bid request made this response
@@ -10,6 +25,8 @@ type BidResponse interface {
 	Excuse() int
 	// Attribute data in ext and other spots
 	Attributes() map[string]interface{}
+	// Supplier return supplier
+	Supplier() Supplier
 }
 
 // the bid is designed the way it returns the data about the first bid of the seat bid
@@ -19,7 +36,7 @@ type Bid interface {
 	// ImpID is the id of impression
 	ImpID() string
 	// Price if the bid
-	Price() float64
+	Price() int64
 	AdDetail
 	// WinURL gives you the url to call if current bid won (NURL in openrtb)
 	WinURL() string
@@ -27,9 +44,10 @@ type Bid interface {
 	Categories() []string
 	// Attributes returns the attribute about ad and bid
 	Attributes() map[string]interface{}
-
 	// Win tells demand the ad won
 	Win()
+	// Demand return demand
+	Demand() Demand
 }
 
 // AdDetail is the ad detail that contains in each bid in response
