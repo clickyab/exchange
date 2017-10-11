@@ -20,10 +20,10 @@ var (
 
 // DemandJob returns a job for demand
 // TODO : add a duration to this. for better view this is important
-func DemandJob(imp exchange.BidRequest, dmn exchange.Demand, ads map[string]exchange.Advertise) broker.Job {
+func DemandJob(imp exchange.BidRequest, dmn exchange.Demand, resp exchange.BidResponse) broker.Job {
 	switch driver.String() {
 	case jsonDriver:
-		return jsonbackend.DemandJob(imp, dmn, ads)
+		return jsonbackend.DemandJob(imp, dmn, resp)
 	case emptyDriver:
 		return job{
 			data:  []byte("demand job"),
@@ -36,6 +36,7 @@ func DemandJob(imp exchange.BidRequest, dmn exchange.Demand, ads map[string]exch
 	}
 }
 
+// TODO change advertise to winner (new interface)
 // WinnerJob return a broker job
 func WinnerJob(imp exchange.BidRequest, ad exchange.Advertise, slotID string) broker.Job {
 	switch driver.String() {
