@@ -4,15 +4,15 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 )
 
-type sortedAd []exchange.Advertise
+type sortedAd []exchange.Bid
 
 func (sa sortedAd) Len() int {
 	return len(sa)
 }
 
 func (sa sortedAd) Less(i, j int) bool {
-	cpi := sa[i].MaxCPM() * sa[i].Demand().Handicap()
-	cpj := sa[j].MaxCPM() * sa[j].Demand().Handicap()
+	cpi := sa[i].Price() * sa[i].Demand().Handicap()
+	cpj := sa[j].Price() * sa[j].Demand().Handicap()
 	return cpi > cpj
 }
 

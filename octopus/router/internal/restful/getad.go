@@ -52,9 +52,9 @@ func modifyClicks(imp exchange.BidRequest) {
 	}
 }
 
-func storeKeys(imp exchange.BidRequest, res map[string]exchange.Advertise) {
+func storeKeys(imp exchange.BidRequest, res  map[string]rtb.Winner) {
 	for _, s := range imp.Imp() {
-		i := s.TrackID()
+		i := s.ID()
 		// Publish them into message broker
 		if res[i] != nil {
 			broker.Publish(materialize.WinnerJob(
@@ -65,33 +65,26 @@ func storeKeys(imp exchange.BidRequest, res map[string]exchange.Advertise) {
 			att := s.Attributes()
 			assert.NotNil(att)
 
-			store := kv.NewEavStore("PIXEL_" + res[i].TrackID())
+			store := kv.NewEavStore("PIXEL_" + res[i].Bid().ImpID())
 			store.SetSubKey("IP",
-				imp.IP().String(),
+				imp.Device().IP(),
 			).SetSubKey("DEMAND",
-				res[i].Demand().Name(),
+				res[i].Bid().BidResponse().Demand().Name(),
 			).SetSubKey("BID",
-				fmt.Sprintf("%d", res[i].WinnerCPM()),
+				fmt.Sprintf("%d", res[i].Price()),
 			).SetSubKey("ADID",
-				res[i].ID(),
+				res[i].Bid().ID(),
 			).SetSubKey("TIME",
 				fmt.Sprint(imp.Time().Unix()),
 			).SetSubKey("PUBLISHER",
-				imp.Source().Name(),
+				imp.Inventory().Publisher().Name(),
 			).SetSubKey("SUPPLIER",
-				imp.Source().Supplier().Name(),
+				imp.Supplier().Name(),
 			).SetSubKey("PROFIT",
-				fmt.Sprintf("%d", int64(imp.Source().Supplier().Share())*res[i].WinnerCPM()/100),
+				fmt.Sprintf("%d", int64(imp.Supplier().Share())*res[i].Price()/100),
 			)
 			assert.Nil(store.Save(1 * time.Hour)) // TODO : Config
 
-			megaImpStore := kv.NewEavStore("SUP_CLICK_" + imp.ID() + imp.Source().Supplier().Name() + s.TrackID())
-			megaImpStore.SetSubKey("SUP_URL",
-				att["_click_url"],
-			).SetSubKey("SUP_PARAM",
-				att["_click_parameter"],
-			)
-			assert.Nil(megaImpStore.Save(72 * time.Hour)) // TODO : Config
 		}
 	}
 }
@@ -124,7 +117,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	storeKeys(imp, res)
 
-	err = imp.Source().Supplier().Renderer().Render(imp, res, w)
+	err = imp.Supplier().Renderer().Render( res, w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		dec.Encode(struct {
