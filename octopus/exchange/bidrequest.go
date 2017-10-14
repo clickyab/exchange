@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// AuctionType whether is first price or second price
 type AuctionType int
 
 const (

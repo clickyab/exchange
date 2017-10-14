@@ -65,3 +65,6 @@ func (ra restAd) MaxCPM() int64 {
 func (ra restAd) Landing() string {
 	return ra.RLanding
 }
+
+//TODO just for lint
+var _ = restAd{}

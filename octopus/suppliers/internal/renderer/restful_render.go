@@ -6,10 +6,7 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
-	"github.com/clickyab/services/config"
 )
-
-var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange root")
 
 type dumbAd struct {
 	TrackID   string `json:"track_id" structs:"track_id"`
