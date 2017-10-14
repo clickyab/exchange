@@ -15,4 +15,4 @@ type ThirdParty interface {
 }
 
 // Publisher is the alias of third party.
-type Publisher = ThirdParty
+type Publisher ThirdParty

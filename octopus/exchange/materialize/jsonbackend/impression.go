@@ -52,9 +52,9 @@ func (i impression) Report() func(error) {
 }
 
 // ImpressionJob return a broker job
-func ImpressionJob(imp exchange.BidRequest) broker.Job {
+func ImpressionJob(req exchange.BidRequest) broker.Job {
 	return impression{
-		data: impressionToMap(imp, nil),
-		key:  imp.IP().String(),
+		data: requestToMap(req),
+		key:  req.Device().IP(),
 	}
 }

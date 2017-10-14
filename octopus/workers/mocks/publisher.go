@@ -10,7 +10,6 @@ type Publisher struct {
 	PSoftFloorCPM int64
 	PAttributes   map[string]interface{}
 	PSupplier     Supplier
-	PRates        []exchange.Rate
 }
 
 func (p Publisher) Name() string {
@@ -31,8 +30,4 @@ func (p Publisher) Attributes() map[string]interface{} {
 
 func (p Publisher) Supplier() exchange.Supplier {
 	return p.PSupplier
-}
-
-func (p Publisher) Rates() []exchange.Rate {
-	return p.PRates
 }

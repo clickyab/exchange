@@ -2,15 +2,12 @@ package renderer
 
 import (
 	"encoding/json"
-	"fmt"
+
 	"net/http"
-	"net/url"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"github.com/clickyab/services/config"
+	"github.com/bsm/openrtb"
 )
-
-var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange root")
 
 type dumbAd struct {
 	TrackID   string `json:"track_id" structs:"track_id"`
@@ -28,65 +25,31 @@ type restful struct {
 	sup          exchange.Supplier
 }
 
-func (rf restful) Render(imp exchange.BidRequest, in map[string]exchange.Advertise, w http.ResponseWriter) error {
-	res := make([]*dumbAd, 0)
-	slots := imp.Imp()
-	for k := range slots {
-		slotTrackID := slots[k].TrackID()
-		if in[slotTrackID] == nil {
-			ctx := templateContext{
-				URL:    slots[k].Fallback(),
-				Width:  slots[k].Width(),
-				Height: slots[k].Height(),
-			}
+func (rf restful) Render(resp exchange.BidResponse, w http.ResponseWriter) error {
+	response := openrtb.BidResponse{}
 
-			res = append(res, &dumbAd{
-				Code:    renderTemplate(ctx),
-				TrackID: slotTrackID,
-			})
-			continue
-		}
+	for i := range resp.Bids() {
+		bid := resp.Bids()[i]
 
-		d := &dumbAd{
-			TrackID:   slotTrackID,
-			AdTrackID: in[slotTrackID].TrackID(),
-			Winner:    in[slotTrackID].WinnerCPM() * 100 / int64(100+rf.sup.Share()),
-			Width:     in[slotTrackID].Width(),
-			Height:    in[slotTrackID].Height(),
-			Landing:   in[slotTrackID].Landing(),
-			IsFilled:  true,
-		}
-
-		trackURL := &url.URL{
-			Scheme: imp.Scheme(),
-			Host:   host.String(),
-			Path:   fmt.Sprintf(rf.pixelPattern, in[slotTrackID].Demand().Name(), in[slotTrackID].TrackID()),
-		}
-		winURL := in[slotTrackID].URL()
-		win, err := url.Parse(winURL)
-		if err == nil {
-			q := win.Query()
-			q.Set("win", fmt.Sprint(in[slotTrackID].WinnerCPM()))
-			win.RawQuery = q.Encode()
-			winURL = win.String()
-		}
-
-		ctx := templateContext{
-			URL:      winURL,
-			IsFilled: true,
-			Landing:  in[slotTrackID].Landing(),
-			Pixel:    trackURL.String(),
-			Width:    slots[k].Width(),
-			Height:   slots[k].Height(),
-		}
-		d.Code = renderTemplate(ctx)
-		res = append(res, d)
+		response.SeatBid = append(response.SeatBid, openrtb.SeatBid{
+			Bid: []openrtb.Bid{{
+				ID:        bid.ID(),
+				ImpID:     bid.ImpID(),
+				Price:     float64(bid.Price()),
+				AdID:      bid.AdID(),
+				NURL:      bid.WinURL(),
+				AdMarkup:  bid.AdMarkup(),
+				AdvDomain: bid.AdDomains(),
+				Cat:       bid.Categories(),
+				W:         bid.AdWidth(),
+				H:         bid.AdHeight(),
+			}},
+		})
 	}
 
 	enc := json.NewEncoder(w)
-	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	w.WriteHeader(http.StatusOK)
-	return enc.Encode(res)
+	return enc.Encode(response)
 }
 
 // NewRestfulRenderer return a restful renderer
@@ -96,3 +59,6 @@ func NewRestfulRenderer(sup exchange.Supplier, pixel string) exchange.Renderer {
 		sup:          sup,
 	}
 }
+
+// TODO just for lint
+var _ = dumbAd{}

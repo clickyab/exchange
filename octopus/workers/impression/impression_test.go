@@ -25,11 +25,11 @@ var (
 )
 
 func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
-	slots := make([]*mocks.Slot, slotCount)
+	slots := make([]*mocks.Imp, slotCount)
 	for i := range slots {
-		slots[i] = &mocks.Slot{}
+		slots[i] = &mocks.Imp{}
 	}
-	return mocks.Impression{
+	return mocks.BidRequest{
 		ITime: t,
 		ISource: mocks.Publisher{
 			PName: source,
@@ -37,7 +37,7 @@ func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidR
 				SName: sup,
 			},
 		},
-		ISlots: slots,
+		IImps: slots,
 	}
 }
 
