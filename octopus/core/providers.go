@@ -103,14 +103,14 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	wg := sync.WaitGroup{}
 	l := len(allProviders)
 	wg.Add(l)
-	var allRes chan exchange.BidResponse
+	var allRes = make(chan exchange.BidResponse)
 	lock.RLock()
 	for i := range allProviders {
 		go func(inner string) {
 			defer wg.Done()
-			if !demandIsAllowed(req, allProviders[inner]) {
-				return
-			}
+			//if !demandIsAllowed(req, allProviders[inner]) {
+			//	return
+			//}
 			p := allProviders[inner]
 			res := p.watch(rCtx, req)
 			if res != nil {
@@ -128,7 +128,7 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	for i := range allRes {
 		response = append(response, i)
 	}
-
+	logrus.Warn("dd",len(response))
 	return response
 }
 
