@@ -1255,9 +1255,9 @@ func (mr *MockDeviceMockRecorder) DeviceType() *gomock.Call {
 }
 
 // Geo mocks base method
-func (m *MockDevice) Geo() exchange.Location {
+func (m *MockDevice) Geo() exchange.Geo {
 	ret := m.ctrl.Call(m, "Geo")
-	ret0, _ := ret[0].(exchange.Location)
+	ret0, _ := ret[0].(exchange.Geo)
 	return ret0
 }
 
@@ -1470,9 +1470,9 @@ func (mr *MockInventoryMockRecorder) Name() *gomock.Call {
 }
 
 // Publisher mocks base method
-func (m *MockInventory) Publisher() exchange.ThirdParty {
+func (m *MockInventory) Publisher() exchange.Publisher {
 	ret := m.ctrl.Call(m, "Publisher")
-	ret0, _ := ret[0].(exchange.ThirdParty)
+	ret0, _ := ret[0].(exchange.Publisher)
 	return ret0
 }
 
@@ -1613,9 +1613,9 @@ func (mr *MockSiteMockRecorder) Page() *gomock.Call {
 }
 
 // Publisher mocks base method
-func (m *MockSite) Publisher() exchange.ThirdParty {
+func (m *MockSite) Publisher() exchange.Publisher {
 	ret := m.ctrl.Call(m, "Publisher")
-	ret0, _ := ret[0].(exchange.ThirdParty)
+	ret0, _ := ret[0].(exchange.Publisher)
 	return ret0
 }
 
@@ -1768,9 +1768,9 @@ func (mr *MockAppMockRecorder) Name() *gomock.Call {
 }
 
 // Publisher mocks base method
-func (m *MockApp) Publisher() exchange.ThirdParty {
+func (m *MockApp) Publisher() exchange.Publisher {
 	ret := m.ctrl.Call(m, "Publisher")
-	ret0, _ := ret[0].(exchange.ThirdParty)
+	ret0, _ := ret[0].(exchange.Publisher)
 	return ret0
 }
 
