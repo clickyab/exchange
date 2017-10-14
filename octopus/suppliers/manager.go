@@ -84,8 +84,8 @@ func GetSupplierByName(name string) (exchange.Supplier, error) {
 	return nil, fmt.Errorf("supplier with name %s not found", name)
 }
 
-// GetImpression try to get an impression from a http request
-func GetImpression(key string, r *http.Request) (exchange.BidRequest, error) {
+// GetBidRequest try to get an bid request from a http request
+func GetBidRequest(key string, r *http.Request) (exchange.BidRequest, error) {
 	sup, err := GetSupplierByKey(key)
 	if err != nil {
 		return nil, err
@@ -94,7 +94,7 @@ func GetImpression(key string, r *http.Request) (exchange.BidRequest, error) {
 	// Make sure the profit margin is added to the request
 	switch sup.Type() {
 	case "rest":
-		return restful.GetImpression(sup, r)
+		return restful.GetBidRequest(sup, r)
 	default:
 		logrus.Panicf("Not a supported type: %s", sup.Type())
 		return nil, fmt.Errorf("not supported type: %s", sup.Type())

@@ -22,8 +22,6 @@ type Banner interface {
 	Width() int
 	// Height is the height of the ad (max height bypassed cuz of being deprecated)
 	Height() int
-	// Type of the banner (e.g BannerTypeXHTMLText, BannerTypeXHTML, BannerTypeJS, BannerTypeFrame)
-	Type() []BannerType
 	// BlockedTypes returns blocked creative types
 	BlockedTypes() []BannerType
 	// BlockedAttributes returns blocked creative attributes

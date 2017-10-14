@@ -4,9 +4,13 @@ import "clickyab.com/exchange/octopus/exchange"
 
 type Location struct {
 	LCountry  exchange.Country
-	LProvince exchange.Province
+	LProvince exchange.Region
 	LLatLon   exchange.LatLon
 	LISP      exchange.ISP
+}
+
+func (l Location) Region() exchange.Region {
+	panic("implement me")
 }
 
 func (l Location) ISP() exchange.ISP {
@@ -17,7 +21,7 @@ func (l Location) Country() exchange.Country {
 	return l.LCountry
 }
 
-func (l Location) Province() exchange.Province {
+func (l Location) Province() exchange.Region {
 	return l.LProvince
 }
 

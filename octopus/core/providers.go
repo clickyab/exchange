@@ -41,21 +41,21 @@ func (p *providerData) Skip() bool {
 	return x%100 >= int64(p.provider.CallRate())
 }
 
-func (p *providerData) watch(ctx context.Context, imp exchange.BidRequest) exchange.BidResponse {
+func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchange.BidResponse {
 	//in := time.Now()
 	// TODO uncomment this
 	/*	defer func() {
 		//out := time.Since(in)
 		jDem := materialize.DemandJob(
-			imp,
+			bq,
 			p.provider,
 			res,
 		)
 		broker.Publish(jDem)
 	}()*/
 
-	log(imp).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
-	defer log(imp).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
+	log(bq).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
+	defer log(bq).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
 	done := ctx.Done()
 	assert.NotNil(done)
 
@@ -63,7 +63,7 @@ func (p *providerData) watch(ctx context.Context, imp exchange.BidRequest) excha
 	rCtx, _ := context.WithTimeout(ctx, p.timeout)
 
 	chn := make(chan exchange.BidResponse, 1)
-	go p.provider.Provide(rCtx, imp, chn)
+	go p.provider.Provide(rCtx, bq, chn)
 
 	return <-chn
 }

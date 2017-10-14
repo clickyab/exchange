@@ -38,10 +38,10 @@ func DemandJob(imp exchange.BidRequest, dmn exchange.Demand, resp exchange.BidRe
 
 // TODO change advertise to winner (new interface)
 // WinnerJob return a broker job
-func WinnerJob(imp exchange.BidRequest, ad exchange.Advertise, slotID string) broker.Job {
+func WinnerJob(bq exchange.BidRequest, bid exchange.Bid) broker.Job {
 	switch driver.String() {
 	case jsonDriver:
-		return jsonbackend.WinnerJob(imp, ad, slotID)
+		return jsonbackend.WinnerJob(bq, bid)
 	case emptyDriver:
 		return job{
 			data:  []byte("winner job"),

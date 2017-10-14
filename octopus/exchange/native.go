@@ -2,8 +2,8 @@ package exchange
 
 // Native part of bid request
 type Native interface {
-	// Extension returns marshaled data from request
-	Extension() []byte
+	// Request returns marshaled data from request
+	Request() []byte
 	// IsExtValid tells if we can unmarshal bytes passed to us
 	IsExtValid() bool
 	// AdLength returns number of ads needed from request

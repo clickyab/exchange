@@ -8,7 +8,22 @@ type restPublisher struct {
 	PubSoftFloorCPM int64  `json:"soft_floor_cpm"`
 
 	sup   exchange.Supplier
-	rates []exchange.Rate
+}
+
+func (rp *restPublisher) ID() string {
+	panic("implement me")
+}
+
+func (rp *restPublisher) Domain() {
+	panic("implement me")
+}
+
+func (rp *restPublisher) Cat() []exchange.Category {
+	panic("implement me")
+}
+
+func (rp *restPublisher) Publisher() exchange.Publisher {
+	panic("implement me")
 }
 
 func (rp restPublisher) Name() string {
@@ -31,6 +46,3 @@ func (rp restPublisher) Supplier() exchange.Supplier {
 	return rp.sup
 }
 
-func (rp restPublisher) Rates() []exchange.Rate {
-	return rp.rates
-}
