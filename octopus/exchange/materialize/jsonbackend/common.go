@@ -9,7 +9,7 @@ func requestToMap(req exchange.BidRequest) map[string]interface{} {
 		"track_id":   req.ID(),
 		"ip":         req.Device().IP(),
 		"user_agent": req.Device().UserAgent(),
-		"supplier":   supplierToMap(req.Supplier()),
+		"supplier":   supplierToMap(req.Inventory().Supplier()),
 		"inventory":  inventoryToMap(req.Inventory()),
 		"location":   locationToMap(req.Device().Geo()),
 		//"attributes":  req.,
@@ -51,17 +51,17 @@ func bidsToMap(bids []exchange.Bid) []map[string]interface{} {
 	return response
 }
 
-func winnerBidToMap(winner winners) map[string]interface{} {
+func winnerBidToMap(bid exchange.Bid) map[string]interface{} {
 	return map[string]interface{}{
-		"height":        winner.bid.AdHeight(),
-		"id":            winner.bid.ID(),
-		"landing":       winner.bid.AdDomains(),
-		"max_cpm":       winner.bid.Price(),
-		"track_id":      winner.bid.ID(),
-		"url":           winner.bid.WinURL(),
-		"width":         winner.bid.AdWidth(),
-		"winner_cpm":    winner.price,
-		"slot_track_id": winner.bid.ImpID(),
+		"height":        bid.AdHeight(),
+		"id":            bid.ID(),
+		"landing":       bid.AdDomains(),
+		"max_cpm":       bid.Price(),
+		"track_id":      bid.ID(),
+		"url":           bid.WinURL(),
+		"width":         bid.AdWidth(),
+		"winner_cpm":    bid.Price(),
+		"slot_track_id": bid.ImpID(),
 	}
 }
 
@@ -116,12 +116,11 @@ func impressionToMap(imps []exchange.Impression) []map[string]interface{} {
 	return resp
 }
 
-func winnerToMap(req exchange.BidRequest, winner winners, slotID string) map[string]interface{} {
+func winnerToMap(bq exchange.BidRequest, bid exchange.Bid) map[string]interface{} {
 	return map[string]interface{}{
-		"demand":    demandToMap(winner.bid.BidResponse().Demand()),
-		"request":   requestToMap(req),
-		"advertise": winnerBidToMap(winner),
-		"slot_id":   slotID,
+		"demand":    demandToMap(bid.Demand()),
+		"request":   requestToMap(bq),
+		"advertise": winnerBidToMap(bid),
 	}
 }
 
@@ -143,7 +142,7 @@ func bannerToMap(banner exchange.Banner) map[string]interface{} {
 		"id":                banner.ID(),
 		"width":             banner.Width(),
 		"height":            banner.Height(),
-		"type":              banner.Type(),
+		"type":              exchange.AdTypeBanner,
 		"blocked_type":      banner.BlockedTypes(),
 		"blocked_attribute": banner.BlockedAttributes(),
 		"mimes":             banner.Mimes(),
@@ -151,22 +150,24 @@ func bannerToMap(banner exchange.Banner) map[string]interface{} {
 	}
 }
 
-func videoToMap(banner exchange.Video) map[string]interface{} {
+func videoToMap(video exchange.Video) map[string]interface{} {
 	return map[string]interface{}{
-		"width":             banner.Width(),
-		"height":            banner.Height(),
-		"linearity":         banner.Linearity(),
-		"blocked_attribute": banner.BlockedAttributes(),
-		"mimes":             banner.Mimes(),
-		"attributes":        banner.Attributes(),
+		"width":             video.Width(),
+		"height":            video.Height(),
+		"linearity":         video.Linearity(),
+		"type":              exchange.AdTypeVideo,
+		"blocked_attribute": video.BlockedAttributes(),
+		"mimes":             video.Mimes(),
+		"attributes":        video.Attributes(),
 	}
 }
 
-func nativeToMap(banner exchange.Native) map[string]interface{} {
+func nativeToMap(native exchange.Native) map[string]interface{} {
 	return map[string]interface{}{
-		"extension":  banner.Extension(),
-		"is_valid":   banner.IsExtValid(),
-		"ad_length":  banner.AdLength(),
-		"attributes": banner.Attributes(),
+		"extension":  native.Request(),
+		"is_valid":   native.IsExtValid(),
+		"type":       exchange.AdTypeNative,
+		"ad_length":  native.AdLength(),
+		"attributes": native.Attributes(),
 	}
 }

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"net/url"
 	"time"
 
 	"clickyab.com/exchange/octopus/core"
@@ -15,13 +14,10 @@ import (
 	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/broker"
-	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
 )
-
-var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange root")
 
 func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
@@ -30,62 +26,35 @@ func log(imp exchange.BidRequest) *logrus.Entry {
 	})
 }
 
-func modifyClicks(imp exchange.BidRequest) {
-	// Change the click url
-	for _, s := range imp.Imp() {
-		att := s.Attributes()
-		if att == nil {
-			continue
-		}
+func storeKeys(bq exchange.BidRequest, res exchange.BidResponse) {
 
-		// TODO : Mount point is hard coded here, use the config
-		exchangeClickURL := &url.URL{
-			Scheme: imp.Scheme(),
-			Host:   host.String(),
-			Path:   fmt.Sprintf("/api/click/%s/%s/%s", imp.Source().Supplier().Name(), imp.ID(), s.TrackID()),
-		}
-		s.SetAttribute("_click_url", att["click_url"])
-		s.SetAttribute("_click_parameter", att["click_parameter"])
-		s.SetAttribute("click_parameter", "return")
-		s.SetAttribute("click_url", exchangeClickURL.String())
-		s.SetAttribute("type", "parameter")
-	}
-}
+	// Publish them into message broker
+	for _, val := range res.Bids() {
+		broker.Publish(materialize.WinnerJob(
+			bq,
+			val,
+		))
 
-func storeKeys(imp exchange.BidRequest, res  map[string]rtb.Winner) {
-	for _, s := range imp.Imp() {
-		i := s.ID()
-		// Publish them into message broker
-		if res[i] != nil {
-			broker.Publish(materialize.WinnerJob(
-				imp,
-				res[i],
-				i,
-			))
-			att := s.Attributes()
-			assert.NotNil(att)
+		store := kv.NewEavStore("PIXEL_" + val.ImpID())
+		store.SetSubKey("IP",
+			bq.Device().IP(),
+		).SetSubKey("DEMAND",
+			val.Demand().Name(),
+		).SetSubKey("PRICE",
+			fmt.Sprintf("%d", val.Price()),
+		).SetSubKey("ADID",
+			val.AdID(),
+		).SetSubKey("TIME",
+			fmt.Sprint(bq.Time().Unix()),
+		).SetSubKey("PUBLISHER",
+			bq.Inventory().Publisher().Name(),
+		).SetSubKey("SUPPLIER",
+			bq.Inventory().Supplier().Name(),
+		).SetSubKey("PROFIT",
+			fmt.Sprintf("%d", int64(bq.Inventory().Supplier().Share())*val.Price()/100),
+		)
+		assert.Nil(store.Save(1 * time.Hour)) // TODO : Config
 
-			store := kv.NewEavStore("PIXEL_" + res[i].Bid().ImpID())
-			store.SetSubKey("IP",
-				imp.Device().IP(),
-			).SetSubKey("DEMAND",
-				res[i].Bid().BidResponse().Demand().Name(),
-			).SetSubKey("BID",
-				fmt.Sprintf("%d", res[i].Price()),
-			).SetSubKey("ADID",
-				res[i].Bid().ID(),
-			).SetSubKey("TIME",
-				fmt.Sprint(imp.Time().Unix()),
-			).SetSubKey("PUBLISHER",
-				imp.Inventory().Publisher().Name(),
-			).SetSubKey("SUPPLIER",
-				imp.Supplier().Name(),
-			).SetSubKey("PROFIT",
-				fmt.Sprintf("%d", int64(imp.Supplier().Share())*res[i].Price()/100),
-			)
-			assert.Nil(store.Save(1 * time.Hour)) // TODO : Config
-
-		}
 	}
 }
 
@@ -94,7 +63,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	dec := json.NewEncoder(w)
 	key := xmux.Param(ctx, "key")
 
-	imp, err := suppliers.GetImpression(key, r)
+	bq, err := suppliers.GetBidRequest(key, r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		dec.Encode(struct {
@@ -104,20 +73,19 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	modifyClicks(imp)
 	// OK push it to broker
-	jImp := materialize.ImpressionJob(imp)
+	jImp := materialize.ImpressionJob(bq)
 	broker.Publish(jImp)
 	nCtx, cnl := context.WithCancel(ctx)
 	defer cnl()
-	ads := core.Call(nCtx, imp)
-	log(imp).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
-	res := rtb.SelectCPM(imp, ads)
-	log(imp).WithField("count", len(res)).Debug("ads is passed the system select")
+	ads := core.Call(nCtx, bq)
+	log(bq).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
+	res := rtb.SelectCPM(bq, ads)
+	log(bq).WithField("count", len(res.Bids())).Debug("ads is passed the system select")
 
-	storeKeys(imp, res)
+	storeKeys(bq, res)
 
-	err = imp.Supplier().Renderer().Render( res, w)
+	err = bq.Inventory().Supplier().Renderer().Render(res, w)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		dec.Encode(struct {

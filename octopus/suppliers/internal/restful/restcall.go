@@ -45,11 +45,11 @@ type requestBody struct {
 		UserAgent string `json:"user_agent,omitempty"`
 	} `json:"vast,omitempty"`
 
-	Slots []*slotRest `json:"slots"`
+	Slots []*impRest `json:"slots"`
 }
 
-// GetImpression try to create an impression object from a request
-func GetImpression(sup exchange.Supplier, r *http.Request) (exchange.BidRequest, error) {
+// GetBidRequest try to create an impression object from a request
+func GetBidRequest(sup exchange.Supplier, r *http.Request) (exchange.BidRequest, error) {
 	dec := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 
@@ -60,7 +60,7 @@ func GetImpression(sup exchange.Supplier, r *http.Request) (exchange.BidRequest,
 		return nil, err
 	}
 
-	var res *impressionRest
+	var res *bidRequestRest
 	switch strings.ToLower(rb.Type) {
 	case "app":
 		res, err = newImpressionFromAppRequest(sup, &rb)

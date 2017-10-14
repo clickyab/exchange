@@ -8,8 +8,8 @@ type Country struct {
 	ISO string `json:"iso"`
 }
 
-// Province of the request
-type Province struct {
+// Region of the request
+type Region struct {
 	Valid bool   `json:"valid"`
 	Name  string `json:"name"`
 	// Region using ISO 3166-2
@@ -23,6 +23,12 @@ type LatLon struct {
 	Lon   float64 `json:"lon"`
 }
 
+// ISP network holder
+type ISP struct {
+	Valid bool   `json:"valid"`
+	Name  string `json:"name"`
+}
+
 // Location is the location provider
 // Design notes:
 // XXX : Type, Accuracy,LastFix,IPService,RegionFIPS104,Metro, City, Zip, UTCOffset   are not supported
@@ -33,8 +39,9 @@ type Location interface {
 	// The country of the device
 	Country() Country
 	// Region of the device
-	Region() Province
+	Region() Region
+	ISP() ISP
 }
 
 // Geo is the alias of Location for open rtb compatibility
-type Geo = Location
+type Geo Location

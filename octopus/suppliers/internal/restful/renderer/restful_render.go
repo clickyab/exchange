@@ -3,14 +3,11 @@ package renderer
 import (
 	"encoding/json"
 
-	"io"
+	"net/http"
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
-	"github.com/clickyab/services/config"
 )
-
-var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange root")
 
 type dumbAd struct {
 	TrackID   string `json:"track_id" structs:"track_id"`
@@ -28,7 +25,7 @@ type restful struct {
 	sup          exchange.Supplier
 }
 
-func (rf restful) Render(resp exchange.BidResponse, writer io.Writer) error {
+func (rf restful) Render(resp exchange.BidResponse, w http.ResponseWriter) error {
 	response := openrtb.BidResponse{}
 
 	for i := range resp.Bids() {
@@ -38,7 +35,7 @@ func (rf restful) Render(resp exchange.BidResponse, writer io.Writer) error {
 			Bid: []openrtb.Bid{{
 				ID:        bid.ID(),
 				ImpID:     bid.ImpID(),
-				Price:     bid.Price(),
+				Price:     float64(bid.Price()),
 				AdID:      bid.AdID(),
 				NURL:      bid.WinURL(),
 				AdMarkup:  bid.AdMarkup(),
@@ -50,8 +47,8 @@ func (rf restful) Render(resp exchange.BidResponse, writer io.Writer) error {
 		})
 	}
 
-	enc := json.NewEncoder(writer)
-	// TODO no header will be set
+	enc := json.NewEncoder(w)
+	w.WriteHeader(http.StatusOK)
 	return enc.Encode(response)
 }
 
@@ -62,3 +59,6 @@ func NewRestfulRenderer(sup exchange.Supplier, pixel string) exchange.Renderer {
 		sup:          sup,
 	}
 }
+
+// TODO just for lint
+var _ = dumbAd{}

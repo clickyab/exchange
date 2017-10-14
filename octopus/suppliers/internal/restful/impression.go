@@ -10,20 +10,20 @@ import (
 	"github.com/clickyab/services/random"
 )
 
-type impressionRest struct {
-	Categories    []exchange.Category         `json:"categories"`
-	ImpPlatform   exchange.ImpressionPlatform `json:"platform"`
-	ImpSlots      []*slotRest                 `json:"slots"`
-	Loc           exchange.Location           `json:"location"`
-	Mega          string                      `json:"track_id"`
-	PTI           string                      `json:"page_track_id"`
-	Pub           *restPublisher              `json:"source"`
-	Schm          string                      `json:"scheme"`
-	SIP           string                      `json:"ip"`
-	STime         time.Time                   `json:"time"`
-	UA            string                      `json:"user_agent"`
-	UnderFloorCPM bool                        `json:"under_floor"`
-	UTI           string                      `json:"user_track_id"`
+type bidRequestRest struct {
+	Categories    []exchange.Category `json:"categories"`
+	Imps          []*impRest          `json:"imps"`
+	Loc           exchange.Location   `json:"location"`
+	Mega          string              `json:"track_id"`
+	PTI           string              `json:"page_track_id"`
+	Pub           *restPublisher      `json:"source"`
+	Schm          string              `json:"scheme"`
+	SIP           string              `json:"ip"`
+	PlatDevice    exchange.DeviceType `json:"platform"`
+	STime         time.Time           `json:"time"`
+	UA            string              `json:"user_agent"`
+	UnderFloorCPM bool                `json:"under_floor"`
+	UTI           string              `json:"user_track_id"`
 
 	Attr map[string]interface{} `json:"attributes"`
 
@@ -31,19 +31,75 @@ type impressionRest struct {
 	latlon exchange.LatLon
 }
 
-func (ir *impressionRest) UserTrackID() string {
+func (ir *bidRequestRest) ID() string {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) Imp() []exchange.Impression {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) Inventory() exchange.Inventory {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) Device() exchange.Device {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) User() exchange.User {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) Test() bool {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) AuctionType() exchange.AuctionType {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) TMax() time.Duration {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) WhiteList() []string {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) BlackList() []string {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) AllowedLanguage() []string {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) BlockedCategories() []string {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) BlockedAdvertiserDomain() []string {
+	panic("implement me")
+}
+
+func (ir *bidRequestRest) UserTrackID() string {
 	return ir.UTI
 }
 
-func (ir *impressionRest) PageTrackID() string {
+func (ir *bidRequestRest) PageTrackID() string {
 	return ir.PTI
 }
 
 type location struct {
-	TheCountry  exchange.Country  `json:"country"`
-	TheProvince exchange.Province `json:"province"`
-	TheLatLon   exchange.LatLon   `json:"latlon"`
-	TheISP      exchange.ISP      `json:"isp"`
+	TheCountry exchange.Country `json:"country"`
+	TheRegion  exchange.Region  `json:"province"`
+	TheLatLon  exchange.LatLon  `json:"latlon"`
+	TheISP     exchange.ISP     `json:"isp"`
+}
+
+func (l location) Region() exchange.Region {
+	panic("implement me")
 }
 
 func (l location) ISP() exchange.ISP {
@@ -54,15 +110,15 @@ func (l location) Country() exchange.Country {
 	return l.TheCountry
 }
 
-func (l location) Province() exchange.Province {
-	return l.TheProvince
+func (l location) Province() exchange.Region {
+	return l.TheRegion
 }
 
 func (l location) LatLon() exchange.LatLon {
 	return l.TheLatLon
 }
 
-func (ir *impressionRest) TrackID() string {
+func (ir *bidRequestRest) TrackID() string {
 	if ir.Mega == "" {
 		ir.Mega = <-random.ID
 	}
@@ -70,60 +126,60 @@ func (ir *impressionRest) TrackID() string {
 	return ir.Mega
 }
 
-func (ir impressionRest) IP() net.IP {
+func (ir bidRequestRest) IP() net.IP {
 	return net.ParseIP(ir.SIP)
 }
 
-func (ir impressionRest) Scheme() string {
+func (ir bidRequestRest) Scheme() string {
 	if ir.Schm != "https" {
 		ir.Schm = "http"
 	}
 	return ir.Schm
 }
 
-func (ir impressionRest) UserAgent() string {
+func (ir bidRequestRest) UserAgent() string {
 	return ir.UA
 }
 
-func (ir impressionRest) Source() exchange.Inventory {
+func (ir bidRequestRest) Source() exchange.Inventory {
 	return ir.Pub
 }
 
-func (ir impressionRest) Location() exchange.Location {
+func (ir bidRequestRest) Location() exchange.Location {
 	return ir.Loc
 }
 
-func (ir impressionRest) Attributes() map[string]interface{} {
+func (ir bidRequestRest) Attributes() map[string]interface{} {
 	return ir.Attr
 }
 
-func (ir *impressionRest) Slots() []exchange.Impression {
+func (ir *bidRequestRest) Slots() []exchange.Impression {
 	if ir.dum == nil {
-		ir.dum = make([]exchange.Impression, len(ir.ImpSlots))
-		for i := range ir.ImpSlots {
-			ir.dum[i] = ir.ImpSlots[i]
+		ir.dum = make([]exchange.Impression, len(ir.Imps))
+		for i := range ir.Imps {
+			ir.dum[i] = ir.Imps[i]
 		}
 	}
 	return ir.dum
 }
 
-func (ir impressionRest) Category() []exchange.Category {
+func (ir bidRequestRest) Category() []exchange.Category {
 	return ir.Categories
 }
 
-func (ir impressionRest) Platform() exchange.ImpressionPlatform {
-	return ir.ImpPlatform
+func (ir bidRequestRest) Platform() exchange.DeviceType {
+	return ir.PlatDevice
 }
 
-func (ir impressionRest) UnderFloor() bool {
+func (ir bidRequestRest) UnderFloor() bool {
 	return ir.UnderFloorCPM
 }
 
-func (ir impressionRest) Raw() interface{} {
+func (ir bidRequestRest) Raw() interface{} {
 	return ir
 }
 
-func (ir *impressionRest) extractData() {
+func (ir *bidRequestRest) extractData() {
 	d := ip2location.IP2Location(ir.SIP)
 	//logrus.Debug(d)
 	ir.Loc = location{
@@ -133,7 +189,7 @@ func (ir *impressionRest) extractData() {
 			Valid: d.CountryLong != "-",
 		},
 
-		TheProvince: exchange.Province{
+		TheRegion: exchange.Region{
 			Valid: d.Region != "-",
 			Name:  d.Region,
 		},
@@ -148,20 +204,20 @@ func (ir *impressionRest) extractData() {
 
 }
 
-func (ir *impressionRest) Time() time.Time {
+func (ir *bidRequestRest) Time() time.Time {
 	return ir.STime
 }
 
-func newImpressionFromAppRequest(sup exchange.Supplier, r *requestBody) (*impressionRest, error) {
-	resp := impressionRest{
+func newImpressionFromAppRequest(sup exchange.Supplier, r *requestBody) (*bidRequestRest, error) {
+	resp := bidRequestRest{
 		Schm:          r.Scheme,
 		UTI:           r.UserTrackID,
 		PTI:           r.PageTrackID,
 		SIP:           r.IP,
 		UA:            r.App.UserAgent,
-		ImpPlatform:   exchange.ImpressionPlatformApp,
+		PlatDevice:    exchange.DeviceTypePhone,
 		Categories:    r.Categories,
-		ImpSlots:      r.Slots,
+		Imps:          r.Slots,
 		Mega:          <-random.ID,
 		UnderFloorCPM: r.UnderFloor,
 		Pub:           r.Publisher,
@@ -190,16 +246,16 @@ func newImpressionFromAppRequest(sup exchange.Supplier, r *requestBody) (*impres
 	return &resp, nil
 }
 
-func newImpressionFromVastRequest(sup exchange.Supplier, r *requestBody) (*impressionRest, error) {
-	resp := impressionRest{
+func newImpressionFromVastRequest(sup exchange.Supplier, r *requestBody) (*bidRequestRest, error) {
+	resp := bidRequestRest{
 		Schm:          r.Scheme,
 		UTI:           r.UserTrackID,
 		PTI:           r.PageTrackID,
 		SIP:           r.IP,
 		UA:            r.Vast.UserAgent,
-		ImpPlatform:   exchange.ImpressionPlatformVast,
+		PlatDevice:    exchange.DeviceTypePC,
 		Categories:    r.Categories,
-		ImpSlots:      r.Slots,
+		Imps:          r.Slots,
 		Mega:          <-random.ID,
 		UnderFloorCPM: r.UnderFloor,
 
@@ -215,17 +271,17 @@ func newImpressionFromVastRequest(sup exchange.Supplier, r *requestBody) (*impre
 	return &resp, nil
 }
 
-func newImpressionFromWebRequest(sup exchange.Supplier, r *requestBody) (*impressionRest, error) {
+func newImpressionFromWebRequest(sup exchange.Supplier, r *requestBody) (*bidRequestRest, error) {
 	r.Publisher.sup = sup
-	resp := impressionRest{
+	resp := bidRequestRest{
 		Schm:          r.Scheme,
 		UTI:           r.UserTrackID,
 		PTI:           r.PageTrackID,
 		SIP:           r.IP,
 		UA:            r.Web.UserAgent,
-		ImpPlatform:   exchange.ImpressionPlatformWeb,
+		PlatDevice:    exchange.DeviceTypePC,
 		Categories:    r.Categories,
-		ImpSlots:      r.Slots,
+		Imps:          r.Slots,
 		Mega:          <-random.ID,
 		UnderFloorCPM: r.UnderFloor,
 
