@@ -1,19 +1,29 @@
 package exchange
 
 const (
+	// ExcuseUnknown Unknown is iota
 	ExcuseUnknown = iota
+	// ExcuseTechnical is Technical
 	ExcuseTechnical
+	// ExcuseInvalid is Invalid
 	ExcuseInvalid
+	// ExcuseKnownWebSpider is KnownWebSpider
 	ExcuseKnownWebSpider
+	// ExcuseSuspectedNonHumanTraffic is SuspectedNonHumanTraffic
 	ExcuseSuspectedNonHumanTraffic
+	// ExcuseCloudDataCenterProxyIP is CloudDataCenterProxyIP
 	ExcuseCloudDataCenterProxyIP
+	// ExcuseUnsupportedDevice is UnsupportedDevice
 	ExcuseUnsupportedDevice
+	// ExcuseBlockedPublisherSite is BlockedPublisherSite
 	ExcuseBlockedPublisherSite
+	// ExcuseUnmatchedUser is UnmatchedUser
 	ExcuseUnmatchedUser
+	// ExcuseDailyReaderCapMet is DailyReaderCapMet
 	ExcuseDailyReaderCapMet
+	// ExcuseDailyDomainCapMet is DailyDomainCapMet
 	ExcuseDailyDomainCapMet
 )
-
 
 // BidResponse is the response of bid request (demand to exchange, exchange to publisher)
 type BidResponse interface {
@@ -29,7 +39,7 @@ type BidResponse interface {
 	Supplier() Supplier
 }
 
-// the bid is designed the way it returns the data about the first bid of the seat bid
+// Bid is designed the way it returns the data about the first bid of the seat bid
 type Bid interface {
 	// ID returns the bid id
 	ID() string

@@ -45,4 +45,4 @@ type Location interface {
 }
 
 // Geo is the alias of Location for open rtb compatibility
-type Geo = Location
+type Geo Location

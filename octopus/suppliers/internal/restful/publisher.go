@@ -45,4 +45,3 @@ func (restPublisher) Attributes() map[string]interface{} {
 func (rp restPublisher) Supplier() exchange.Supplier {
 	return rp.sup
 }
-
