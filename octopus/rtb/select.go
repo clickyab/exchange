@@ -25,10 +25,10 @@ var (
 // SelectCPM is the simplest way to bid. sort the value, return the
 func SelectCPM(bq exchange.BidRequest, all []exchange.BidResponse) exchange.BidResponse {
 	bids := make([]exchange.Bid, 0)
-	lock := kv.NewDistributedLock("LOCK"+bq.Supplier().Name()+bq.ID(), pageLock.Duration())
+	lock := kv.NewDistributedLock("LOCK"+bq.Inventory().Supplier().Name()+bq.ID(), pageLock.Duration())
 	lock.Lock()
 	defer lock.Unlock()
-	set := kv.NewDistributedSet("EXC" + bq.Supplier().Name() + bq.ID())
+	set := kv.NewDistributedSet("EXC" + bq.Inventory().Supplier().Name() + bq.ID())
 	for _, m := range bq.Imp() {
 		reds := reduce(m.ID(), all)
 		sorted := sortedAd(rmDuplicate(set, reds))
@@ -39,9 +39,9 @@ func SelectCPM(bq exchange.BidRequest, all []exchange.BidResponse) exchange.BidR
 
 		tb := sorted[0]
 		var tp int64
-		lower := bq.Supplier().SoftFloorCPM()
+		lower := bq.Inventory().Supplier().SoftFloorCPM()
 		if lower > tb.Price() {
-			lower = bq.Supplier().FloorCPM()
+			lower = bq.Inventory().Supplier().FloorCPM()
 		}
 		if len(sorted) > 1 && sorted[1].Price() > lower {
 			lower = sorted[1].Price()
@@ -58,7 +58,7 @@ func SelectCPM(bq exchange.BidRequest, all []exchange.BidResponse) exchange.BidR
 		})
 	}
 	var res = rsp{
-		supplier:   bq.Supplier(),
+		supplier:   bq.Inventory().Supplier(),
 		id:         bq.ID(),
 		attributes: bq.Attributes(),
 	}

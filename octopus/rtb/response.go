@@ -8,7 +8,7 @@ type bid struct {
 }
 
 func (b bid) ImpID() string {
-	b.bid.ImpID()
+	return b.bid.ImpID()
 }
 
 func (b bid) Demand() exchange.Demand {
@@ -19,7 +19,6 @@ func (b bid) ID() string {
 	return b.bid.ID()
 }
 
-
 func (b bid) Price() int64 {
 	return b.price
 }
@@ -27,7 +26,6 @@ func (b bid) Price() int64 {
 func (b bid) AdID() string {
 	return b.bid.AdID()
 }
-
 
 func (b bid) AdHeight() int {
 	return b.bid.AdHeight()

@@ -8,7 +8,7 @@ type ConnectionType int
 
 const (
 	// DeviceTypeMobileTablet means mobile tablet
-	DeviceTypeMobileTablet DeviceType = 1
+	DeviceTypeMobileTablet DeviceType = iota + 1
 	// DeviceTypePC means personal computer
 	DeviceTypePC
 	// DeviceTypeTV is the connected TV

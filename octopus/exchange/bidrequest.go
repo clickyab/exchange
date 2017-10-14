@@ -51,6 +51,6 @@ type BidRequest interface {
 
 	// Time time of the impression (the input time)
 	Time() time.Time
-	Supplier() Supplier
+
 	Attributes() map[string]interface{}
 }

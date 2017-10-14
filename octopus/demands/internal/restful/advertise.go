@@ -17,7 +17,6 @@ type restAd struct {
 	demand    exchange.Demand
 	trackID   string
 	winnerCPM int64
-	rates     []exchange.Rate
 }
 
 func (ra restAd) SlotTrackID() string {
@@ -61,10 +60,6 @@ func (ra restAd) ID() string {
 
 func (ra restAd) MaxCPM() int64 {
 	return ra.RMaxCPM
-}
-
-func (ra restAd) Rates() []exchange.Rate {
-	return ra.rates
 }
 
 func (ra restAd) Landing() string {

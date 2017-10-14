@@ -62,14 +62,14 @@ func (d *demand) Name() string {
 	return d.key
 }
 
-func (d *demand) Provide(ctx context.Context, imp exchange.BidRequest, ch chan exchange.Advertise) {
+func (d *demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan exchange.BidResponse) {
 	defer close(ch)
 	if !d.hasLimits() {
 		return
 	}
 	buf := &bytes.Buffer{}
 	enc := json.NewEncoder(buf)
-	if err := enc.Encode(d.encoder(imp)); err != nil {
+	if err := enc.Encode(d.encoder(bq)); err != nil {
 		logrus.Debug(err)
 		return
 	}
@@ -78,7 +78,7 @@ func (d *demand) Provide(ctx context.Context, imp exchange.BidRequest, ch chan e
 		logrus.Debug(err)
 		return
 	}
-	log(imp).WithField("key", d.key).Debug("calling demand")
+	log(bq).WithField("key", d.key).Debug("calling demand")
 	resp, err := d.client.Do(req.WithContext(ctx))
 	if err != nil {
 		logrus.Debug(err)
@@ -87,26 +87,26 @@ func (d *demand) Provide(ctx context.Context, imp exchange.BidRequest, ch chan e
 	if resp.StatusCode != http.StatusOK {
 		body, _ := ioutil.ReadAll(resp.Body)
 		resp.Body.Close()
-		log(imp).WithField("status", resp.StatusCode).Debug(string(body))
+		log(bq).WithField("status", resp.StatusCode).Debug(string(body))
 		return
 	}
 	data, err := ioutil.ReadAll(resp.Body)
 	assert.Nil(err)
 	reader := bytes.NewReader(data)
-	log(imp).WithField("key", d.key).WithField("result", string(data)).Debug("Call done")
+	log(bq).WithField("key", d.key).WithField("result", string(data)).Debug("Call done")
 
-	ads := []*restAd{}
+	bidRes := []*bidResponse{}
 	dec := json.NewDecoder(reader)
 	defer resp.Body.Close()
-	if err := dec.Decode(&ads); err != nil {
+	if err := dec.Decode(&bidRes); err != nil {
 		logrus.Debug(err)
 		return
 	}
 
-	log(imp).WithField("count", len(ads)).Debug("selected ad from pool")
-	for i := range ads {
-		ads[i].demand = d
-		ch <- ads[i]
+	log(bq).WithField("count", len(bidRes)).Debug("selected ad from pool")
+	for _, val := range bidRes {
+		val.bids[0].demand = d
+		ch <- val
 	}
 }
 

@@ -7,79 +7,79 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 )
 
-type Impression struct {
+type BidRequest struct {
 	ITrackID     string
 	IIP          net.IP
 	ISchema      string
 	IUserTrackID string
 	IPageTrackID string
 	IUserAgent   string
-	ISource      Publisher
+	ISource      exchange.Inventory
 	ILocation    Location
 	IAttributes  map[string]interface{}
-	ISlots       []*Slot
+	IImps        []*Imp
 	ICategory    []exchange.Category
-	IPlatform    exchange.ImpressionPlatform
+	IPlatform    exchange.DeviceType
 	IUnderFloor  bool
 	ITime        time.Time
 }
 
-func (i Impression) TrackID() string {
-	return i.ITrackID
+func (*BidRequest) ID() string {
+	panic("implement me")
 }
 
-func (i Impression) IP() net.IP {
-	return i.IIP
+func (*BidRequest) Imp() []exchange.Impression {
+	panic("implement me")
 }
 
-func (i Impression) Scheme() string {
-	return i.ISchema
+func (*BidRequest) Inventory() exchange.Inventory {
+	panic("implement me")
 }
 
-func (i Impression) UserTrackID() string {
-	return i.IUserTrackID
+func (*BidRequest) Device() exchange.Device {
+	panic("implement me")
 }
 
-func (i Impression) PageTrackID() string {
-	return i.IPageTrackID
+func (*BidRequest) User() exchange.User {
+	panic("implement me")
 }
 
-func (i Impression) UserAgent() string {
-	return i.IUserAgent
+func (*BidRequest) Test() bool {
+	panic("implement me")
 }
 
-func (i Impression) Source() exchange.Inventory {
-	return i.ISource
+func (*BidRequest) AuctionType() exchange.AuctionType {
+	panic("implement me")
 }
 
-func (i Impression) Location() exchange.Location {
-	return i.ILocation
+func (*BidRequest) TMax() time.Duration {
+	panic("implement me")
 }
 
-func (i Impression) Attributes() map[string]interface{} {
-	return i.IAttributes
+func (*BidRequest) WhiteList() []string {
+	panic("implement me")
 }
 
-func (i Impression) Slots() []exchange.Impression {
-	res := make([]exchange.Impression, len(i.ISlots))
-	for j := range i.ISlots {
-		res[j] = i.ISlots[j]
-	}
-	return res
+func (*BidRequest) BlackList() []string {
+	panic("implement me")
 }
 
-func (i Impression) Category() []exchange.Category {
-	return i.ICategory
+func (*BidRequest) AllowedLanguage() []string {
+	panic("implement me")
 }
 
-func (i Impression) Platform() exchange.ImpressionPlatform {
-	return i.IPlatform
+func (*BidRequest) BlockedCategories() []string {
+	panic("implement me")
 }
 
-func (i Impression) UnderFloor() bool {
-	return i.IUnderFloor
+func (*BidRequest) BlockedAdvertiserDomain() []string {
+	panic("implement me")
 }
 
-func (i Impression) Time() time.Time {
-	return i.ITime
+func (*BidRequest) Time() time.Time {
+	panic("implement me")
+}
+
+func (*BidRequest) Attributes() map[string]interface{} {
+	panic("implement me")
 }

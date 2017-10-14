@@ -31,15 +31,15 @@ func newDemand(name string, rate int, handicap int64) exchange.Demand {
 }
 
 func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
-	a := make([]*mocks.Slot, 0)
+	a := make([]*mocks.Imp, 0)
 	for i := 1; i <= slotCount; i++ {
-		a = append(a, &mocks.Slot{
+		a = append(a, &mocks.Imp{
 			SWidth:   300,
 			SHeight:  250,
 			STRackID: <-random.ID,
 		})
 	}
-	return mocks.Impression{
+	return mocks.BidRequest{
 		ITime: t,
 		ISource: mocks.Publisher{
 			PName: source,
@@ -48,7 +48,7 @@ func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidR
 			},
 		},
 
-		ISlots: a,
+		IImps: a,
 	}
 }
 

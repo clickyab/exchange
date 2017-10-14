@@ -1,32 +1,32 @@
 package mocks
 
-type Slot struct {
+type Imp struct {
 	SWidth, SHeight int
 	STRackID        string
 	SFallback       string
 	Attribute       map[string]string
 }
 
-func (s Slot) Attributes() map[string]string {
+func (s Imp) Attributes() map[string]string {
 	return s.Attribute
 }
 
-func (s Slot) Width() int {
+func (s Imp) Width() int {
 	return s.SWidth
 }
 
-func (s Slot) Height() int {
+func (s Imp) Height() int {
 	return s.SHeight
 }
 
-func (s Slot) TrackID() string {
+func (s Imp) TrackID() string {
 	return s.STRackID
 }
 
-func (s Slot) Fallback() string {
+func (s Imp) Fallback() string {
 	return s.SFallback
 }
 
-func (s *Slot) SetAttribute(att string, v string) {
+func (s *Imp) SetAttribute(att string, v string) {
 	s.Attribute[att] = v
 }
