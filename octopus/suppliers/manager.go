@@ -10,8 +10,8 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/suppliers/internal/models"
+	"clickyab.com/exchange/octopus/suppliers/internal/renderer"
 	"clickyab.com/exchange/octopus/suppliers/internal/restful"
-	"clickyab.com/exchange/octopus/suppliers/internal/restful/renderer"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
 
@@ -32,7 +32,8 @@ func restRendererFactory(sup exchange.Supplier, in string) exchange.Renderer {
 	switch in {
 	case "rest":
 		// TODO : /api is hardcoded
-		return renderer.NewRestfulRenderer(sup, mountPoint.String()+"/pixel/%s/%s")
+		// TODO : restRenderFactory should have no arg
+		return renderer.NewRenderer()
 	default:
 		logrus.Panicf("supplier with key %s not found", in)
 	}
