@@ -61,11 +61,22 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 
 	// the cancel is not required here. the parent is the hammer :)
 	rCtx, _ := context.WithTimeout(ctx, p.timeout)
-
 	chn := make(chan exchange.BidResponse, 1)
 	go p.provider.Provide(rCtx, bq, chn)
-
-	return <-chn
+	for {
+		select {
+		case <-done:
+			// request is canceled
+			return nil
+		case data, open := <-chn:
+			if data != nil {
+				return data
+			}
+			if !open {
+				return <-chn
+			}
+		}
+	}
 }
 
 // Register is used to handle new layer in system
@@ -103,7 +114,7 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	wg := sync.WaitGroup{}
 	l := len(allProviders)
 	wg.Add(l)
-	var allRes = make(chan exchange.BidResponse)
+	var allRes = make(chan exchange.BidResponse, l)
 	lock.RLock()
 	for i := range allProviders {
 		go func(inner string) {
@@ -128,7 +139,6 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	for i := range allRes {
 		response = append(response, i)
 	}
-	logrus.Warn("dd",len(response))
 	return response
 }
 
@@ -141,23 +151,23 @@ func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
 	return true
 }
 
-func isSameProvider(request exchange.BidRequest, data providerData) bool {
-	return request.Inventory().Name() == data.name
+func isSameProvider(bq exchange.BidRequest, data providerData) bool {
+	return bq.Inventory().Name() == data.name
 }
 
-func notWhitelistCountries(request exchange.BidRequest, data providerData) bool {
+func notWhitelistCountries(bq exchange.BidRequest, data providerData) bool {
 	if len(data.provider.WhiteListCountries()) == 0 {
 		return false
 	}
-	return !contains(data.provider.WhiteListCountries(), request.Device().Geo().Country().ISO)
+	return !contains(data.provider.WhiteListCountries(), bq.Device().Geo().Country().ISO)
 }
 
-func isExcludedDemands(request exchange.BidRequest, data providerData) bool {
-	return contains(request.WhiteList(), data.name)
+func isExcludedDemands(bq exchange.BidRequest, data providerData) bool {
+	return contains(bq.WhiteList(), data.name)
 }
 
-func isNotSameMode(impression exchange.BidRequest, data providerData) bool {
-	return impression.Test() != data.provider.TestMode()
+func isNotSameMode(bq exchange.BidRequest, data providerData) bool {
+	return bq.Test() != data.provider.TestMode()
 }
 
 func contains(s []string, t string) bool {

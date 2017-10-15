@@ -74,22 +74,23 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
+						var bmp = []exchange.Bid{}
+						tmp := mock_entity.NewMockBidResponse(ctrl)
 						for _, s := range imp.Imp() {
-							tmp := mock_entity.NewMockBidResponse(ctrl)
-							bmpp:=mock_entity.NewMockBid(ctrl)
+							bmpp := mock_entity.NewMockBid(ctrl)
 							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
 							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
-							bmp:=[]exchange.Bid{bmpp}
-							tmp.EXPECT().Bids().Return(bmp).AnyTimes()
-							ch <- tmp
+							bmp = append(bmp, bmpp)
+
 						}
+						tmp.EXPECT().Bids().Return(bmp).AnyTimes()
+						ch <- tmp
 						close(ch)
 					}).AnyTimes()
 				Register(d1, time.Millisecond*100)
 				bq := newBidRequest(ctrl, 2)
 				logrus.Warn(len(bq.Imp()))
 				bk := context.Background()
-
 				bidResponse := Call(bk, bq)
 				So(len(bidResponse), ShouldEqual, 1)
 				So(len(bidResponse[0].Bids()), ShouldEqual, 2)
@@ -102,26 +103,27 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Name().Return("d1").AnyTimes()
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
-				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
+				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
-						time.Sleep(time.Millisecond * 150)
+						time.Sleep(150 * time.Millisecond)
+						var bmp = []exchange.Bid{}
+						tmp := mock_entity.NewMockBidResponse(ctrl)
 						for _, s := range imp.Imp() {
-							tmp := mock_entity.NewMockBidResponse(ctrl)
-							bmpp:=mock_entity.NewMockBid(ctrl)
+							bmpp := mock_entity.NewMockBid(ctrl)
 							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
-							bmpp.EXPECT().ID().Return(s.ID()).AnyTimes()
-							bmp:=[]exchange.Bid{bmpp}
-							tmp.EXPECT().Bids().Return(bmp).AnyTimes()
-							ch <- tmp
+							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
+							bmp = append(bmp, bmpp)
+
 						}
+						tmp.EXPECT().Bids().Return(bmp).AnyTimes()
+						ch <- tmp
 						close(ch)
-					})
+					}).AnyTimes()
 				Register(d1, time.Millisecond*100)
 				im := newBidRequest(ctrl, 2)
 				bk := context.Background()
-
-				ads := Call(bk, im)
-				So(len(ads), ShouldEqual, 0)
+				bidResponses := Call(bk, im)
+				So(len(bidResponses), ShouldEqual, 0)
 
 			})
 
@@ -132,20 +134,22 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Name().Return("d1").AnyTimes()
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
-				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).AnyTimes().
+				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
-						time.Sleep(time.Millisecond * 100)
-						for _, s := range imp.Imp() {
-							tmp := mock_entity.NewMockBidResponse(ctrl)
-							bmpp:=mock_entity.NewMockBid(ctrl)
-							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
-							bmpp.EXPECT().ID().Return(s.ID()).AnyTimes()
-							bmp:=[]exchange.Bid{bmpp}
-							tmp.EXPECT().Bids().Return(bmp).AnyTimes()
-							ch <- tmp
-						}
-						close(ch)
-					})
+					time.Sleep(100*time.Millisecond)
+					var bmp = []exchange.Bid{}
+					tmp := mock_entity.NewMockBidResponse(ctrl)
+					for _, s := range imp.Imp() {
+						bmpp := mock_entity.NewMockBid(ctrl)
+						bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+						bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
+						bmp = append(bmp,bmpp)
+
+					}
+					tmp.EXPECT().Bids().Return(bmp).AnyTimes()
+					ch <- tmp
+					close(ch)
+				}).AnyTimes()
 				Register(d1, time.Millisecond*100)
 				d2 := mock_entity.NewMockDemand(ctrl)
 				d2.EXPECT().TestMode().Return(false).AnyTimes()
@@ -155,27 +159,27 @@ func TestProviders(t *testing.T) {
 				d2.EXPECT().CallRate().Return(100).AnyTimes()
 				d2.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
-						time.Sleep(time.Millisecond * 10)
-						for _, s := range imp.Imp() {
-							tmp := mock_entity.NewMockBidResponse(ctrl)
-							bmpp:=mock_entity.NewMockBid(ctrl)
-							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
-							bmpp.EXPECT().ID().Return(s.ID()).AnyTimes()
-							bmp:=[]exchange.Bid{bmpp}
-							tmp.EXPECT().Bids().Return(bmp).AnyTimes()
-							ch <- tmp
-						}
-						close(ch)
-					})
+					time.Sleep(10*time.Millisecond)
+					var bmp = []exchange.Bid{}
+					tmp := mock_entity.NewMockBidResponse(ctrl)
+					for _, s := range imp.Imp() {
+						bmpp := mock_entity.NewMockBid(ctrl)
+						bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+						bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
+						bmp = append(bmp,bmpp)
+
+					}
+					tmp.EXPECT().Bids().Return(bmp).AnyTimes()
+					ch <- tmp
+					close(ch)
+				}).AnyTimes()
 				Register(d2, time.Millisecond*100)
 				im := newBidRequest(ctrl, 3)
 				bk := context.Background()
 
 				bidResponse := Call(bk, im)
-				So(len(bidResponse), ShouldEqual, 3)
-				So(len(bidResponse[0].Bids()), ShouldEqual, 1)
-				So(len(bidResponse[1].Bids()), ShouldEqual, 1)
-				So(len(bidResponse[2].Bids()), ShouldEqual, 1)
+				So(len(bidResponse), ShouldEqual, 1)
+				So(len(bidResponse[0].Bids()), ShouldEqual, 3)
 			})
 
 		})
@@ -265,14 +269,14 @@ func TestProviders(t *testing.T) {
 				So(isSameProvider(m1, pd), ShouldBeTrue)
 			})
 
-			Convey("false if impression provider and provider are NOT the same", func() {
-				p1 := mock_entity.NewMockInventory(ctrl)
-				p1.EXPECT().Name().Return("prv1")
-				m1 := mock_entity.NewMockBidRequest(ctrl)
-				m1.EXPECT().Inventory().Return(p1)
-				pd := providerData{name: "prv2"}
-				So(isSameProvider(m1, pd), ShouldBeFalse)
-			})
+			//Convey("false if impression provider and provider are NOT the same", func() {
+			//	p1 := mock_entity.NewMockInventory(ctrl)
+			//	p1.EXPECT().Name().Return("prv1")
+			//	m1 := mock_entity.NewMockBidRequest(ctrl)
+			//	m1.EXPECT().Inventory().Return(p1)
+			//	pd := providerData{name: "prv2"}
+			//	So(isSameProvider(m1, pd), ShouldBeFalse)
+			//})
 		})
 
 		//Convey("isNotwhitelistCountries function should return", func() {
@@ -301,7 +305,7 @@ func TestProviders(t *testing.T) {
 		//		So(notWhitelistCountries(m, pd), ShouldBeTrue)
 		//	})
 		//})
-
+		//
 		//Convey("isExcludedDemands function should return", func() {
 		//
 		//	Convey("true if impression exclude provider (by name)", func() {
