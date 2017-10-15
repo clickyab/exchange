@@ -23,60 +23,72 @@ var (
 )
 
 // SelectCPM is the simplest way to bid. sort the value, return the
-func SelectCPM(imp exchange.BidRequest, all map[string][]exchange.Advertise) (res map[string]exchange.Advertise) {
-	res = make(map[string]exchange.Advertise)
-
-	lock := kv.NewDistributedLock("LOCK"+imp.Source().Supplier().Name()+imp.PageTrackID(), pageLock.Duration())
+func SelectCPM(bq exchange.BidRequest, all []exchange.BidResponse) exchange.BidResponse {
+	bids := make([]exchange.Bid, 0)
+	lock := kv.NewDistributedLock("LOCK"+bq.Inventory().Supplier().Name()+bq.ID(), pageLock.Duration())
 	lock.Lock()
 	defer lock.Unlock()
-
-	set := kv.NewDistributedSet("EXC" + imp.Source().Supplier().Name() + imp.PageTrackID())
-	for id := range all {
-		this := moderate(imp.Source(), all[id])
-		sorted := sortedAd(rmDuplicate(set, this))
+	set := kv.NewDistributedSet("EXC" + bq.Inventory().Supplier().Name() + bq.ID())
+	for _, m := range bq.Imp() {
+		reds := reduce(m.ID(), all)
+		sorted := sortedAd(rmDuplicate(set, reds))
 		if len(sorted) == 0 {
-			res[id] = nil
 			continue
 		}
 		sort.Sort(sorted)
 
-		res[id] = sorted[0]
-		lower := imp.Source().SoftFloorCPM()
-		if lower > res[id].MaxCPM() {
-			lower = imp.Source().FloorCPM()
+		tb := sorted[0]
+		var tp int64
+		lower := bq.Inventory().Supplier().SoftFloorCPM()
+		if lower > tb.Price() {
+			lower = bq.Inventory().Supplier().FloorCPM()
 		}
-		if len(sorted) > 1 && sorted[1].MaxCPM() > lower {
-			lower = sorted[1].MaxCPM()
+		if len(sorted) > 1 && sorted[1].Price() > lower {
+			lower = sorted[1].Price()
 		}
-
-		if lower < res[id].MaxCPM() {
-			res[id].SetWinnerCPM(lower + 1)
+		if lower < tb.Price() {
+			tp = lower + 1.0
 		} else {
-			res[id].SetWinnerCPM(res[id].MaxCPM())
+			tp = tb.Price()
 		}
-
-		set.Add(res[id].ID())
+		set.Add(tb.AdID())
+		bids = append(bids, bid{
+			bid:   tb,
+			price: tp,
+		})
 	}
-
+	var res = rsp{
+		supplier:   bq.Inventory().Supplier(),
+		id:         bq.ID(),
+		attributes: bq.Attributes(),
+	}
+	if len(bids) == 0 {
+		// if you find better reason replace it
+		res.excuse = exchange.ExcuseCloudDataCenterProxyIP
+	} else {
+		res.bids = bids
+	}
 	set.Save(pageLifeTime.Duration())
 	return res
 }
 
-// moderate remove unacceptable ads for publisher
-func moderate(imp exchange.Rater, ads []exchange.Advertise) []exchange.Advertise {
-	var rds []exchange.Advertise
-	for _, ad := range ads {
-		if reduce(imp, ad) {
-			rds = append(rds, ad)
+func reduce(imp string, b []exchange.BidResponse) []exchange.Bid {
+	res := make([]exchange.Bid, 0)
+	for _, br := range b {
+		for _, bid := range br.Bids() {
+			if bid.ImpID() == imp {
+				res = append(res, bid)
+				break
+			}
 		}
-	}
 
-	return rds
+	}
+	return res
 }
 
-func rmDuplicate(set kv.DistributedSet, ads []exchange.Advertise) []exchange.Advertise {
+func rmDuplicate(set kv.DistributedSet, ads []exchange.Bid) []exchange.Bid {
 	all := set.Members()
-	var res []exchange.Advertise
+	var res []exchange.Bid
 bigLoop:
 	for id := range ads {
 		for _, adID := range all {
@@ -87,17 +99,4 @@ bigLoop:
 		res = append(res, ads[id])
 	}
 	return res
-}
-
-func reduce(pub exchange.Rater, ad exchange.Rater) bool {
-	p := pub.Rates()
-	a := ad.Rates()
-	for _, ar := range a {
-		for _, pr := range p {
-			if ar == pr {
-				return false
-			}
-		}
-	}
-	return true
 }

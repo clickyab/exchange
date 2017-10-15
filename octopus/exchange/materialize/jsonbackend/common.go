@@ -4,19 +4,19 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 )
 
-func impressionToMap(imp exchange.BidRequest, ads map[string]exchange.Advertise) map[string]interface{} {
+func requestToMap(req exchange.BidRequest) map[string]interface{} {
 	return map[string]interface{}{
-		"track_id":    imp.ID(),
-		"ip":          imp.IP(),
-		"user_agent":  imp.UserAgent(),
-		"source":      sourceToMap(imp.Source()),
-		"location":    locationToMap(imp.Location()),
-		"attributes":  imp.Attributes(),
-		"slots":       slotsToMap(imp.Imp(), ads),
-		"category":    imp.Category(),
-		"platform":    imp.Platform(),
-		"under_floor": imp.UnderFloor(),
-		"time":        imp.Time(),
+		"track_id":   req.ID(),
+		"ip":         req.Device().IP(),
+		"user_agent": req.Device().UserAgent(),
+		"supplier":   supplierToMap(req.Inventory().Supplier()),
+		"inventory":  inventoryToMap(req.Inventory()),
+		"location":   locationToMap(req.Device().Geo()),
+		//"attributes":  req.,
+		"impression":       impressionToMap(req.Imp()),
+		"blocked_category": req.BlockedCategories(),
+		"platform":         req.Device().DeviceType(),
+		"time":             req.Time(),
 	}
 }
 
@@ -31,29 +31,46 @@ func demandToMap(dmn exchange.Demand) map[string]interface{} {
 
 }
 
-func advertiseToMap(ad exchange.Advertise) map[string]interface{} {
+// no ad markup, dont think we need it
+func bidsToMap(bids []exchange.Bid) []map[string]interface{} {
+	response := []map[string]interface{}{}
+	for i := range bids {
+		response = append(response, map[string]interface{}{
+			"id":         bids[i].ID(),
+			"imp_id":     bids[i].ImpID(),
+			"price":      bids[i].Price(),
+			"win_url":    bids[i].WinURL(),
+			"categories": bids[i].Categories(),
+			"ad_id":      bids[i].AdID(),
+			"ad_height":  bids[i].AdHeight(),
+			"ad_width":   bids[i].AdWidth(),
+			"ad_domains": bids[i].AdDomains(),
+		})
+	}
+
+	return response
+}
+
+func winnerBidToMap(bid exchange.Bid) map[string]interface{} {
 	return map[string]interface{}{
-		"demand":        demandToMap(ad.Demand()),
-		"height":        ad.Height(),
-		"id":            ad.ID(),
-		"landing":       ad.Landing(),
-		"max_cpm":       ad.MaxCPM(),
-		"rate":          ad.Rates(),
-		"track_id":      ad.TrackID(),
-		"url":           ad.URL(),
-		"width":         ad.Width(),
-		"winner_cpm":    ad.WinnerCPM(),
-		"slot_track_id": ad.SlotTrackID(),
+		"height":        bid.AdHeight(),
+		"id":            bid.ID(),
+		"landing":       bid.AdDomains(),
+		"max_cpm":       bid.Price(),
+		"track_id":      bid.ID(),
+		"url":           bid.WinURL(),
+		"width":         bid.AdWidth(),
+		"winner_cpm":    bid.Price(),
+		"slot_track_id": bid.ImpID(),
 	}
 }
 
-func sourceToMap(pub exchange.Inventory) map[string]interface{} {
+func inventoryToMap(inv exchange.Inventory) map[string]interface{} {
 	return map[string]interface{}{
-		"name":           pub.Name(),
-		"soft_floor_cpm": pub.SoftFloorCPM(),
-		"floor_cpm":      pub.FloorCPM(),
-		"attributes":     pub.Attributes(),
-		"supplier":       supplierToMap(pub.Supplier()),
+		"name":           inv.Name(),
+		"soft_floor_cpm": inv.SoftFloorCPM(),
+		"floor_cpm":      inv.FloorCPM(),
+		"attributes":     inv.Attributes(),
 	}
 }
 
@@ -70,38 +87,40 @@ func supplierToMap(sup exchange.Supplier) map[string]interface{} {
 func locationToMap(loc exchange.Location) map[string]interface{} {
 	return map[string]interface{}{
 		"country":  loc.Country(),
-		"province": loc.Province(),
+		"province": loc.Region(),
 		"lat_lon":  loc.LatLon(),
 	}
 }
 
-func slotsToMap(slots []exchange.Impression, ads map[string]exchange.Advertise) []map[string]interface{} {
-	resSlots := make([]map[string]interface{}, 0)
-	for i := range slots {
-		data := map[string]interface{}{
-			"height":   slots[i].Height(),
-			"track_id": slots[i].TrackID(),
-			"width":    slots[i].Width(),
-			"fallback": slots[i].Fallback(),
+func impressionToMap(imps []exchange.Impression) []map[string]interface{} {
+	var resp []map[string]interface{}
+	for i := range imps {
+		temp := map[string]interface{}{}
+		switch imps[i].Type() {
+		case exchange.AdTypeBanner:
+			temp["banner"] = bannerToMap(imps[i].Banner())
+		case exchange.AdTypeNative:
+			temp["native"] = nativeToMap(imps[i].Native())
+		case exchange.AdTypeVideo:
+			temp["video"] = videoToMap(imps[i].Video())
 		}
 
-		if ads != nil {
-			if ad, ok := ads[slots[i].TrackID()]; ok {
-				data["ad"] = advertiseToMap(ad)
-			}
-		}
-		resSlots = append(resSlots, data)
+		temp["id"] = imps[i].ID()
+		temp["bid_floor"] = imps[i].BidFloor()
+		temp["type"] = imps[i].Type()
+		temp["secure"] = imps[i].Secure()
+
+		resp = append(resp, temp)
 	}
-	return resSlots
+
+	return resp
 }
 
-func winnerToMap(imp exchange.BidRequest, ad exchange.Advertise, slotID string) map[string]interface{} {
-	m := make(map[string]exchange.Advertise)
-	m[slotID] = ad
+func winnerToMap(bq exchange.BidRequest, bid exchange.Bid) map[string]interface{} {
 	return map[string]interface{}{
-		"impression": impressionToMap(imp, m),
-		"advertise":  advertiseToMap(ad),
-		"slot_id":    slotID,
+		"demand":    demandToMap(bid.Demand()),
+		"request":   requestToMap(bq),
+		"advertise": winnerBidToMap(bid),
 	}
 }
 
@@ -115,5 +134,40 @@ func showToMap(trackID, demand, slotID, adID string, winner int64, supplier stri
 		"supplier":    supplier,
 		"publisher":   publisher,
 		"profit":      profit,
+	}
+}
+
+func bannerToMap(banner exchange.Banner) map[string]interface{} {
+	return map[string]interface{}{
+		"id":                banner.ID(),
+		"width":             banner.Width(),
+		"height":            banner.Height(),
+		"type":              exchange.AdTypeBanner,
+		"blocked_type":      banner.BlockedTypes(),
+		"blocked_attribute": banner.BlockedAttributes(),
+		"mimes":             banner.Mimes(),
+		"attributes":        banner.Attributes(),
+	}
+}
+
+func videoToMap(video exchange.Video) map[string]interface{} {
+	return map[string]interface{}{
+		"width":             video.Width(),
+		"height":            video.Height(),
+		"linearity":         video.Linearity(),
+		"type":              exchange.AdTypeVideo,
+		"blocked_attribute": video.BlockedAttributes(),
+		"mimes":             video.Mimes(),
+		"attributes":        video.Attributes(),
+	}
+}
+
+func nativeToMap(native exchange.Native) map[string]interface{} {
+	return map[string]interface{}{
+		"extension":  native.Request(),
+		"is_valid":   native.IsExtValid(),
+		"type":       exchange.AdTypeNative,
+		"ad_length":  native.AdLength(),
+		"attributes": native.Attributes(),
 	}
 }

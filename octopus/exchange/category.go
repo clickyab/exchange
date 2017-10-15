@@ -1,4 +1,4 @@
 package exchange
 
-// Category returns category types
+// Category system cat
 type Category string

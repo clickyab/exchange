@@ -40,3 +40,5 @@ func renderTemplate(ctx templateContext) string {
 	assert.Nil(restTemplate.Execute(buf, ctx))
 	return buf.String()
 }
+
+var _ = renderTemplate(templateContext{})

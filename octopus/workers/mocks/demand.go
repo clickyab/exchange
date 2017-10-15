@@ -18,7 +18,7 @@ func (d *Demand) Name() string {
 	return d.DName
 }
 
-func (*Demand) Provide(context.Context, exchange.BidRequest, chan exchange.Advertise) {
+func (*Demand) Provide(context.Context, exchange.BidRequest, chan exchange.BidResponse) {
 	panic("implement me")
 }
 
