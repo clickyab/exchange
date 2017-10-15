@@ -34,6 +34,22 @@ type model struct {
 	} `json:"demand"`
 }
 
+type model1 struct {
+	BidResponse struct {
+		Time time.Time `json:"time"`
+		Supplier string `json:"supplier"`
+		Bids []struct {
+			Price  int64 `json:"price,omitempty"`
+			Demand struct {
+				Name string `json:"name"`
+			} `json:"demand"`
+			Supplier struct {
+				Name string `json:"name"`
+			} `json:"supplier"`
+		} `json:"bids"`
+	} `json:"bid_response"`
+}
+
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
 
 type consumer struct {
@@ -76,7 +92,7 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 		for {
 			select {
 			case del = <-chn:
-				obj := model{}
+				obj := model1{}
 				err := del.Decode(&obj)
 				assert.Nil(err)
 				var win int64
@@ -86,7 +102,7 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 					}
 				}
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:           obj.Impression.Source.Supplier.Name,
+					Supplier:           obj.BidResponse.Supplier,
 					Source:             obj.Impression.Source.Name,
 					Demand:             obj.Demand.Name,
 					Time:               models.FactTableID(obj.Impression.Time),

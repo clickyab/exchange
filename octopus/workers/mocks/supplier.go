@@ -1,13 +1,15 @@
 package mocks
 
-import "clickyab.com/exchange/octopus/exchange"
+import (
+	"clickyab.com/exchange/octopus/exchange"
+)
 
 type Supplier struct {
-	SName            string
-	SFloorCPM        int64
-	SSoftFloorCPM    int64
-	SExcludedDemands []string
-	SShare           int
+	SName         string
+	SFloorCPM     int64
+	SSoftFloorCPM int64
+	SShare        int
+	SRenderer     exchange.Renderer
 }
 
 func (s Supplier) Name() string {
@@ -23,7 +25,7 @@ func (s Supplier) SoftFloorCPM() int64 {
 }
 
 func (s Supplier) ExcludedDemands() []string {
-	return s.SExcludedDemands
+	return []string{}
 }
 
 func (s Supplier) Share() int {
@@ -31,17 +33,17 @@ func (s Supplier) Share() int {
 }
 
 func (s Supplier) Renderer() exchange.Renderer {
-	panic("not needed")
+	return s.SRenderer
 }
 
 func (s Supplier) TestMode() bool {
-	return true
+	panic("implement me")
 }
 
 func (s Supplier) ClickMode() exchange.SupplierClickMode {
-	return exchange.SupplierClickModeNone
+	panic("implement me")
 }
 
 func (s Supplier) Type() string {
-	return "rest"
+	panic("implement me")
 }

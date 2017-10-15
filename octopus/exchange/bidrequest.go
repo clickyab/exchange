@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// AuctionType whether is first price or second price
 type AuctionType int
 
 const (
@@ -51,4 +52,6 @@ type BidRequest interface {
 
 	// Time time of the impression (the input time)
 	Time() time.Time
+
+	Attributes() map[string]interface{}
 }

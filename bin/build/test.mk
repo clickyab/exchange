@@ -8,7 +8,7 @@ mockgen:
 
 mockentity: $(LINTER) mockgen
 	mkdir -p $(ROOT)/octopus/exchange/mock_exchange
-	$(BIN)/mockgen -destination=$(ROOT)/octopus/exchange/mock_exchange/mock_exchange.gen.go clickyab.com/exchange/octopus/exchange Impression,Demand,Advertise,Publisher,Location,Slot,Supplier
+	$(BIN)/mockgen -destination=$(ROOT)/octopus/exchange/mock_exchange/mock_exchange.gen.go clickyab.com/exchange/octopus/exchange Impression,Demand,Publisher,Location,Supplier,BidResponse,Bid,AdDetail,BidRequest,Banner,Device,Inventory,Site,App,Native,Renderer,User,Video
 
 
 .PHONY: lint $(SUBDIRS) $(ENTITIES) mockentity

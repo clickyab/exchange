@@ -23,50 +23,50 @@ var (
 )
 
 func newDemand(name string, rate int, handicap int64) exchange.Demand {
-	return &mocks.Demand{
-		DName:     name,
-		DCallRate: rate,
-		DHandicap: handicap,
+	return &mocks.Demands{
+		IName:     name,
+		ICallRate: rate,
+		IHandicap: handicap,
 	}
 }
 
-func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
-	a := make([]*mocks.Slot, 0)
-	for i := 1; i <= slotCount; i++ {
-		a = append(a, &mocks.Slot{
-			SWidth:   300,
-			SHeight:  250,
-			STRackID: <-random.ID,
+func newBidResponse(t time.Time, bidCount int, source, sup string) exchange.BidResponse {
+	a := make([]mocks.Bid, 0)
+	for i := 1; i <= bidCount; i++ {
+		a = append(a, mocks.Bid{
+			IAdWidth:  300,
+			IAdHeight: 250,
+			IID:       <-random.ID,
+			IDemand: mocks.Demands{
+				IName: source,
+			},
 		})
 	}
-	return mocks.Impression{
-		ITime: t,
-		ISource: mocks.Publisher{
-			PName: source,
-			PSupplier: mocks.Supplier{
-				SName: sup,
-			},
+	return mocks.BidResponse{
+		ISupplier: mocks.Supplier{
+			SName: sup,
 		},
-
-		ISlots: a,
+		IBids: a,
 	}
 }
 
-func newAds(slots []exchange.Impression, demand exchange.Demand) map[string]exchange.Advertise {
-	a := make(map[string]exchange.Advertise, 0)
-	for i := range slots {
-		a[slots[i].TrackID()] = &mocks.Ads{
-			AHeight: slots[i].Height(),
-			AWidth:  slots[i].Width(),
-			AMaxCPM: 340,
-			ADemand: demand,
-		}
+func newBid(imps []exchange.Impression, demand string) []exchange.Bid {
+	a := make([]exchange.Bid, 0)
+	for i := range imps {
+		a = append(a, mocks.Bid{
+			IDemand: mocks.Demands{
+				IName: demand,
+			},
+			IAdHeight: imps[i].Banner().Height(),
+			IAdWidth:  imps[i].Banner().Width(),
+			IPrice:    340,
+		})
 	}
 	return a
 }
 
-func demToDelivery(i exchange.BidRequest, dem exchange.Demand, ads map[string]exchange.Advertise) broker.Delivery {
-	job := materialize.DemandJob(i, dem, ads)
+func demToDelivery(dem exchange.Demand, resp exchange.BidResponse) broker.Delivery {
+	job := materialize.DemandJob(dem, resp)
 	d, err := job.Encode()
 	assert.Nil(err)
 	return mocks.JsonDelivery{Data: d}
@@ -87,14 +87,13 @@ func TestDemand(t *testing.T) {
 	base := context.Background()
 	Convey("demand json job", t, func() {
 		d := newDemand("test_demand", 100, 50)
-		imp := newImpression(t1, 2, "test_source", "test_supplier")
+		resp := newBidResponse(t1, 2, "test_source", "test_supplier")
 		//slots:=newSlots(2)
-		ads := newAds(imp.Imp(), d)
 		ctx, cnl := context.WithCancel(base)
 		defer cnl()
 		dem := consumer{ctx: ctx}
 		delivery := dem.Consume()
-		data := demToDelivery(imp, d, ads)
+		data := demToDelivery( d,resp)
 		// make sure this is not blocker, and if the test fails then may it hangs for ever
 		select {
 		case delivery <- data:

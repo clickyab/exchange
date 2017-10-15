@@ -15,9 +15,9 @@ type Inventory interface {
 	// Name of publisher
 	Name() string
 	// Domain the domain of the inventory (domain for site, package name for app)
-	Domain()
+	Domain()string
 	// Cat return the category of this inventory
-	Cat() []string
+	Cat() []Category
 	// Publisher return the publisher of the inventory or nil when there is no publisher
 	// WARN : nil is meaningful. watch it
 	Publisher() Publisher
@@ -33,5 +33,5 @@ type Inventory interface {
 	// SoftFloorCPM is the soft version of floor cpm. if the publisher ahs it, then the system
 	// try to use this as floor, but if this is not available, the FloorCPM is used
 	SoftFloorCPM() int64
+	Supplier() Supplier
 }
-

@@ -7,79 +7,86 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 )
 
-type Impression struct {
-	ITrackID     string
+type BidRequest struct {
+	IID          string
 	IIP          net.IP
 	ISchema      string
+	ITest        bool
+	IAuctionType exchange.AuctionType
 	IUserTrackID string
 	IPageTrackID string
 	IUserAgent   string
-	ISource      Publisher
-	ILocation    Location
+	IInventory   Inventory
+
 	IAttributes  map[string]interface{}
-	ISlots       []*Slot
+	IImps        []Imp
 	ICategory    []exchange.Category
-	IPlatform    exchange.ImpressionPlatform
-	IUnderFloor  bool
+	IPlatform    exchange.DeviceType
 	ITime        time.Time
+	ITMax        time.Duration
+	IDevice      Device
 }
 
-func (i Impression) TrackID() string {
-	return i.ITrackID
+func (b *BidRequest) ID() string {
+	return b.IID
 }
 
-func (i Impression) IP() net.IP {
-	return i.IIP
-}
-
-func (i Impression) Scheme() string {
-	return i.ISchema
-}
-
-func (i Impression) UserTrackID() string {
-	return i.IUserTrackID
-}
-
-func (i Impression) PageTrackID() string {
-	return i.IPageTrackID
-}
-
-func (i Impression) UserAgent() string {
-	return i.IUserAgent
-}
-
-func (i Impression) Source() exchange.Inventory {
-	return i.ISource
-}
-
-func (i Impression) Location() exchange.Location {
-	return i.ILocation
-}
-
-func (i Impression) Attributes() map[string]interface{} {
-	return i.IAttributes
-}
-
-func (i Impression) Slots() []exchange.Impression {
-	res := make([]exchange.Impression, len(i.ISlots))
-	for j := range i.ISlots {
-		res[j] = i.ISlots[j]
+func (b *BidRequest) Imp() []exchange.Impression {
+	var res = make([]exchange.Impression, 0)
+	for _, val := range b.IImps {
+		res = append(res, val)
 	}
 	return res
 }
 
-func (i Impression) Category() []exchange.Category {
-	return i.ICategory
+func (b *BidRequest) Inventory() exchange.Inventory {
+	return b.IInventory
 }
 
-func (i Impression) Platform() exchange.ImpressionPlatform {
-	return i.IPlatform
+func (b *BidRequest) Device() exchange.Device {
+	return &b.IDevice
 }
 
-func (i Impression) UnderFloor() bool {
-	return i.IUnderFloor
+func (b *BidRequest) User() exchange.User {
+	panic("implement me")
 }
 
-func (i Impression) Time() time.Time {
-	return i.ITime
+func (b *BidRequest) Test() bool {
+	return b.ITest
+}
+
+func (b *BidRequest) AuctionType() exchange.AuctionType {
+	return b.IAuctionType
+}
+
+func (b *BidRequest) TMax() time.Duration {
+	return b.ITMax
+}
+
+func (b *BidRequest) WhiteList() []string {
+	return []string{}
+}
+
+func (b *BidRequest) BlackList() []string {
+	return []string{}
+}
+
+func (b *BidRequest) AllowedLanguage() []string {
+	return []string{}
+}
+
+func (b *BidRequest) BlockedCategories() []string {
+	return []string{}
+}
+
+func (b *BidRequest) BlockedAdvertiserDomain() []string {
+	return []string{}
+}
+
+func (b *BidRequest) Time() time.Time {
+	return b.ITime
+}
+
+func (b *BidRequest) Attributes() map[string]interface{} {
+	return b.IAttributes
 }
