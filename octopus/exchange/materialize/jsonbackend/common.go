@@ -9,9 +9,9 @@ func requestToMap(req exchange.BidRequest) map[string]interface{} {
 		"track_id":   req.ID(),
 		"ip":         req.Device().IP(),
 		"user_agent": req.Device().UserAgent(),
-		"supplier":   supplierToMap(req.Inventory().Supplier()),
-		"inventory":  inventoryToMap(req.Inventory()),
-		"location":   locationToMap(req.Device().Geo()),
+
+		"inventory": inventoryToMap(req.Inventory()),
+		"location":  locationToMap(req.Device().Geo()),
 		//"attributes":  req.,
 		"impression":       impressionToMap(req.Imp()),
 		"blocked_category": req.BlockedCategories(),
@@ -32,19 +32,20 @@ func demandToMap(dmn exchange.Demand) map[string]interface{} {
 }
 
 // no ad markup, dont think we need it
-func bidsToMap(bids []exchange.Bid) []map[string]interface{} {
+func bidsToMap(resp exchange.BidResponse) []map[string]interface{} {
 	response := []map[string]interface{}{}
-	for i := range bids {
+	for _, val := range resp.Bids() {
 		response = append(response, map[string]interface{}{
-			"id":         bids[i].ID(),
-			"imp_id":     bids[i].ImpID(),
-			"price":      bids[i].Price(),
-			"win_url":    bids[i].WinURL(),
-			"categories": bids[i].Categories(),
-			"ad_id":      bids[i].AdID(),
-			"ad_height":  bids[i].AdHeight(),
-			"ad_width":   bids[i].AdWidth(),
-			"ad_domains": bids[i].AdDomains(),
+			"supplier":   resp.Supplier(),
+			"id":         val.ID(),
+			"imp_id":     val.ImpID(),
+			"price":      val.Price(),
+			"win_url":    val.WinURL(),
+			"categories": val.Categories(),
+			"ad_id":      val.AdID(),
+			"ad_height":  val.AdHeight(),
+			"ad_width":   val.AdWidth(),
+			"ad_domains": val.AdDomains(),
 		})
 	}
 
@@ -67,6 +68,7 @@ func winnerBidToMap(bid exchange.Bid) map[string]interface{} {
 
 func inventoryToMap(inv exchange.Inventory) map[string]interface{} {
 	return map[string]interface{}{
+		"supplier":       supplierToMap(inv.Supplier()),
 		"name":           inv.Name(),
 		"soft_floor_cpm": inv.SoftFloorCPM(),
 		"floor_cpm":      inv.FloorCPM(),

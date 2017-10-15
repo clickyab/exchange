@@ -1,5 +1,7 @@
 package exchange
 
+import "time"
+
 const (
 	// ExcuseUnknown Unknown is iota
 	ExcuseUnknown = iota
@@ -37,6 +39,7 @@ type BidResponse interface {
 	Attributes() map[string]interface{}
 	// Supplier return supplier
 	Supplier() Supplier
+	Time() time.Time
 }
 
 // Bid is designed the way it returns the data about the first bid of the seat bid

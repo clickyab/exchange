@@ -15,7 +15,7 @@ type Inventory interface {
 	// Name of publisher
 	Name() string
 	// Domain the domain of the inventory (domain for site, package name for app)
-	Domain()
+	Domain()string
 	// Cat return the category of this inventory
 	Cat() []Category
 	// Publisher return the publisher of the inventory or nil when there is no publisher

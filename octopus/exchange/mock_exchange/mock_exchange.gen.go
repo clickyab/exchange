@@ -1422,10 +1422,8 @@ func (mr *MockInventoryMockRecorder) Cat() *gomock.Call {
 }
 
 // Domain mocks base method
-func (m *MockInventory) Domain() string {
-	ret := m.ctrl.Call(m, "Domain")
-	ret0, _ := ret[0].(string)
-	return ret0
+func (m *MockInventory) Domain() {
+	m.ctrl.Call(m, "Domain")
 }
 
 // Domain indicates an expected call of Domain
@@ -1553,10 +1551,8 @@ func (mr *MockSiteMockRecorder) Cat() *gomock.Call {
 }
 
 // Domain mocks base method
-func (m *MockSite) Domain() string {
-	ret := m.ctrl.Call(m, "Domain")
-	ret0, _ := ret[0].(string)
-	return ret0
+func (m *MockSite) Domain() {
+	m.ctrl.Call(m, "Domain")
 }
 
 // Domain indicates an expected call of Domain
@@ -1720,10 +1716,8 @@ func (mr *MockAppMockRecorder) Cat() *gomock.Call {
 }
 
 // Domain mocks base method
-func (m *MockApp) Domain() string {
-	ret := m.ctrl.Call(m, "Domain")
-	ret0, _ := ret[0].(string)
-	return ret0
+func (m *MockApp) Domain() {
+	m.ctrl.Call(m, "Domain")
 }
 
 // Domain indicates an expected call of Domain

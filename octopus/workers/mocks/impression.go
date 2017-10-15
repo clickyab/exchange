@@ -8,78 +8,85 @@ import (
 )
 
 type BidRequest struct {
-	ITrackID     string
+	IID          string
 	IIP          net.IP
 	ISchema      string
+	ITest        bool
+	IAuctionType exchange.AuctionType
 	IUserTrackID string
 	IPageTrackID string
 	IUserAgent   string
-	ISource      exchange.Inventory
-	ILocation    Location
+	IInventory   Inventory
+
 	IAttributes  map[string]interface{}
-	IImps        []*Imp
+	IImps        []Imp
 	ICategory    []exchange.Category
 	IPlatform    exchange.DeviceType
-	IUnderFloor  bool
 	ITime        time.Time
+	ITMax        time.Duration
+	IDevice      Device
 }
 
-func (*BidRequest) ID() string {
+func (b *BidRequest) ID() string {
+	return b.IID
+}
+
+func (b *BidRequest) Imp() []exchange.Impression {
+	var res = make([]exchange.Impression, 0)
+	for _, val := range b.IImps {
+		res = append(res, val)
+	}
+	return res
+}
+
+func (b *BidRequest) Inventory() exchange.Inventory {
+	return b.IInventory
+}
+
+func (b *BidRequest) Device() exchange.Device {
+	return &b.IDevice
+}
+
+func (b *BidRequest) User() exchange.User {
 	panic("implement me")
 }
 
-func (*BidRequest) Imp() []exchange.Impression {
-	panic("implement me")
+func (b *BidRequest) Test() bool {
+	return b.ITest
 }
 
-func (*BidRequest) Inventory() exchange.Inventory {
-	panic("implement me")
+func (b *BidRequest) AuctionType() exchange.AuctionType {
+	return b.IAuctionType
 }
 
-func (*BidRequest) Device() exchange.Device {
-	panic("implement me")
+func (b *BidRequest) TMax() time.Duration {
+	return b.ITMax
 }
 
-func (*BidRequest) User() exchange.User {
-	panic("implement me")
+func (b *BidRequest) WhiteList() []string {
+	return []string{}
 }
 
-func (*BidRequest) Test() bool {
-	panic("implement me")
+func (b *BidRequest) BlackList() []string {
+	return []string{}
 }
 
-func (*BidRequest) AuctionType() exchange.AuctionType {
-	panic("implement me")
+func (b *BidRequest) AllowedLanguage() []string {
+	return []string{}
 }
 
-func (*BidRequest) TMax() time.Duration {
-	panic("implement me")
+func (b *BidRequest) BlockedCategories() []string {
+	return []string{}
 }
 
-func (*BidRequest) WhiteList() []string {
-	panic("implement me")
+func (b *BidRequest) BlockedAdvertiserDomain() []string {
+	return []string{}
 }
 
-func (*BidRequest) BlackList() []string {
-	panic("implement me")
+func (b *BidRequest) Time() time.Time {
+	return b.ITime
 }
 
-func (*BidRequest) AllowedLanguage() []string {
-	panic("implement me")
-}
-
-func (*BidRequest) BlockedCategories() []string {
-	panic("implement me")
-}
-
-func (*BidRequest) BlockedAdvertiserDomain() []string {
-	panic("implement me")
-}
-
-func (*BidRequest) Time() time.Time {
-	panic("implement me")
-}
-
-func (*BidRequest) Attributes() map[string]interface{} {
-	panic("implement me")
+func (b *BidRequest) Attributes() map[string]interface{} {
+	return b.IAttributes
 }
