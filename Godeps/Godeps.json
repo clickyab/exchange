@@ -7,6 +7,11 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "github.com/bsm/openrtb",
+			"Comment": "v2.1.1-10-g1979186",
+			"Rev": "197918635afa32b6e0d971921926f61671cfc092"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/aredis",
 			"Rev": "7dc599ea95f874da3b9fc46db2391873e4eb6983"
 		},
