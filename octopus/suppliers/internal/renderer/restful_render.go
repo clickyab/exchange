@@ -2,7 +2,6 @@ package renderer
 
 import (
 	"encoding/json"
-
 	"net/http"
 
 	"clickyab.com/exchange/octopus/exchange"
@@ -24,8 +23,6 @@ type dumbAd struct {
 }
 
 type restful struct {
-	pixelPattern string
-	sup          exchange.Supplier
 }
 
 func (rf restful) Render(resp exchange.BidResponse, w http.ResponseWriter) error {
@@ -56,9 +53,6 @@ func (rf restful) Render(resp exchange.BidResponse, w http.ResponseWriter) error
 }
 
 // NewRestfulRenderer return a restful renderer
-func NewRestfulRenderer(sup exchange.Supplier, pixel string) exchange.Renderer {
-	return &restful{
-		pixelPattern: pixel,
-		sup:          sup,
-	}
+func NewRenderer() exchange.Renderer {
+	return &restful{}
 }
