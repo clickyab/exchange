@@ -8,17 +8,6 @@ import (
 	"github.com/bsm/openrtb"
 )
 
-type dumbAd struct {
-	TrackID   string `json:"track_id" structs:"track_id"`
-	AdTrackID string `json:"ad_track_id" structs:"ad_track_id"`
-	Winner    int64  `json:"winner" structs:"winner"`
-	Width     int    `json:"width" structs:"width"`
-	Height    int    `json:"height" structs:"height"`
-	Code      string `json:"code" structs:"code"`
-	IsFilled  bool   `json:"is_filled" structs:"is_filled"`
-	Landing   string `json:"landing" structs:"landing"`
-}
-
 type restful struct {
 }
 
@@ -49,7 +38,7 @@ func (rf restful) Render(resp exchange.BidResponse, w http.ResponseWriter) error
 	return enc.Encode(response)
 }
 
-// NewRestfulRenderer return a restful renderer
+// NewRenderer return a restful renderer
 func NewRenderer() exchange.Renderer {
 	return &restful{}
 }

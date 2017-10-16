@@ -18,21 +18,10 @@ import (
 	"github.com/clickyab/services/broker/mock"
 
 	"github.com/golang/mock/gomock"
-	"github.com/sirupsen/logrus"
 	. "github.com/smartystreets/goconvey/convey"
 	"gopkg.in/fzerorubigd/onion.v2"
 )
 
-func newInventory(c *gomock.Controller) exchange.Inventory {
-	s := mock_entity.NewMockSupplier(c)
-	s.EXPECT().TestMode().Return(false).AnyTimes()
-	s.EXPECT().ExcludedDemands().Return([]string{}).AnyTimes()
-	tmp := mock_entity.NewMockInventory(c)
-	tmp.EXPECT().Name().Return("publisher").AnyTimes()
-	tmp.EXPECT().Supplier().Return(s).AnyTimes()
-	tmp.EXPECT().FloorCPM().Return(int64(100)).AnyTimes()
-	return tmp
-}
 func newBidRequest(c *gomock.Controller, count int) exchange.BidRequest {
 	tmp := make([]exchange.Impression, count)
 	for i := range tmp {
@@ -89,7 +78,6 @@ func TestProviders(t *testing.T) {
 					}).AnyTimes()
 				Register(d1, time.Millisecond*100)
 				bq := newBidRequest(ctrl, 2)
-				logrus.Warn(len(bq.Imp()))
 				bk := context.Background()
 				bidResponse := Call(bk, bq)
 				So(len(bidResponse), ShouldEqual, 1)
@@ -136,20 +124,20 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
-					time.Sleep(100*time.Millisecond)
-					var bmp = []exchange.Bid{}
-					tmp := mock_entity.NewMockBidResponse(ctrl)
-					for _, s := range imp.Imp() {
-						bmpp := mock_entity.NewMockBid(ctrl)
-						bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
-						bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
-						bmp = append(bmp,bmpp)
+						time.Sleep(100 * time.Millisecond)
+						var bmp = []exchange.Bid{}
+						tmp := mock_entity.NewMockBidResponse(ctrl)
+						for _, s := range imp.Imp() {
+							bmpp := mock_entity.NewMockBid(ctrl)
+							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
+							bmp = append(bmp, bmpp)
 
-					}
-					tmp.EXPECT().Bids().Return(bmp).AnyTimes()
-					ch <- tmp
-					close(ch)
-				}).AnyTimes()
+						}
+						tmp.EXPECT().Bids().Return(bmp).AnyTimes()
+						ch <- tmp
+						close(ch)
+					}).AnyTimes()
 				Register(d1, time.Millisecond*100)
 				d2 := mock_entity.NewMockDemand(ctrl)
 				d2.EXPECT().TestMode().Return(false).AnyTimes()
@@ -159,20 +147,20 @@ func TestProviders(t *testing.T) {
 				d2.EXPECT().CallRate().Return(100).AnyTimes()
 				d2.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
-					time.Sleep(10*time.Millisecond)
-					var bmp = []exchange.Bid{}
-					tmp := mock_entity.NewMockBidResponse(ctrl)
-					for _, s := range imp.Imp() {
-						bmpp := mock_entity.NewMockBid(ctrl)
-						bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
-						bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
-						bmp = append(bmp,bmpp)
+						time.Sleep(10 * time.Millisecond)
+						var bmp = []exchange.Bid{}
+						tmp := mock_entity.NewMockBidResponse(ctrl)
+						for _, s := range imp.Imp() {
+							bmpp := mock_entity.NewMockBid(ctrl)
+							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
+							bmp = append(bmp, bmpp)
 
-					}
-					tmp.EXPECT().Bids().Return(bmp).AnyTimes()
-					ch <- tmp
-					close(ch)
-				}).AnyTimes()
+						}
+						tmp.EXPECT().Bids().Return(bmp).AnyTimes()
+						ch <- tmp
+						close(ch)
+					}).AnyTimes()
 				Register(d2, time.Millisecond*100)
 				im := newBidRequest(ctrl, 3)
 				bk := context.Background()

@@ -10,9 +10,8 @@ import (
 )
 
 type demand struct {
-	imp  exchange.BidRequest
-	dmn  exchange.Demand
 	resp exchange.BidResponse
+	rq   exchange.BidRequest
 
 	src []byte
 }
@@ -21,9 +20,8 @@ type demand struct {
 func (d demand) Encode() ([]byte, error) {
 	if d.src == nil {
 		themap := make(map[string]interface{})
-		themap["demand"] = demandToMap(d.dmn)
-		themap["request"] = requestToMap(d.imp)
-		themap["bids"] = bidsToMap(d.resp.Bids())
+		themap["response"] = responseToMap(d.resp)
+		themap["request"] = requestToMap(d.rq)
 		d.src, _ = json.Marshal(themap)
 	}
 
@@ -43,7 +41,7 @@ func (d demand) Topic() string {
 
 // Key return key
 func (d demand) Key() string {
-	return d.imp.Device().IP()
+	return ""
 }
 
 // Report report
@@ -57,10 +55,9 @@ func (d demand) Report() func(error) {
 
 // DemandJob returns a job for demand
 // TODO : add a duration to this. for better view this is important
-func DemandJob(imp exchange.BidRequest, dmn exchange.Demand, resp exchange.BidResponse) broker.Job {
+func DemandJob(rq exchange.BidRequest, resp exchange.BidResponse) broker.Job {
 	return &demand{
-		imp:  imp,
-		dmn:  dmn,
+		rq:   rq,
 		resp: resp,
 	}
 }

@@ -41,7 +41,6 @@ type Location interface {
 	// Region of the device
 	Region() Region
 	ISP() ISP
-
 }
 
 // Geo is the alias of Location for open rtb compatibility

@@ -15,23 +15,37 @@ import (
 )
 
 type model struct {
-	Impression struct {
-		Source struct {
+	Request struct {
+		TrackID   string    `json:"track_id"`
+		Time      time.Time `json:"time"`
+		Inventory struct {
 			Name     string `json:"name"`
 			Supplier struct {
-				Name string `json:"name"`
+				FloorCPM     int64  `json:"floor_cpm"`
+				SoftFloorCPM int64  `json:"soft_floor_cpm"`
+				Name         string `json:"name"`
+				Share        int    `json:"share"`
 			} `json:"supplier"`
-		} `json:"source"`
-		Time  time.Time `json:"time"`
-		Slots []struct {
-			Ad struct {
-				MaxCPM int64 `json:"max_cpm,omitempty"`
-			} `json:"ad,omitempty"`
-		} `json:"slots"`
-	} `json:"impression"`
-	Demand struct {
-		Name string `json:"name"`
-	} `json:"demand"`
+			Domain string `json:"domain"`
+		} `json:"inventory"`
+	} `json:"request"`
+	Response struct {
+		ID   string `json:"id"`
+		Bids []struct {
+			ID         string   `json:"id"`
+			ImpID      string   `json:"imp_id"`
+			Price      int64    `json:"price"`
+			WinURL     string   `json:"win_url"`
+			Categories []string `json:"categories"`
+			AdID       string   `json:"ad_id"`
+			AdHeight   int      `json:"ad_height"`
+			AdWidth    int      `json:"ad_width"`
+			AdDomain   []string `json:"ad_domain"`
+			Demand     struct {
+				Name string `json:"name"`
+			} `json:"demand"`
+		} `json:"bids"`
+	} `json:"response"`
 }
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
@@ -80,18 +94,19 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				err := del.Decode(&obj)
 				assert.Nil(err)
 				var win int64
-				for i := range obj.Impression.Slots {
-					if cpm := obj.Impression.Slots[i].Ad.MaxCPM; cpm > 0 {
+				for _, v := range obj.Response.Bids {
+					if cpm := v.Price; cpm > 0 {
 						win++
 					}
 				}
+
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:           obj.Impression.Source.Supplier.Name,
-					Source:             obj.Impression.Source.Name,
-					Demand:             obj.Demand.Name,
-					Time:               models.FactTableID(obj.Impression.Time),
+					Supplier:           obj.Request.Inventory.Supplier.Name,
+					Source:             obj.Request.Inventory.Domain,
+					Demand:             obj.Response.Bids[0].Demand.Name,
+					Time:               models.FactTableID(obj.Request.Time),
 					RequestOutCount:    1,
-					ImpressionOutCount: int64(len(obj.Impression.Slots)),
+					ImpressionOutCount: int64(len(obj.Response.Bids)),
 					AdInCount:          win,
 					Acknowledger:       del,
 					WorkerID:           s.workerID,

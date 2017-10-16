@@ -7,16 +7,9 @@ import (
 func requestToMap(req exchange.BidRequest) map[string]interface{} {
 	return map[string]interface{}{
 		"track_id":   req.ID(),
-		"ip":         req.Device().IP(),
-		"user_agent": req.Device().UserAgent(),
-		"supplier":   supplierToMap(req.Inventory().Supplier()),
 		"inventory":  inventoryToMap(req.Inventory()),
-		"location":   locationToMap(req.Device().Geo()),
-		//"attributes":  req.,
-		"impression":       impressionToMap(req.Imp()),
-		"blocked_category": req.BlockedCategories(),
-		"platform":         req.Device().DeviceType(),
-		"time":             req.Time(),
+		"impression": impressionToMap(req.Imp()),
+		"time":       req.Time(),
 	}
 }
 
@@ -26,28 +19,37 @@ func demandToMap(dmn exchange.Demand) map[string]interface{} {
 		"call_rate":            dmn.CallRate(),
 		"handicap":             dmn.Handicap(),
 		"white_list_countries": dmn.WhiteListCountries(),
-		"excluded_suppliers":   dmn.WhiteListCountries(),
+		"excluded_suppliers":   dmn.ExcludedSuppliers(),
 	}
 
 }
 
 // no ad markup, dont think we need it
-func bidsToMap(bids []exchange.Bid) []map[string]interface{} {
-	response := []map[string]interface{}{}
-	for i := range bids {
-		response = append(response, map[string]interface{}{
-			"id":         bids[i].ID(),
-			"imp_id":     bids[i].ImpID(),
-			"price":      bids[i].Price(),
-			"win_url":    bids[i].WinURL(),
-			"categories": bids[i].Categories(),
-			"ad_id":      bids[i].AdID(),
-			"ad_height":  bids[i].AdHeight(),
-			"ad_width":   bids[i].AdWidth(),
-			"ad_domains": bids[i].AdDomains(),
-		})
+func responseToMap(rs exchange.BidResponse) map[string]interface{} {
+	return map[string]interface{}{
+		"id":       rs.ID(),
+		"bids":     bidsToMap(rs.Bids()),
+		"supplier": supplierToMap(rs.Supplier()),
 	}
 
+}
+
+func bidsToMap(bids []exchange.Bid) []map[string]interface{} {
+	response := []map[string]interface{}{}
+	for _, val := range bids {
+		response = append(response, map[string]interface{}{
+			"id":         val.ID(),
+			"imp_id":     val.ImpID(),
+			"price":      val.Price(),
+			"win_url":    val.WinURL(),
+			"categories": val.Categories(),
+			"ad_id":      val.AdID(),
+			"ad_height":  val.AdHeight(),
+			"ad_width":   val.AdWidth(),
+			"ad_domains": val.AdDomains(),
+			"demand":     demandToMap(val.Demand()),
+		})
+	}
 	return response
 }
 
@@ -67,10 +69,12 @@ func winnerBidToMap(bid exchange.Bid) map[string]interface{} {
 
 func inventoryToMap(inv exchange.Inventory) map[string]interface{} {
 	return map[string]interface{}{
+		"supplier":       supplierToMap(inv.Supplier()),
 		"name":           inv.Name(),
 		"soft_floor_cpm": inv.SoftFloorCPM(),
 		"floor_cpm":      inv.FloorCPM(),
 		"attributes":     inv.Attributes(),
+		"domain":         inv.Domain(),
 	}
 }
 
@@ -81,14 +85,6 @@ func supplierToMap(sup exchange.Supplier) map[string]interface{} {
 		"name":             sup.Name(),
 		"share":            sup.Share(),
 		"excluded_demands": sup.ExcludedDemands(),
-	}
-}
-
-func locationToMap(loc exchange.Location) map[string]interface{} {
-	return map[string]interface{}{
-		"country":  loc.Country(),
-		"province": loc.Region(),
-		"lat_lon":  loc.LatLon(),
 	}
 }
 

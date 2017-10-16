@@ -7,45 +7,47 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 )
 
-type Demand struct {
-	DName               string
-	DCallRate           int
-	DHandicap           int64
-	DWhitelistCountries []string
+type Demands struct {
+	IName            string
+	ICallRate        int
+	IHandicap        int64
+	IWhiteList       []string
+	IExcludeSupplier []string
 }
 
-func (d *Demand) Name() string {
-	return d.DName
+func (d Demands) Name() string {
+	return d.IName
 }
 
-func (*Demand) Provide(context.Context, exchange.BidRequest, chan exchange.BidResponse) {
+func (Demands) Provide(context.Context, exchange.BidRequest, chan exchange.BidResponse) {
 	panic("implement me")
 }
 
-func (*Demand) Win(context.Context, string, int64) {
+func (Demands) Win(context.Context, string, int64) {
 	panic("implement me")
 }
 
-func (*Demand) Status(context.Context, http.ResponseWriter, *http.Request) {
+func (Demands) Status(context.Context, http.ResponseWriter, *http.Request) {
 	panic("implement me")
 }
 
-func (d *Demand) Handicap() int64 {
-	return d.DHandicap
+func (d Demands) Handicap() int64 {
+	return d.IHandicap
 }
 
-func (d *Demand) CallRate() int {
-	return d.DCallRate
+func (d Demands) CallRate() int {
+	return d.ICallRate
 }
 
-func (d *Demand) WhiteListCountries() []string {
-	return d.DWhitelistCountries
+func (d Demands) WhiteListCountries() []string {
+
+	return d.IWhiteList
 }
 
-func (*Demand) ExcludedSuppliers() []string {
+func (d Demands) ExcludedSuppliers() []string {
+	return d.IExcludeSupplier
+}
+
+func (Demands) TestMode() bool {
 	panic("implement me")
-}
-
-func (*Demand) TestMode() bool {
-	return false
 }

@@ -24,24 +24,23 @@ var (
 	//t3, _ = time.Parse("2006-01-02T15:04:05.000Z", "2017-03-21T02:01:00.000Z")
 )
 
-func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
-	slots := make([]*mocks.Imp, slotCount)
-	for i := range slots {
-		slots[i] = &mocks.Imp{}
+func newBidRequest(t time.Time, impCount int, sup string) exchange.BidRequest {
+	imps := make([]mocks.Imp, impCount)
+	for i := range imps {
+		imps[i] = mocks.Imp{}
 	}
-	return mocks.BidRequest{
+	return &mocks.BidRequest{
 		ITime: t,
-		ISource: mocks.Publisher{
-			PName: source,
-			PSupplier: mocks.Supplier{
+		IInventory: mocks.Inventory{
+			ISupplier: mocks.Supplier{
 				SName: sup,
 			},
 		},
-		IImps: slots,
+		IImps: imps,
 	}
 }
 
-func impToDelivery(in exchange.BidRequest) broker.Delivery {
+func bidRequestToDelivery(in exchange.BidRequest) broker.Delivery {
 	job := materialize.ImpressionJob(in)
 	d, err := job.Encode()
 	assert.Nil(err)
@@ -63,13 +62,13 @@ func TestImpression(t *testing.T) {
 	datamodels.RegisterAggregator(a)
 	base := context.Background()
 	Convey("the demand test with the impression job", t, func() {
-		imp := newImpression(t1, 10, "test_source", "test_sup")
+		bq := newBidRequest(t1, 10, "test_sup")
 		ctx, cl := context.WithCancel(base)
 		defer cl()
 		dem := consumer{ctx: ctx}
 
 		delivery := dem.Consume()
-		data := impToDelivery(imp)
+		data := bidRequestToDelivery(bq)
 		// make sure this is not blocker, and if the test fails then may it hangs for ever
 		select {
 		case delivery <- data:
@@ -92,7 +91,6 @@ func TestImpression(t *testing.T) {
 		}
 
 		So(t.Supplier, ShouldEqual, "test_sup")
-		So(t.Source, ShouldEqual, "test_source")
 		So(t.Time, ShouldEqual, 1)
 		So(t.RequestInCount, ShouldEqual, 1)
 		So(t.ImpressionInCount, ShouldEqual, 10)

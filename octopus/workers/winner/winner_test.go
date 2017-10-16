@@ -24,7 +24,7 @@ var (
 //func newImpression(t time.Time, slotCount int, source, sup string) exchange.BidRequest {
 //	return mocks.BidRequest{
 //		ITime: t,
-//		ISource: mocks.Publisher{
+//		IInventory: mocks.Publisher{
 //			PName: source,
 //			PSupplier: mocks.Supplier{
 //				SName: sup,
@@ -36,7 +36,7 @@ var (
 //func newAdvertiser(cpm int64, dname string) exchange.Advertise {
 //	return mocks.Advertiser{
 //		MMaxCPM: cpm,
-//		MDemand: mocks.Demand{
+//		MDemand: mocks.Demands{
 //			Mkey: dname,
 //		},
 //	}
@@ -108,6 +108,6 @@ func TestImpression(t *testing.T) {
 		//So(t.WinnerBid, ShouldBeZeroValue)
 		//So(t.ShowBid, ShouldBeZeroValue)
 		//So(t.Show, ShouldBeZeroValue)
-		//So(t.Demand, ShouldBeZeroValue)
+		//So(t.Demands, ShouldBeZeroValue)
 	})
 }

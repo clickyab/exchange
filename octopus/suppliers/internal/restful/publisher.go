@@ -7,14 +7,14 @@ type restPublisher struct {
 	PubFloorCPM     int64  `json:"floor_cpm"`
 	PubSoftFloorCPM int64  `json:"soft_floor_cpm"`
 
-	sup   exchange.Supplier
+	sup exchange.Supplier
 }
 
 func (rp *restPublisher) ID() string {
 	panic("implement me")
 }
 
-func (rp *restPublisher) Domain() {
+func (rp *restPublisher) Domain() string {
 	panic("implement me")
 }
 
