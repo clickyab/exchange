@@ -3,14 +3,14 @@ package mocks
 import "clickyab.com/exchange/octopus/exchange"
 
 type Location struct {
-	LCountry  exchange.Country
-	LProvince exchange.Region
-	LLatLon   exchange.LatLon
-	LISP      exchange.ISP
+	LCountry exchange.Country
+	LRegion  exchange.Region
+	LLatLon  exchange.LatLon
+	LISP     exchange.ISP
 }
 
 func (l Location) Region() exchange.Region {
-	panic("implement me")
+	return l.LRegion
 }
 
 func (l Location) ISP() exchange.ISP {
@@ -22,7 +22,7 @@ func (l Location) Country() exchange.Country {
 }
 
 func (l Location) Province() exchange.Region {
-	return l.LProvince
+	return l.LRegion
 }
 
 func (l Location) LatLon() exchange.LatLon {

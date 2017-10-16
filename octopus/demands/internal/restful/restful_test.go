@@ -6,53 +6,44 @@ import (
 	"testing"
 	"time"
 
-	"clickyab.com/exchange/octopus/exchange"
-	mock_entity "clickyab.com/exchange/octopus/exchange/mock_exchange"
-	"github.com/clickyab/services/random"
-
-	"github.com/clickyab/services/kv"
 	"github.com/clickyab/services/kv/mock"
-	"github.com/golang/mock/gomock"
+
 	. "github.com/smartystreets/goconvey/convey"
+
+	"clickyab.com/exchange/octopus/exchange"
+	"clickyab.com/exchange/octopus/exchange/mock_exchange"
+	"github.com/clickyab/services/kv"
+	"github.com/golang/mock/gomock"
 	"gopkg.in/jarcoal/httpmock.v1"
 )
 
-func handler(count int) (func(*http.Request) (*http.Response, error), []string) {
-	ids := make([]string, 0)
-	resps := make([]restAd, 0)
-	for i := 0; i < count; i++ {
-		ID := <-random.ID
-
-		ids = append(ids, ID)
-		resps = append(resps, restAd{
-			RSlotTrackID: ID,
-		})
-	}
-	return func(req *http.Request) (*http.Response, error) {
-		resp, err := httpmock.NewJsonResponse(200, resps)
-		if err != nil {
-			return httpmock.NewStringResponse(500, ""), nil
-		}
-		return resp, nil
-	}, ids
-}
-
 func TestDemandProvide(t *testing.T) {
-	Convey("restful demand", t, func() {
-		Convey("provide", func() {
-			ctrl := gomock.NewController(t)
-			defer ctrl.Finish()
-			httpmock.Activate()
-			defer httpmock.DeactivateAndReset()
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	kv.Register(nil, nil, nil, nil, mock.NewAtomicMockStore, nil, nil)
 
-			kv.Register(nil, nil, nil, nil, mock.NewAtomicMockStore, nil, nil)
-			ads, ids := handler(1)
-			httpmock.RegisterResponder("POST", "http://127.0.0.1:9898", ads)
+	Convey("restful demand", t, func() {
+		Convey("provide should panic", func() {
+			host := "http://127.0.0.1:9898"
+			httpmock.RegisterResponder("POST", host, func(req *http.Request) (*http.Response, error) {
+				return httpmock.NewJsonResponse(200, bidResponse{
+					FID: "a",
+					FBids: []bid{
+						bid{
+							FID: "b",
+						}, bid{
+							FID: "c",
+						},
+					},
+				})
+			})
 			ctx, cl := context.WithTimeout(context.Background(), time.Second*2)
 			defer cl()
-			imp := mock_entity.NewMockImpression(ctrl)
-			imp.EXPECT().TrackID().Return("HAHAHA").AnyTimes()
-			res := make(chan exchange.Advertise)
+			bq := mock_exchange.NewMockBidRequest(ctrl)
+			bq.EXPECT().ID().Return("HAHAHA").AnyTimes()
+			res := make(chan exchange.BidResponse)
 			d := demand{
 				client:     &http.Client{},
 				key:        "test demand key",
@@ -60,14 +51,17 @@ func TestDemandProvide(t *testing.T) {
 				monthLimit: 1000,
 				hourLimit:  1000,
 				weekLimit:  1000,
-				endPoint:   "http://127.0.0.1:9898",
+				endPoint:   host,
 				encoder: func(imp exchange.BidRequest) interface{} {
 					return imp
 				},
 			}
-			go d.Provide(ctx, imp, res)
-			re := <-res
-			So(re.SlotTrackID(), ShouldEqual, ids[0])
+			go d.Provide(ctx, bq, res)
+			f := <-res
+			So(f.ID(), ShouldEqual, "a")
+			So(len(f.Bids()), ShouldEqual, 2)
+
 		})
+
 	})
 }

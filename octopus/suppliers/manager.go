@@ -12,15 +12,13 @@ import (
 	"clickyab.com/exchange/octopus/suppliers/internal/models"
 	"clickyab.com/exchange/octopus/suppliers/internal/renderer"
 	"clickyab.com/exchange/octopus/suppliers/internal/restful"
-	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/mysql"
 
 	"github.com/sirupsen/logrus"
 )
 
 var (
-	sm         *supplierManager
-	mountPoint = config.RegisterString("services.framework.controller.mount_point", "/api", "http controller mount point")
+	sm *supplierManager
 )
 
 type supplierManager struct {

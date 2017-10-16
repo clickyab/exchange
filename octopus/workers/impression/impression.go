@@ -12,18 +12,19 @@ import (
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
+	"github.com/sirupsen/logrus"
 )
 
 type model struct {
-	Time   time.Time `json:"time"`
-	Source struct {
+	Time      time.Time `json:"time"`
+	Inventory struct {
 		Name     string `json:"name"`
 		Supplier struct {
 			Name string `json:"name"`
 		} `json:"supplier"`
-	} `json:"source"`
+	} `json:"inventory"`
 
-	Slots []struct{} `json:"slots"`
+	Impressions []struct{} `json:"impression"`
 }
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
@@ -70,13 +71,14 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 			case del = <-chn:
 				obj := model{}
 				err := del.Decode(&obj)
+				logrus.Warn(obj)
 				assert.Nil(err)
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Source:            obj.Source.Name,
-					Supplier:          obj.Source.Supplier.Name,
+					//Source:            obj.Source.Name,
+					Supplier:          obj.Inventory.Supplier.Name,
 					Time:              models.FactTableID(obj.Time),
 					RequestInCount:    1,
-					ImpressionInCount: int64(len(obj.Slots)),
+					ImpressionInCount: int64(len(obj.Impressions)),
 					Acknowledger:      del,
 					WorkerID:          s.workerID,
 				}

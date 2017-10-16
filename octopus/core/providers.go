@@ -9,10 +9,12 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/assert"
+	"github.com/sirupsen/logrus"
 
 	"errors"
 
-	"github.com/sirupsen/logrus"
+	"clickyab.com/exchange/octopus/exchange/materialize"
+	"github.com/clickyab/services/broker"
 )
 
 var (
@@ -42,17 +44,16 @@ func (p *providerData) Skip() bool {
 }
 
 func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchange.BidResponse {
-	//in := time.Now()
+	chn := make(chan exchange.BidResponse, 1)
 	// TODO uncomment this
-	/*	defer func() {
+	defer func() {
 		//out := time.Since(in)
 		jDem := materialize.DemandJob(
 			bq,
-			p.provider,
-			res,
+			<-chn,
 		)
 		broker.Publish(jDem)
-	}()*/
+	}()
 
 	log(bq).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
 	defer log(bq).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
@@ -61,7 +62,7 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 
 	// the cancel is not required here. the parent is the hammer :)
 	rCtx, _ := context.WithTimeout(ctx, p.timeout)
-	chn := make(chan exchange.BidResponse, 1)
+
 	go p.provider.Provide(rCtx, bq, chn)
 	for {
 		select {
@@ -119,9 +120,9 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	for i := range allProviders {
 		go func(inner string) {
 			defer wg.Done()
-			//if !demandIsAllowed(req, allProviders[inner]) {
-			//	return
-			//}
+			if !demandIsAllowed(req, allProviders[inner]) {
+				return
+			}
 			p := allProviders[inner]
 			res := p.watch(rCtx, req)
 			if res != nil {
@@ -143,12 +144,13 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 }
 
 func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
-	for _, f := range filters {
-		if f(m, d) {
-			return false
-		}
-	}
 	return true
+	//for _, f := range filters {
+	//	if f(m, d) {
+	//		return false
+	//	}
+	//}
+	//return true
 }
 
 func isSameProvider(bq exchange.BidRequest, data providerData) bool {
@@ -171,12 +173,13 @@ func isNotSameMode(bq exchange.BidRequest, data providerData) bool {
 }
 
 func contains(s []string, t string) bool {
-	for _, a := range s {
-		if a == t {
-			return true
-		}
-	}
-	return false
+	return true
+	//for _, a := range s {
+	//	if a == t {
+	//		return true
+	//	}
+	//}
+	//return false
 }
 
 func init() {

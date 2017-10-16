@@ -14,13 +14,10 @@ import (
 	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/broker"
-	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
 )
-
-var host = config.RegisterString("octopus.host.name", "127.0.0.1", "the exchange root")
 
 func log(imp exchange.BidRequest) *logrus.Entry {
 	return logrus.WithFields(logrus.Fields{
@@ -86,7 +83,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	res := rtb.SelectCPM(bq, ads)
 	log(bq).WithField("count", len(res.Bids())).Debug("ads is passed the system select")
 
-	storeKeys(bq,res)
+	storeKeys(bq, res)
 
 	err = bq.Inventory().Supplier().Renderer().Render(res, w)
 	if err != nil {

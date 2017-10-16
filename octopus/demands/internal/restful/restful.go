@@ -95,7 +95,7 @@ func (d *demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 	reader := bytes.NewReader(data)
 	log(bq).WithField("key", d.key).WithField("result", string(data)).Debug("Call done")
 
-	bidRes := []*bidResponse{}
+	bidRes := bidResponse{}
 	dec := json.NewDecoder(reader)
 	defer resp.Body.Close()
 	if err := dec.Decode(&bidRes); err != nil {
@@ -103,11 +103,8 @@ func (d *demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 		return
 	}
 
-	log(bq).WithField("count", len(bidRes)).Debug("selected ad from pool")
-	for _, val := range bidRes {
-		val.bids[0].demand = d
-		ch <- val
-	}
+	log(bq).WithField("count", len(bidRes.FBids)).Debug("selected ad from pool")
+	ch <- bidRes
 }
 
 func (d *demand) Win(ctx context.Context, id string, cpm int64) {

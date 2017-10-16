@@ -92,10 +92,10 @@ func (ir *bidRequestRest) PageTrackID() string {
 }
 
 type location struct {
-	TheCountry exchange.Country  `json:"country"`
-	TheRegion  exchange.Region `json:"province"`
-	TheLatLon  exchange.LatLon   `json:"latlon"`
-	TheISP     exchange.ISP      `json:"isp"`
+	TheCountry exchange.Country `json:"country"`
+	TheRegion  exchange.Region  `json:"province"`
+	TheLatLon  exchange.LatLon  `json:"latlon"`
+	TheISP     exchange.ISP     `json:"isp"`
 }
 
 func (l location) Region() exchange.Region {
