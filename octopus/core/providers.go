@@ -44,15 +44,17 @@ func (p *providerData) Skip() bool {
 }
 
 func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchange.BidResponse {
+	var data exchange.BidResponse
 	chn := make(chan exchange.BidResponse, 1)
-	// TODO uncomment this
 	defer func() {
 		//out := time.Since(in)
-		jDem := materialize.DemandJob(
-			bq,
-			<-chn,
-		)
-		broker.Publish(jDem)
+		if data != nil && len(data.Bids()) != 0 {
+			jDem := materialize.DemandJob(
+				bq,
+				<-chn,
+			)
+			broker.Publish(jDem)
+		}
 	}()
 
 	log(bq).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
@@ -64,20 +66,18 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 	rCtx, _ := context.WithTimeout(ctx, p.timeout)
 
 	go p.provider.Provide(rCtx, bq, chn)
-	for {
-		select {
-		case <-done:
-			// request is canceled
-			return nil
-		case data, open := <-chn:
-			if data != nil {
-				return data
-			}
-			if !open {
-				return <-chn
-			}
+	select {
+	case <-done:
+		// request is canceled
+		return nil
+	case x, open := <-chn:
+		if x != nil && open {
+			data = x
+			return data
 		}
 	}
+	assert.NotNil(data)
+	return data
 }
 
 // Register is used to handle new layer in system

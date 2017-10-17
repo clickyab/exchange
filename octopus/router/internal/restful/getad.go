@@ -82,7 +82,6 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	log(bq).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
 	res := rtb.SelectCPM(bq, ads)
 	log(bq).WithField("count", len(res.Bids())).Debug("ads is passed the system select")
-
 	storeKeys(bq, res)
 
 	err = bq.Inventory().Supplier().Renderer().Render(res, w)

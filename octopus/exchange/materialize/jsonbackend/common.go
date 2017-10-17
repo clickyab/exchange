@@ -6,7 +6,7 @@ import (
 
 func requestToMap(req exchange.BidRequest) map[string]interface{} {
 	return map[string]interface{}{
-		"track_id":   req.ID(),
+		"id":         req.ID(),
 		"inventory":  inventoryToMap(req.Inventory()),
 		"impression": impressionToMap(req.Imp()),
 		"time":       req.Time(),
@@ -16,20 +16,15 @@ func requestToMap(req exchange.BidRequest) map[string]interface{} {
 func demandToMap(dmn exchange.Demand) map[string]interface{} {
 	return map[string]interface{}{
 		"name":                 dmn.Name(),
-		"call_rate":            dmn.CallRate(),
-		"handicap":             dmn.Handicap(),
-		"white_list_countries": dmn.WhiteListCountries(),
-		"excluded_suppliers":   dmn.ExcludedSuppliers(),
 	}
 
 }
 
 // no ad markup, dont think we need it
-func responseToMap(rs exchange.BidResponse) map[string]interface{} {
+func responseToMap(res exchange.BidResponse) map[string]interface{} {
 	return map[string]interface{}{
-		"id":       rs.ID(),
-		"bids":     bidsToMap(rs.Bids()),
-		"supplier": supplierToMap(rs.Supplier()),
+		"id":       res.ID(),
+		"bids":     bidsToMap(res.Bids()),
 	}
 
 }
@@ -73,7 +68,6 @@ func inventoryToMap(inv exchange.Inventory) map[string]interface{} {
 		"name":           inv.Name(),
 		"soft_floor_cpm": inv.SoftFloorCPM(),
 		"floor_cpm":      inv.FloorCPM(),
-		"attributes":     inv.Attributes(),
 		"domain":         inv.Domain(),
 	}
 }
@@ -84,7 +78,6 @@ func supplierToMap(sup exchange.Supplier) map[string]interface{} {
 		"soft_floor_cpm":   sup.SoftFloorCPM(),
 		"name":             sup.Name(),
 		"share":            sup.Share(),
-		"excluded_demands": sup.ExcludedDemands(),
 	}
 }
 

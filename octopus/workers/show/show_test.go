@@ -72,7 +72,7 @@ func TestImpression(t *testing.T) {
 		So(t.AdOutBid, ShouldEqual, 0)
 		So(t.RequestInCount, ShouldEqual, 0)
 		So(t.RequestOutCount, ShouldEqual, 0)
-		So(t.ImpressionOutCount, ShouldEqual, 0)
+		So(t.BidOutCount, ShouldEqual, 0)
 		So(t.ImpressionInCount, ShouldEqual, 0)
 	})
 }
