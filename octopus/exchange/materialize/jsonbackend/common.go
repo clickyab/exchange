@@ -15,7 +15,7 @@ func requestToMap(req exchange.BidRequest) map[string]interface{} {
 
 func demandToMap(dmn exchange.Demand) map[string]interface{} {
 	return map[string]interface{}{
-		"name":                 dmn.Name(),
+		"name": dmn.Name(),
 	}
 
 }
@@ -23,8 +23,8 @@ func demandToMap(dmn exchange.Demand) map[string]interface{} {
 // no ad markup, dont think we need it
 func responseToMap(res exchange.BidResponse) map[string]interface{} {
 	return map[string]interface{}{
-		"id":       res.ID(),
-		"bids":     bidsToMap(res.Bids()),
+		"id":   res.ID(),
+		"bids": bidsToMap(res.Bids()),
 	}
 
 }
@@ -74,10 +74,10 @@ func inventoryToMap(inv exchange.Inventory) map[string]interface{} {
 
 func supplierToMap(sup exchange.Supplier) map[string]interface{} {
 	return map[string]interface{}{
-		"floor_cpm":        sup.FloorCPM(),
-		"soft_floor_cpm":   sup.SoftFloorCPM(),
-		"name":             sup.Name(),
-		"share":            sup.Share(),
+		"floor_cpm":      sup.FloorCPM(),
+		"soft_floor_cpm": sup.SoftFloorCPM(),
+		"name":           sup.Name(),
+		"share":          sup.Share(),
 	}
 }
 
