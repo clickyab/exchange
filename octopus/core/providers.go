@@ -144,13 +144,12 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 }
 
 func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
+	for _, f := range filters {
+		if f(m, d) {
+			return false
+		}
+	}
 	return true
-	//for _, f := range filters {
-	//	if f(m, d) {
-	//		return false
-	//	}
-	//}
-	//return true
 }
 
 func isSameProvider(bq exchange.BidRequest, data providerData) bool {
@@ -173,13 +172,12 @@ func isNotSameMode(bq exchange.BidRequest, data providerData) bool {
 }
 
 func contains(s []string, t string) bool {
-	return true
-	//for _, a := range s {
-	//	if a == t {
-	//		return true
-	//	}
-	//}
-	//return false
+	for _, a := range s {
+		if a == t {
+			return true
+		}
+	}
+	return false
 }
 
 func init() {

@@ -91,5 +91,3 @@ func (bid) HandicappedPrice() int64 {
 func (b bid) Demand() exchange.Demand {
 	return b.FDemand
 }
-
-

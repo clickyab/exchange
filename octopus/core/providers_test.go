@@ -32,6 +32,11 @@ func newBidRequest(c *gomock.Controller, count int) exchange.BidRequest {
 	m := mock_entity.NewMockBidRequest(c)
 	m.EXPECT().Imp().Return(tmp).AnyTimes()
 	m.EXPECT().ID().Return(<-random.ID).AnyTimes()
+	inv := mock_entity.NewMockInventory(c)
+	inv.EXPECT().Name().Return("bang").AnyTimes()
+	m.EXPECT().WhiteList().Return([]string{}).AnyTimes()
+	m.EXPECT().Test().Return(false).AnyTimes()
+	m.EXPECT().Inventory().Return(inv).AnyTimes()
 	return m
 }
 
