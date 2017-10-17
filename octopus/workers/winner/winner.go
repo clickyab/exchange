@@ -15,21 +15,33 @@ import (
 )
 
 type model struct {
-	Impression struct {
-		Source struct {
-			Name     string `json:"name"`
-			Supplier struct {
-				Name string `json:"name"`
+	Request struct {
+		ID        string    `json:"id"`
+		Time      time.Time `json:"time"`
+		Inventory struct {
+			FloorCPM     int64  `json:"floor_cpm"`
+			SoftFloorCPM int64  `json:"soft_floor_cpm"`
+			Name         string `json:"name"`
+			Supplier     struct {
+				FloorCPM     int64  `json:"floor_cpm"`
+				SoftFloorCPM int64  `json:"soft_floor_cpm"`
+				Name         string `json:"name"`
+				Share        int    `json:"share"`
 			} `json:"supplier"`
-		}
-		Time time.Time `json:"time"`
-	} `json:"impression"`
-	Advertise struct {
-		WinnerCpm int64 `json:"winner_cpm"`
+			Domain string `json:"domain"`
+		} `json:"inventory"`
+	} `json:"request"`
+	Bid struct {
+		Height    int      `json:"height"`
+		Width     int      `json:"width"`
+		AdDomains []string `json:"ad_domains"`
+		WinnerCpm int64    `json:"winner_cpm"`
+		ID        string   `json:"id"`
+		ImpID     string   `json:"imp_id"`
 		Demand    struct {
 			Name string `json:"name"`
 		} `json:"demand"`
-	}
+	} `json:"bid"`
 }
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
@@ -78,12 +90,12 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				err := del.Decode(&obj)
 				assert.Nil(err)
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:     obj.Impression.Source.Supplier.Name,
-					Source:       obj.Impression.Source.Name,
-					Demand:       obj.Advertise.Demand.Name,
-					Time:         models.FactTableID(obj.Impression.Time),
+					Supplier:     obj.Request.Inventory.Supplier.Name,
+					Source:       obj.Request.Inventory.Domain,
+					Demand:       obj.Bid.Demand.Name,
+					Time:         models.FactTableID(obj.Request.Time),
 					AdOutCount:   1,
-					AdOutBid:     obj.Advertise.WinnerCpm,
+					AdOutBid:     obj.Bid.WinnerCpm,
 					Acknowledger: del,
 					WorkerID:     s.workerID,
 				}

@@ -19,6 +19,7 @@ type model struct {
 	Time      time.Time `json:"time"`
 	Inventory struct {
 		Name     string `json:"name"`
+		Domain   string `json:"domain"`
 		Supplier struct {
 			Name string `json:"name"`
 		} `json:"supplier"`
@@ -74,7 +75,7 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				logrus.Warn(obj)
 				assert.Nil(err)
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					//Source:            obj.Source.Name,
+					Source:            obj.Inventory.Domain,
 					Supplier:          obj.Inventory.Supplier.Name,
 					Time:              models.FactTableID(obj.Time),
 					RequestInCount:    1,
