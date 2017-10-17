@@ -52,7 +52,7 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 		if data != nil && len(data.Bids()) != 0 {
 			jDem := materialize.DemandJob(
 				bq,
-				<-chn,
+				data,
 			)
 			broker.Publish(jDem)
 		}
@@ -60,15 +60,12 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 
 	log(ctx, bq).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
 	defer log(ctx, bq).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
-	done := ctx.Done()
-	assert.NotNil(done)
-
 	// the cancel is not required here. the parent is the hammer :)
 	rCtx, _ := context.WithTimeout(ctx, p.timeout)
 
 	go p.provider.Provide(rCtx, bq, chn)
 	select {
-	case <-done:
+	case <-rCtx.Done():
 		// request is canceled
 		return nil
 	case x, open := <-chn:
@@ -76,9 +73,9 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 			data = x
 			return data
 		}
+
+		return nil
 	}
-	assert.NotNil(data)
-	return data
 }
 
 // Register is used to handle new layer in system
