@@ -14,6 +14,8 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange/mock_exchange"
 
+	"context"
+
 	"github.com/clickyab/services/kv"
 	mock2 "github.com/clickyab/services/kv/mock"
 	"github.com/golang/mock/gomock"
@@ -114,7 +116,7 @@ func TestSelect(t *testing.T) {
 				bids = append(bids, br)
 			}
 
-			res := SelectCPM(rq, bids)
+			res := SelectCPM(context.Background(), rq, bids)
 			So(res.Bids()[0].Price(), u.Expectation, u.WinnerDemand)
 		})
 	}

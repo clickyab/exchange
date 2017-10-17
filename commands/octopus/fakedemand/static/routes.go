@@ -1,19 +1,18 @@
 package static
 
 import (
+	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 type initRouter struct {
 }
 
-func (initRouter) Routes(mux *xmux.Mux, _ string) {
+func (initRouter) Routes(mux framework.Mux) {
 	// Exam paths
-	mux.POST("/exam/get/ad", xhandler.HandlerFuncC(demandHandler))
-	mux.GET("/exam/ad/:impTrackID/:slotTrackId/:width/:height", xhandler.HandlerFuncC(adHandler))
-	mux.GET("/exam/click/:impTrackID/:slotTrackId", xhandler.HandlerFuncC(clickHandler))
+	mux.POST("/exam/get/ad", demandHandler)
+	mux.GET("/exam/ad/:impTrackID/:slotTrackId/:width/:height", adHandler)
+	mux.GET("/exam/click/:impTrackID/:slotTrackId", clickHandler)
 }
 
 func init() {

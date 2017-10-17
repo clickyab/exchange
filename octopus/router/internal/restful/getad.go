@@ -15,12 +15,13 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/broker"
 	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
 )
 
-func log(imp exchange.BidRequest) *logrus.Entry {
-	return logrus.WithFields(logrus.Fields{
+func log(ctx context.Context, imp exchange.BidRequest) *logrus.Entry {
+	return xlog.GetWithFields(ctx, logrus.Fields{
 		"track_id": imp.ID(),
 		"type":     "provider",
 	})
@@ -79,9 +80,9 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	nCtx, cnl := context.WithCancel(ctx)
 	defer cnl()
 	ads := core.Call(nCtx, bq)
-	log(bq).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
-	res := rtb.SelectCPM(bq, ads)
-	log(bq).WithField("count", len(res.Bids())).Debug("ads is passed the system select")
+	log(nCtx, bq).WithField("count", len(ads)).Debug("ads is passed the system from exchange calls")
+	res := rtb.SelectCPM(nCtx, bq, ads)
+	log(nCtx, bq).WithField("count", len(res.Bids())).Debug("ads is passed the system select")
 	storeKeys(bq, res)
 
 	err = bq.Inventory().Supplier().Renderer().Render(res, w)
