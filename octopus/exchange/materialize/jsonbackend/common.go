@@ -50,15 +50,14 @@ func bidsToMap(bids []exchange.Bid) []map[string]interface{} {
 
 func winnerBidToMap(bid exchange.Bid) map[string]interface{} {
 	return map[string]interface{}{
-		"height":        bid.AdHeight(),
-		"id":            bid.ID(),
-		"landing":       bid.AdDomains(),
-		"max_cpm":       bid.Price(),
-		"track_id":      bid.ID(),
-		"url":           bid.WinURL(),
-		"width":         bid.AdWidth(),
-		"winner_cpm":    bid.Price(),
-		"slot_track_id": bid.ImpID(),
+		"height":     bid.AdHeight(),
+		"id":         bid.ID(),
+		"ad_domains": bid.AdDomains(),
+		"url":        bid.WinURL(),
+		"width":      bid.AdWidth(),
+		"winner_cpm": bid.Price(),
+		"imp_id":     bid.ImpID(),
+		"demand":     demandToMap(bid.Demand()),
 	}
 }
 
@@ -107,9 +106,8 @@ func impressionToMap(imps []exchange.Impression) []map[string]interface{} {
 
 func winnerToMap(bq exchange.BidRequest, bid exchange.Bid) map[string]interface{} {
 	return map[string]interface{}{
-		"demand":    demandToMap(bid.Demand()),
-		"request":   requestToMap(bq),
-		"advertise": winnerBidToMap(bid),
+		"bid":     winnerBidToMap(bid),
+		"request": requestToMap(bq),
 	}
 }
 
