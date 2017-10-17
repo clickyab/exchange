@@ -33,7 +33,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 	set := kv.NewDistributedSet("EXC" + bq.Inventory().Supplier().Name() + bq.ID())
 	for _, m := range bq.Imp() {
 		reds := reduce(m.ID(), all)
-		sorted := sortedAd(rmDuplicate(set, reds))
+		sorted := sortedBid(rmDuplicate(set, reds))
 		if len(sorted) == 0 {
 			continue
 		}
@@ -65,8 +65,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 		attributes: bq.Attributes(),
 	}
 	if len(bids) == 0 {
-		// if you find better reason replace it
-		res.excuse = exchange.ExcuseCloudDataCenterProxyIP
+		res.excuse = exchange.ExcuseNoDemandWantThisBid
 	} else {
 		res.bids = bids
 	}
