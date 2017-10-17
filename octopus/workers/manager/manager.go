@@ -118,7 +118,7 @@ func aggregate(a *datamodels.TableModel, b datamodels.TableModel) *datamodels.Ta
 	a.RequestInCount += b.RequestInCount
 	a.RequestOutCount += b.RequestOutCount
 	a.ImpressionInCount += b.ImpressionInCount
-	a.ImpressionOutCount += b.ImpressionOutCount
+	a.BidOutCount += b.BidOutCount
 	a.AdOutCount += b.AdOutCount
 	a.DeliverCount += b.DeliverCount
 	a.AdOutBid += b.AdOutBid

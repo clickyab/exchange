@@ -16,11 +16,13 @@ import (
 
 type model struct {
 	Request struct {
-		TrackID   string    `json:"track_id"`
+		ID        string    `json:"id"`
 		Time      time.Time `json:"time"`
 		Inventory struct {
-			Name     string `json:"name"`
-			Supplier struct {
+			FloorCPM     int64  `json:"floor_cpm"`
+			SoftFloorCPM int64  `json:"soft_floor_cpm"`
+			Name         string `json:"name"`
+			Supplier     struct {
 				FloorCPM     int64  `json:"floor_cpm"`
 				SoftFloorCPM int64  `json:"soft_floor_cpm"`
 				Name         string `json:"name"`
@@ -30,7 +32,8 @@ type model struct {
 		} `json:"inventory"`
 	} `json:"request"`
 	Response struct {
-		ID   string `json:"id"`
+		ID string `json:"id"`
+
 		Bids []struct {
 			ID         string   `json:"id"`
 			ImpID      string   `json:"imp_id"`
@@ -40,7 +43,7 @@ type model struct {
 			AdID       string   `json:"ad_id"`
 			AdHeight   int      `json:"ad_height"`
 			AdWidth    int      `json:"ad_width"`
-			AdDomain   []string `json:"ad_domain"`
+			AdDomain   []string `json:"ad_domains"`
 			Demand     struct {
 				Name string `json:"name"`
 			} `json:"demand"`
@@ -101,15 +104,15 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				}
 
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:           obj.Request.Inventory.Supplier.Name,
-					Source:             obj.Request.Inventory.Domain,
-					Demand:             obj.Response.Bids[0].Demand.Name,
-					Time:               models.FactTableID(obj.Request.Time),
-					RequestOutCount:    1,
-					ImpressionOutCount: int64(len(obj.Response.Bids)),
-					AdInCount:          win,
-					Acknowledger:       del,
-					WorkerID:           s.workerID,
+					Supplier:        obj.Request.Inventory.Supplier.Name,
+					Source:          obj.Request.Inventory.Domain,
+					Demand:          obj.Response.Bids[0].Demand.Name,
+					Time:            models.FactTableID(obj.Request.Time),
+					RequestOutCount: 1,
+					BidOutCount:     int64(len(obj.Response.Bids)),
+					AdInCount:       win,
+					Acknowledger:    del,
+					WorkerID:        s.workerID,
 				}
 			case <-done:
 				cnl()

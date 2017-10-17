@@ -9,7 +9,7 @@ import (
 )
 
 func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
-	b := tm.RequestOutCount+tm.ImpressionOutCount+tm.AdInCount+tm.AdOutCount+tm.AdOutBid+tm.DeliverCount+tm.DeliverBid+tm.Profit+tm.Click > 0
+	b := tm.RequestOutCount+tm.BidOutCount+tm.AdInCount+tm.AdOutCount+tm.AdOutBid+tm.DeliverCount+tm.DeliverBid+tm.Profit+tm.Click > 0
 	if b {
 		//(supplier,demand,source,time_id,request_out_count,imp_out_count,imp_in_count,win_count,win_bid,deliver_count,deliver_bid,profit,click)
 		return true, fmt.Sprintf(`("%s", "%s", "%s", %d, %d, %d, %d, %d, %d, %d,%d,%d,%d)`,
@@ -18,7 +18,7 @@ func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
 			tm.Source,
 			tm.Time,
 			tm.RequestOutCount,
-			tm.ImpressionOutCount,
+			tm.BidOutCount,
 			tm.AdInCount,
 			tm.AdOutCount,
 			tm.AdOutBid,

@@ -84,6 +84,12 @@ func (bid) Win() {
 	panic("implement me")
 }
 
-func (bid) Demand() exchange.Demand {
+func (bid) HandicappedPrice() int64 {
 	panic("implement me")
 }
+
+func (b bid) Demand() exchange.Demand {
+	return b.FDemand
+}
+
+
