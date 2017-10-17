@@ -5,26 +5,25 @@ import (
 	"clickyab.com/exchange/octopus/router/internal/demands"
 	"clickyab.com/exchange/octopus/router/internal/restful"
 
+	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 type initRouter struct {
 }
 
-func (initRouter) Routes(mux *xmux.Mux, mountPoint string) {
-	mux.POST(mountPoint+"/rest/get/:key", xhandler.HandlerFuncC(restful.GetAd))
-	mux.GET(mountPoint+"/click/:supplier/:impID/:trackID", xhandler.HandlerFuncC(restful.Click))
-	mux.GET(mountPoint+"/pixel/:demand/:trackID", xhandler.HandlerFuncC(restful.TrackPixel))
+func (initRouter) Routes(mux framework.Mux) {
+	mux.POST("/rest/get/:key", restful.GetAd)
+	mux.GET("/click/:supplier/:impID/:trackID", restful.Click)
+	mux.GET("/pixel/:demand/:trackID", restful.TrackPixel)
 
 	// The demand status routes
-	mux.GET(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.POST(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.DELETE(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.HEAD(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.PUT(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
-	mux.OPTIONS(mountPoint+"/demands/status/:name", xhandler.HandlerFuncC(demands.Status))
+	mux.GET("/demands/status/:name", demands.Status)
+	mux.POST("/demands/status/:name", demands.Status)
+	mux.DELETE("/demands/status/:name", demands.Status)
+	mux.HEAD("/demands/status/:name", demands.Status)
+	mux.PUT("/demands/status/:name", demands.Status)
+	mux.OPTIONS("/demands/status/:name", demands.Status)
 }
 
 func init() {

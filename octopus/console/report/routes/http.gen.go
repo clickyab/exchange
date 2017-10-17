@@ -9,19 +9,17 @@ import (
 	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (c *Controller) Routes(r framework.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{}
 
-		group := r.NewGroup(mountPoint + "/report")
+		group := r.NewGroup("/report")
 
 		/* Route {
 			"Route": "/demand/:from/:to",
@@ -42,7 +40,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/demand/:from/:to", xhandler.HandlerFuncC(framework.Mix(c.demand, m0...)))
+		group.GET("/demand/:from/:to", framework.Mix(c.demand, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -64,7 +62,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/exchange/:from/:to", xhandler.HandlerFuncC(framework.Mix(c.exchange, m1...)))
+		group.GET("/exchange/:from/:to", framework.Mix(c.exchange, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -86,7 +84,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/supplier/:from/:to", xhandler.HandlerFuncC(framework.Mix(c.supplier, m2...)))
+		group.GET("/supplier/:from/:to", framework.Mix(c.supplier, m2...))
 		// End route with key 2
 
 		initializer.DoInitialize(c)

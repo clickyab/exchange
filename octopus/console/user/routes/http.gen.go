@@ -10,19 +10,17 @@ import (
 	"github.com/clickyab/services/framework/middleware"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/initializer"
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
 )
 
 var once = sync.Once{}
 
 // Routes return the route registered with this
-func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
+func (c *Controller) Routes(r framework.Mux) {
 	once.Do(func() {
 
 		groupMiddleware := []framework.Middleware{}
 
-		group := r.NewGroup(mountPoint + "/user")
+		group := r.NewGroup("/user")
 
 		/* Route {
 			"Route": "/login",
@@ -41,7 +39,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 
 		// Make sure payload is the last middleware
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(loginPayload{}))
-		group.POST("/login", xhandler.HandlerFuncC(framework.Mix(c.login, m0...)))
+		group.POST("/login", framework.Mix(c.login, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -63,7 +61,7 @@ func (c *Controller) Routes(r *xmux.Mux, mountPoint string) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/logout", xhandler.HandlerFuncC(framework.Mix(c.logout, m1...)))
+		group.GET("/logout", framework.Mix(c.logout, m1...))
 		// End route with key 1
 
 		initializer.DoInitialize(c)

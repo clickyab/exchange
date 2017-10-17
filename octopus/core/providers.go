@@ -15,6 +15,7 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
+	"github.com/clickyab/services/xlog"
 )
 
 var (
@@ -30,8 +31,8 @@ type providerData struct {
 	callRateTracker int64
 }
 
-func log(imp exchange.BidRequest) *logrus.Entry {
-	return logrus.WithFields(logrus.Fields{
+func log(ctx context.Context, imp exchange.BidRequest) *logrus.Entry {
+	return xlog.GetWithFields(ctx, logrus.Fields{
 		"track_id": imp.ID(),
 		"type":     "provider",
 	})
@@ -57,8 +58,8 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 		}
 	}()
 
-	log(bq).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
-	defer log(bq).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
+	log(ctx, bq).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
+	defer log(ctx, bq).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
 	done := ctx.Done()
 	assert.NotNil(done)
 

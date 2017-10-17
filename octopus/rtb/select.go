@@ -4,6 +4,8 @@ import (
 	"sort"
 	"time"
 
+	"context"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
@@ -23,7 +25,7 @@ var (
 )
 
 // SelectCPM is the simplest way to bid. sort the value, return the
-func SelectCPM(bq exchange.BidRequest, all []exchange.BidResponse) exchange.BidResponse {
+func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidResponse) exchange.BidResponse {
 	bids := make([]exchange.Bid, 0)
 	lock := kv.NewDistributedLock("LOCK"+bq.Inventory().Supplier().Name()+bq.ID(), pageLock.Duration())
 	lock.Lock()

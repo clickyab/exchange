@@ -4,17 +4,16 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/rs/xhandler"
-	"github.com/rs/xmux"
+	"github.com/clickyab/services/framework"
 )
 
 type initRouter struct {
 }
 
 // Routes is the main route handler
-func (initRouter) Routes(r *xmux.Mux, _ string) {
-	r.GET("/", xhandler.HandlerFuncC(html))
-	r.POST("/ad", xhandler.HandlerFuncC(handler))
+func (initRouter) Routes(r framework.Mux) {
+	r.GET("/", html)
+	r.POST("/ad", handler)
 
 }
 
