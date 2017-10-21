@@ -280,6 +280,18 @@ func (m *MockPublisher) EXPECT() *MockPublisherMockRecorder {
 	return m.recorder
 }
 
+// Attributes mocks base method
+func (m *MockPublisher) Attributes() map[string]interface{} {
+	ret := m.ctrl.Call(m, "Attributes")
+	ret0, _ := ret[0].(map[string]interface{})
+	return ret0
+}
+
+// Attributes indicates an expected call of Attributes
+func (mr *MockPublisherMockRecorder) Attributes() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Attributes", reflect.TypeOf((*MockPublisher)(nil).Attributes))
+}
+
 // Cat mocks base method
 func (m *MockPublisher) Cat() []string {
 	ret := m.ctrl.Call(m, "Cat")
@@ -349,6 +361,18 @@ func NewMockLocation(ctrl *gomock.Controller) *MockLocation {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockLocation) EXPECT() *MockLocationMockRecorder {
 	return m.recorder
+}
+
+// Attributes mocks base method
+func (m *MockLocation) Attributes() map[string]interface{} {
+	ret := m.ctrl.Call(m, "Attributes")
+	ret0, _ := ret[0].(map[string]interface{})
+	return ret0
+}
+
+// Attributes indicates an expected call of Attributes
+func (mr *MockLocationMockRecorder) Attributes() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Attributes", reflect.TypeOf((*MockLocation)(nil).Attributes))
 }
 
 // Country mocks base method
@@ -1206,6 +1230,18 @@ func (m *MockDevice) EXPECT() *MockDeviceMockRecorder {
 	return m.recorder
 }
 
+// Attributes mocks base method
+func (m *MockDevice) Attributes() map[string]interface{} {
+	ret := m.ctrl.Call(m, "Attributes")
+	ret0, _ := ret[0].(map[string]interface{})
+	return ret0
+}
+
+// Attributes indicates an expected call of Attributes
+func (mr *MockDeviceMockRecorder) Attributes() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Attributes", reflect.TypeOf((*MockDevice)(nil).Attributes))
+}
+
 // CID mocks base method
 func (m *MockDevice) CID() string {
 	ret := m.ctrl.Call(m, "CID")
@@ -1930,6 +1966,18 @@ func NewMockUser(ctrl *gomock.Controller) *MockUser {
 // EXPECT returns an object that allows the caller to indicate expected use
 func (m *MockUser) EXPECT() *MockUserMockRecorder {
 	return m.recorder
+}
+
+// Attributes mocks base method
+func (m *MockUser) Attributes() map[string]interface{} {
+	ret := m.ctrl.Call(m, "Attributes")
+	ret0, _ := ret[0].(map[string]interface{})
+	return ret0
+}
+
+// Attributes indicates an expected call of Attributes
+func (mr *MockUserMockRecorder) Attributes() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Attributes", reflect.TypeOf((*MockUser)(nil).Attributes))
 }
 
 // ID mocks base method

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"context"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
 )
@@ -11,7 +13,7 @@ import (
 type restful struct {
 }
 
-func (rf restful) Render(resp exchange.BidResponse, w http.ResponseWriter) error {
+func (rf restful) Render(ctx context.Context, resp exchange.BidResponse, w http.ResponseWriter) error {
 	response := openrtb.BidResponse{}
 
 	for i := range resp.Bids() {

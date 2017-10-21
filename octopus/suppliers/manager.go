@@ -15,6 +15,13 @@ import (
 	"github.com/clickyab/services/mysql"
 
 	"github.com/sirupsen/logrus"
+
+	"clickyab.com/exchange/octopus/suppliers/internal/openrtb"
+)
+
+const (
+	rest = "rest"
+	rtb  = "rtb"
 )
 
 var (
@@ -92,8 +99,10 @@ func GetBidRequest(key string, r *http.Request) (exchange.BidRequest, error) {
 
 	// Make sure the profit margin is added to the request
 	switch sup.Type() {
-	case "rest":
+	case rest:
 		return restful.GetBidRequest(sup, r)
+	case rtb:
+		return openrtb.GetBidRequest(sup, r)
 	default:
 		logrus.Panicf("Not a supported type: %s", sup.Type())
 		return nil, fmt.Errorf("not supported type: %s", sup.Type())

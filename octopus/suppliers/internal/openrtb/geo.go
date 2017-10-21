@@ -70,6 +70,7 @@ func newGeo(ip string, g *openrtb.Geo) exchange.Geo {
 		region: exchange.Region{
 			Valid: x.Region != "",
 			Name:  x.Region,
+			ISO:   x.Region,
 		},
 	}
 }
