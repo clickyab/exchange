@@ -3,6 +3,9 @@ package openrtb
 import (
 	"time"
 
+	"encoding/json"
+	"net/http"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
 )
@@ -82,7 +85,15 @@ func (b bidRequest) Attributes() map[string]interface{} {
 	return b.attributes
 }
 
-func newBidRequest(r *openrtb.BidRequest, supplier exchange.Supplier) exchange.BidRequest {
+// GetBidRequest will generate bid-request from http request
+func GetBidRequest(supplier exchange.Supplier, q *http.Request) (exchange.BidRequest, error) {
+	r := &openrtb.BidRequest{}
+	jd := json.NewDecoder(q.Body)
+	defer q.Body.Close()
+	err := jd.Decode(r)
+	if err != nil {
+		return nil, err
+	}
 	return bidRequest{
 		impressions: newImpressions(r.Imp),
 		attributes:  requestAttributes(r),
@@ -104,7 +115,7 @@ func newBidRequest(r *openrtb.BidRequest, supplier exchange.Supplier) exchange.B
 			return true
 		}(),
 		tMax: time.Millisecond * time.Duration(r.TMax),
-	}
+	}, nil
 
 }
 

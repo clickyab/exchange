@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"testing"
 
+	"context"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/mock_exchange"
 	"github.com/bsm/openrtb"
@@ -15,6 +17,7 @@ import (
 
 func TestSupplier(t *testing.T) {
 	ctrl := gomock.NewController(t)
+
 	defer ctrl.Finish()
 
 	Convey("render test", t, func() {
@@ -41,7 +44,8 @@ func TestSupplier(t *testing.T) {
 
 		bidResponse.EXPECT().Bids().Return(bids).AnyTimes()
 		writer := test{buff: &bytes.Buffer{}}
-		err := NewRenderer().Render(bidResponse, http.ResponseWriter(writer))
+
+		err := NewRenderer().Render(context.Context(context.Background()), bidResponse, http.ResponseWriter(writer))
 		println(writer.buff.String())
 		So(err, ShouldBeNil)
 

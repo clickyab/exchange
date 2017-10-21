@@ -1,6 +1,7 @@
 package exchange
 
 import (
+	"context"
 	"net/http"
 )
 
@@ -8,5 +9,5 @@ import (
 type Renderer interface {
 	// Render is a function to handle rendering of bunch of ads into a
 	// output stream
-	Render(BidResponse, http.ResponseWriter) error
+	Render(context.Context, BidResponse, http.ResponseWriter) error
 }
