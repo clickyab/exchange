@@ -10,4 +10,6 @@ type User interface {
 	// Buyer-specific ID for the user as mapped by the exchange for the buyer. At least one of buyeruid/buyerid or id is recommended. Valid for OpenRTB 2.3.
 	// Buyer-specific ID for the user as mapped by the exchange for the buyer. Same as BuyerID but valid for OpenRTB 2.2.
 	ID() string
+	// Attributes return all unused fields from open rtb user
+	Attributes() map[string]interface{}
 }

@@ -98,6 +98,10 @@ type location struct {
 	TheISP     exchange.ISP     `json:"isp"`
 }
 
+func (l location) Attributes() map[string]interface{} {
+	return map[string]interface{}{}
+}
+
 func (l location) Region() exchange.Region {
 	panic("implement me")
 }

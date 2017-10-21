@@ -7,7 +7,11 @@ type Device struct {
 	IGeo      exchange.Geo
 	IIP       string
 	ILocation Location
-	IDType exchange.DeviceType
+	IDType    exchange.DeviceType
+}
+
+func (d *Device) Attributes() map[string]interface{} {
+	panic("implement me")
 }
 
 func (d *Device) UserAgent() string {

@@ -9,6 +9,10 @@ type Location struct {
 	LISP     exchange.ISP
 }
 
+func (l Location) Attributes() map[string]interface{} {
+	return map[string]interface{}{}
+}
+
 func (l Location) Region() exchange.Region {
 	return l.LRegion
 }

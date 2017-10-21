@@ -73,4 +73,6 @@ type Device interface {
 	LAC() string
 	// CID from mobile data
 	CID() string
+	// Attributes return all unused fields from open rtb device
+	Attributes() map[string]interface{}
 }
