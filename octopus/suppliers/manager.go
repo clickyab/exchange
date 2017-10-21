@@ -31,7 +31,7 @@ func restRendererFactory(sup exchange.Supplier, in string) exchange.Renderer {
 	case "rest":
 		// TODO : /api is hardcoded
 		// TODO : restRenderFactory should have no arg
-		return renderer.NewRenderer()
+		return renderer.NewRestRenderer()
 	default:
 		logrus.Panicf("supplier with key %s not found", in)
 	}

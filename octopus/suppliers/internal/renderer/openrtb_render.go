@@ -38,7 +38,7 @@ func (rf restful) Render(resp exchange.BidResponse, w http.ResponseWriter) error
 	return enc.Encode(response)
 }
 
-// NewRenderer return a restful renderer
-func NewRenderer() exchange.Renderer {
+// NewrtbRenderer return a restful renderer
+func NewrtbRenderer() exchange.Renderer {
 	return &restful{}
 }

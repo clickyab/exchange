@@ -41,7 +41,7 @@ func TestSupplier(t *testing.T) {
 
 		bidResponse.EXPECT().Bids().Return(bids).AnyTimes()
 		writer := test{buff: &bytes.Buffer{}}
-		err := NewRenderer().Render(bidResponse, http.ResponseWriter(writer))
+		err := NewrtbRenderer().Render(bidResponse, http.ResponseWriter(writer))
 		println(writer.buff.String())
 		So(err, ShouldBeNil)
 
