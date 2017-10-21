@@ -12,6 +12,8 @@ type ThirdParty interface {
 	Cat() []string
 	// Domain of the publisher, optional
 	Domain() string
+	// Attributes return all unused fields of open rtb publisher
+	Attributes() map[string]interface{}
 }
 
 // Publisher is the alias of third party.

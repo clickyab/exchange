@@ -41,6 +41,8 @@ type Location interface {
 	// Region of the device
 	Region() Region
 	ISP() ISP
+	// Attributes return all unused fields from open rtb geo
+	Attributes() map[string]interface{}
 }
 
 // Geo is the alias of Location for open rtb compatibility

@@ -53,5 +53,6 @@ type BidRequest interface {
 	// Time time of the impression (the input time)
 	Time() time.Time
 
+	// Attributes is all extra data from input request
 	Attributes() map[string]interface{}
 }
