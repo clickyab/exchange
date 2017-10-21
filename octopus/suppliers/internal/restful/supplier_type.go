@@ -2,6 +2,14 @@ package restful
 
 import "clickyab.com/exchange/octopus/exchange"
 
+type app struct {
+	inventory
+}
+
+type site struct {
+	inventory
+}
+
 type inventory struct {
 	FID       string                 `json:"id"`
 	FName     string                 `json:"name,omitempty"`
@@ -30,7 +38,13 @@ func (i inventory) Cat() []exchange.Category {
 }
 
 func (i inventory) Publisher() exchange.Publisher {
-	return i.FSupplier.FPublisher
+	var res = publisher{
+		FID:     i.FID,
+		FCat:    i.FCat,
+		FDomain: i.FDomain,
+		FName:   i.FName,
+	}
+	return res
 }
 
 func (i inventory) Attributes() map[string]interface{} {
@@ -38,11 +52,11 @@ func (i inventory) Attributes() map[string]interface{} {
 }
 
 func (i inventory) FloorCPM() int64 {
-	return i.FSupplier.FFloorCPM
+	return i.FSupplier.FloorCPM()
 }
 
 func (i inventory) SoftFloorCPM() int64 {
-	return i.FSupplier.FSoftFloorCpm
+	return i.FSupplier.SoftFloorCPM()
 }
 
 func (i inventory) Supplier() exchange.Supplier {

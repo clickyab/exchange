@@ -1,9 +1,11 @@
 package restful
 
+import "clickyab.com/exchange/octopus/exchange"
+
 type publisher struct {
 	FID     string   `json:"id"`
 	FName   string   `json:"name"`
-	FCat    []string `json:"cat"`
+	FCat    []exchange.Category `json:"cat"`
 	FDomain string   `json:"domain"`
 }
 
@@ -15,7 +17,7 @@ func (p publisher) Name() string {
 	return p.FName
 }
 
-func (p publisher) Cat() []string {
+func (p publisher) Cat() []exchange.Category {
 	return p.FCat
 }
 

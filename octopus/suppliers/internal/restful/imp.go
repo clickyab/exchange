@@ -4,7 +4,7 @@ import "clickyab.com/exchange/octopus/exchange"
 
 type imp struct {
 	FID       string                  `json:"id"`
-	FBanner   banner                  `json:"banner"`
+	FBanner   *banner                 `json:"banner"`
 	FBidFloor float64                 `json:"bid_floor"`
 	FAttr     map[string]interface{}  `json:"attr"`
 	FSecure   bool                    `json:"secure"`

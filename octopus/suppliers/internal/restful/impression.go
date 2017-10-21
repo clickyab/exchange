@@ -1,11 +1,7 @@
 package restful
 
 import (
-	"time"
-
 	"clickyab.com/exchange/octopus/exchange"
-	"github.com/clickyab/services/random"
-	"reflect"
 )
 
 //type bidRequestRest struct {
@@ -269,28 +265,18 @@ import (
 //	return &resp, nil
 //}
 
-func newImpressionFromWebRequest(sup exchange.Supplier, r *requestBody) (*bidRequestRest, error) {
+// Hidden profit is here. the floor and soft floor are rising here
+func (inv *inventory) setSupplierFloors(sup exchange.Supplier) {
+	share := int64(100 + inv.Supplier().Share())
+	floorCPM := (inv.Supplier().FloorCPM() * share) / 100
+	if floorCPM == 0 {
+		floorCPM = (sup.FloorCPM() * share) / 100
+	}
+	softFloorCPM := (inv.Supplier().SoftFloorCPM() * share) / 100
+	if softFloorCPM == 0 {
+		softFloorCPM = (sup.SoftFloorCPM() * share) / 100
+	}
 
-	//r.Publisher.sup = sup
-	//resp := bidRequestRest{
-	//	Schm:          r.Scheme,
-	//	UTI:           r.UserTrackID,
-	//	PTI:           r.PageTrackID,
-	//	SIP:           r.IP,
-	//	UA:            r.Web.UserAgent,
-	//	PlatDevice:    exchange.DeviceTypePC,
-	//	Categories:    r.Categories,
-	//	Imps:          r.Slots,
-	//	Mega:          <-random.ID,
-	//	UnderFloorCPM: r.UnderFloor,
-	//
-	//	Attr: map[string]interface{}{
-	//		"referrer": r.Web.Referrer,
-	//		"parent":   r.Web.Parent,
-	//	},
-	//	Pub: r.Publisher,
-	//}
-	//resp.STime = time.Now()
-	//resp.extractData()
-	return &resp, nil
+	inv.FSupplier.FFloorCPM = floorCPM
+	inv.FSupplier.FSoftFloorCpm = softFloorCPM
 }

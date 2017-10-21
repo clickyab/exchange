@@ -6,48 +6,50 @@ import (
 	"time"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/exchange/rest"
 )
 
 type bidRequest struct {
-	FID     string                 `json:"id"`
-	FImp    []imp                  `json:"imp"`
-	FSite   inventory              `json:"inventory"`
-	FType   rest.BidType           `json:"type"`
-	FDevice device                 `json:"device"`
-	FUser   user                   `json:"user"`
-	FTest   bool                   `json:"test"`
-	FTMax   time.Duration          `json:"-"`
-	FTime   time.Time              `json:"time"`
-	FAttr   map[string]interface{} `json:"attr"`
+	IID     string                 `json:"id"`
+	IImp    []imp                  `json:"imp"`
+	ISite   *site                  `json:"site,omitempty"`
+	IApp    *app                   `json:"app,omitempty"`
+	IDevice device                 `json:"device"`
+	IUser   user                   `json:"user"`
+	ITest   bool                   `json:"test"`
+	ITMax   time.Duration          `json:"-"`
+	ITime   time.Time              `json:"time"`
+	IAttr   map[string]interface{} `json:"attr"`
 }
 
 func (b bidRequest) ID() string {
-	return b.FID
+	return b.IID
 }
 
 func (b bidRequest) Imp() []exchange.Impression {
 	var res = make([]exchange.Impression, 0)
-	for i := range b.FImp {
-		res = append(res, b.FImp[i])
+	for i := range b.IImp {
+		res = append(res, b.IImp[i])
 	}
 	return res
 }
 
 func (b bidRequest) Inventory() exchange.Inventory {
-	return b.FSite
+	if b.ISite != nil {
+		return b.ISite
+	}
+	return b.IApp
 }
 
 func (b bidRequest) Device() exchange.Device {
-	return b.FDevice
+	return b.IDevice
 }
 
 func (b bidRequest) User() exchange.User {
-	return b.FUser
+	return b.IUser
 }
 
 func (b bidRequest) Test() bool {
-	return b.FTest
+	return b.ITest
 }
 
 func (b bidRequest) AuctionType() exchange.AuctionType {
@@ -55,7 +57,7 @@ func (b bidRequest) AuctionType() exchange.AuctionType {
 }
 
 func (b bidRequest) TMax() time.Duration {
-	return b.FTMax
+	return b.ITMax
 }
 
 func (b bidRequest) WhiteList() []string {
@@ -79,11 +81,11 @@ func (b bidRequest) BlockedAdvertiserDomain() []string {
 }
 
 func (b bidRequest) Time() time.Time {
-	return b.FTime
+	return b.ITime
 }
 
 func (b bidRequest) Attributes() map[string]interface{} {
-	return b.FAttr
+	return b.IAttr
 }
 
 // NewBidRequest get new bid request for rest clients
