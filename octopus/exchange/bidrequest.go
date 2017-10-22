@@ -24,6 +24,8 @@ const (
 type BidRequest interface {
 	// ID return the random id of this imp object
 	ID() string
+	// CID unique random identifier for our tracking
+	CID() string
 	// Imp is the slot for this request
 	Imp() []Impression
 	// Inventory return the current inventory, caller should cast it to other inventory types
@@ -54,4 +56,5 @@ type BidRequest interface {
 	Time() time.Time
 
 	Attributes() map[string]interface{}
+	Layer()string
 }

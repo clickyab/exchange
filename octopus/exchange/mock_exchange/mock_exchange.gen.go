@@ -72,6 +72,18 @@ func (mr *MockImpressionMockRecorder) BidFloor() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BidFloor", reflect.TypeOf((*MockImpression)(nil).BidFloor))
 }
 
+// CID mocks base method
+func (m *MockImpression) CID() string {
+	ret := m.ctrl.Call(m, "CID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// CID indicates an expected call of CID
+func (mr *MockImpressionMockRecorder) CID() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CID", reflect.TypeOf((*MockImpression)(nil).CID))
+}
+
 // ID mocks base method
 func (m *MockImpression) ID() string {
 	ret := m.ctrl.Call(m, "ID")
@@ -281,9 +293,9 @@ func (m *MockPublisher) EXPECT() *MockPublisherMockRecorder {
 }
 
 // Cat mocks base method
-func (m *MockPublisher) Cat() []string {
+func (m *MockPublisher) Cat() []exchange.Category {
 	ret := m.ctrl.Call(m, "Cat")
-	ret0, _ := ret[0].([]string)
+	ret0, _ := ret[0].([]exchange.Category)
 	return ret0
 }
 
@@ -966,6 +978,18 @@ func (m *MockBidRequest) BlockedCategories() []string {
 // BlockedCategories indicates an expected call of BlockedCategories
 func (mr *MockBidRequestMockRecorder) BlockedCategories() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockedCategories", reflect.TypeOf((*MockBidRequest)(nil).BlockedCategories))
+}
+
+// CID mocks base method
+func (m *MockBidRequest) CID() string {
+	ret := m.ctrl.Call(m, "CID")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// CID indicates an expected call of CID
+func (mr *MockBidRequestMockRecorder) CID() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CID", reflect.TypeOf((*MockBidRequest)(nil).CID))
 }
 
 // Device mocks base method

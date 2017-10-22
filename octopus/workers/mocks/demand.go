@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"context"
+	"io"
 	"net/http"
 
 	"clickyab.com/exchange/octopus/exchange"
@@ -13,6 +14,14 @@ type Demands struct {
 	IHandicap        int64
 	IWhiteList       []string
 	IExcludeSupplier []string
+}
+
+func (d Demands) RenderBidRequest(context.Context, io.Writer, exchange.BidRequest) http.Header{
+	panic("implement me")
+}
+
+func (d Demands) GeBidResponse(context.Context, *http.Response) exchange.BidResponse {
+	panic("implement me")
 }
 
 func (d Demands) Name() string {

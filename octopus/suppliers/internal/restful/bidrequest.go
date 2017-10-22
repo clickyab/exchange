@@ -1,31 +1,39 @@
 package restful
 
 import (
-	"net/http"
-
 	"time"
 
 	"clickyab.com/exchange/octopus/exchange"
+	"github.com/clickyab/services/random"
 )
 
-type bidRequest struct {
+type BidRequest struct {
 	IID     string                 `json:"id"`
-	IImp    []imp                  `json:"imp"`
-	ISite   *site                  `json:"site,omitempty"`
-	IApp    *app                   `json:"app,omitempty"`
-	IDevice device                 `json:"device"`
-	IUser   user                   `json:"user"`
+	clid    string                 `json:"-"`
+	IImp    []Imp                  `json:"Imp"`
+	ISite   *Site                  `json:"Site,omitempty"`
+	IApp    *App                   `json:"App,omitempty"`
+	IDevice Device                 `json:"Device"`
+	IUser   User                   `json:"User"`
 	ITest   bool                   `json:"test"`
-	ITMax   time.Duration          `json:"-"`
-	ITime   time.Time              `json:"time"`
+	ITMax   time.Duration          `json:"tmax,omitempty"`
+	time    time.Time              `json:"-"`
+	IWLang  []string               `json:"wlang,omitempty"`
+	IBCat   []string               `json:"bcat,omitempty"`
+	IBAdv   []string               `json:"badv,omitempty"`
+	ILayer  string                 `json:"-"`
 	IAttr   map[string]interface{} `json:"attr"`
 }
 
-func (b bidRequest) ID() string {
+func (b BidRequest) Layer() string {
+	return b.ILayer
+}
+
+func (b BidRequest) ID() string {
 	return b.IID
 }
 
-func (b bidRequest) Imp() []exchange.Impression {
+func (b BidRequest) Imp() []exchange.Impression {
 	var res = make([]exchange.Impression, 0)
 	for i := range b.IImp {
 		res = append(res, b.IImp[i])
@@ -33,62 +41,64 @@ func (b bidRequest) Imp() []exchange.Impression {
 	return res
 }
 
-func (b bidRequest) Inventory() exchange.Inventory {
+func (b BidRequest) Inventory() exchange.Inventory {
 	if b.ISite != nil {
 		return b.ISite
 	}
 	return b.IApp
 }
 
-func (b bidRequest) Device() exchange.Device {
+func (b BidRequest) Device() exchange.Device {
 	return b.IDevice
 }
 
-func (b bidRequest) User() exchange.User {
+func (b BidRequest) User() exchange.User {
 	return b.IUser
 }
 
-func (b bidRequest) Test() bool {
+func (b BidRequest) Test() bool {
 	return b.ITest
 }
 
-func (b bidRequest) AuctionType() exchange.AuctionType {
+func (b BidRequest) AuctionType() exchange.AuctionType {
 	return exchange.AuctionTypeSecondPrice
 }
 
-func (b bidRequest) TMax() time.Duration {
+func (b BidRequest) TMax() time.Duration {
 	return b.ITMax
 }
 
-func (b bidRequest) WhiteList() []string {
+func (b BidRequest) WhiteList() []string {
 	return []string{}
 }
 
-func (b bidRequest) BlackList() []string {
+func (b BidRequest) BlackList() []string {
 	return []string{}
 }
 
-func (b bidRequest) AllowedLanguage() []string {
-	return []string{}
+func (b BidRequest) AllowedLanguage() []string {
+	return b.IWLang
 }
 
-func (b bidRequest) BlockedCategories() []string {
-	return []string{}
+func (b BidRequest) BlockedCategories() []string {
+	return b.IBCat
 }
 
-func (b bidRequest) BlockedAdvertiserDomain() []string {
-	return []string{}
+func (b BidRequest) BlockedAdvertiserDomain() []string {
+	return b.IBAdv
 }
 
-func (b bidRequest) Time() time.Time {
-	return b.ITime
+func (b BidRequest) Time() time.Time {
+	return b.time
 }
 
-func (b bidRequest) Attributes() map[string]interface{} {
+func (b BidRequest) Attributes() map[string]interface{} {
 	return b.IAttr
 }
 
-// NewBidRequest get new bid request for rest clients
-func NewBidRequest(r *http.Request) exchange.BidRequest {
-	panic("not implemented yet")
+func (b BidRequest) CID() string {
+	if b.clid == "" {
+		return <-random.ID
+	}
+	return b.clid
 }

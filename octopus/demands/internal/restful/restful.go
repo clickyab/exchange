@@ -3,8 +3,8 @@ package restful
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"time"
@@ -14,8 +14,9 @@ import (
 
 	"clickyab.com/exchange/octopus/demands/internal/models"
 
-	"io/ioutil"
+	"encoding/json"
 
+	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/sirupsen/logrus"
 )
 
@@ -44,6 +45,29 @@ func log(imp exchange.BidRequest) *logrus.Entry {
 		"track_id": imp.ID(),
 		"type":     "provider",
 	})
+
+}
+
+func (d *demand) RenderBidRequest(ctx context.Context, r io.Writer, bq exchange.BidRequest) http.Header {
+	header := http.Header{}
+
+	if bq.Layer() == "rest" {
+		res, err := json.Marshal(bq)
+		assert.Nil(err)
+		r.Write(res)
+	} else {
+		// render in rtb style
+		obj := suppliers.RenderBidRequestRtbToRest(bq)
+		res, err := json.Marshal(obj)
+		assert.Nil(err)
+		r.Write(res)
+	}
+	return header
+}
+
+func (d *demand) GeBidResponse(ctx context.Context, resp *http.Response) exchange.BidResponse {
+	//
+	return nil
 }
 
 func (d *demand) WhiteListCountries() []string {
@@ -68,43 +92,33 @@ func (d *demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 		return
 	}
 	buf := &bytes.Buffer{}
-	enc := json.NewEncoder(buf)
-	if err := enc.Encode(d.encoder(bq)); err != nil {
-		logrus.Debug(err)
-		return
-	}
-	req, err := http.NewRequest("POST", d.endPoint, bytes.NewBuffer(buf.Bytes()))
+	header := d.RenderBidRequest(ctx, buf, bq)
+	req, err := http.NewRequest("POST", d.endPoint, buf)
+	req.Header = header
 	if err != nil {
 		logrus.Debug(err)
 		return
 	}
+
 	log(bq).WithField("key", d.key).Debug("calling demand")
 	resp, err := d.client.Do(req.WithContext(ctx))
 	if err != nil {
 		logrus.Debug(err)
 		return
 	}
-	if resp.StatusCode != http.StatusOK {
-		body, _ := ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
-		log(bq).WithField("status", resp.StatusCode).Debug(string(body))
-		return
-	}
-	data, err := ioutil.ReadAll(resp.Body)
-	assert.Nil(err)
-	reader := bytes.NewReader(data)
-	log(bq).WithField("key", d.key).WithField("result", string(data)).Debug("Call done")
+	//if resp.StatusCode != http.StatusOK {
+	//	body, _ := ioutil.ReadAll(resp.Body)
+	//	resp.Body.Close()
+	//	log(bq).WithField("status", resp.StatusCode).Debug(string(body))
+	//	return
+	//}
+	//bidResponse:=
+	//data, err := ioutil.ReadAll(resp.Body)
+	//assert.Nil(err)
+	//reader := bytes.NewReader(data)
+	//log(bq).WithField("key", d.key).WithField("result", string(data)).Debug("Call done")
 
-	bidRes := bidResponse{}
-	dec := json.NewDecoder(reader)
-	defer resp.Body.Close()
-	if err := dec.Decode(&bidRes); err != nil {
-		logrus.Debug(err)
-		return
-	}
-
-	log(bq).WithField("count", len(bidRes.FBids)).Debug("selected ad from pool")
-	ch <- bidRes
+	ch <- d.GeBidResponse(ctx, resp)
 }
 
 func (d *demand) Win(ctx context.Context, id string, cpm int64) {

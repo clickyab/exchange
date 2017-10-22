@@ -2,25 +2,25 @@ package restful
 
 import "clickyab.com/exchange/octopus/exchange"
 
-type geo struct {
-	FLatLon  exchange.LatLon  `json:"lat_lon"`
-	FCountry exchange.Country `json:"country"`
-	FRegion  exchange.Region  `json:"region"`
-	FIsp     exchange.ISP     `json:"isp"`
+type Geo struct {
+	ILatLon  exchange.LatLon  `json:"lat_lon"`
+	ICountry exchange.Country `json:"country"`
+	IRegion  exchange.Region  `json:"region"`
+	IIsp     exchange.ISP     `json:"isp"`
 }
 
-func (g geo) LatLon() exchange.LatLon {
-	return g.FLatLon
+func (g Geo) LatLon() exchange.LatLon {
+	return g.ILatLon
 }
 
-func (g geo) Country() exchange.Country {
-	return g.FCountry
+func (g Geo) Country() exchange.Country {
+	return g.ICountry
 }
 
-func (g geo) Region() exchange.Region {
-	return g.FRegion
+func (g Geo) Region() exchange.Region {
+	return g.IRegion
 }
 
-func (g geo) ISP() exchange.ISP {
-	return g.FIsp
+func (g Geo) ISP() exchange.ISP {
+	return g.IIsp
 }

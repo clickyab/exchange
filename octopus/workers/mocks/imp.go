@@ -5,6 +5,7 @@ import (
 )
 
 type Imp struct {
+	SCID      string
 	SBanner   Banner
 	SNative   Native
 	SVideo    Video
@@ -17,6 +18,10 @@ type Imp struct {
 
 func (i Imp) ID() string {
 	return i.SID
+}
+
+func (i Imp) CID() string {
+	return i.SCID
 }
 
 func (i Imp) BidFloor() float64 {

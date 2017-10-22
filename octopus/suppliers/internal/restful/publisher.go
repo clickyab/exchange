@@ -3,24 +3,24 @@ package restful
 import "clickyab.com/exchange/octopus/exchange"
 
 type publisher struct {
-	FID     string   `json:"id"`
-	FName   string   `json:"name"`
-	FCat    []exchange.Category `json:"cat"`
-	FDomain string   `json:"domain"`
+	IID     string              `json:"id"`
+	IName   string              `json:"name"`
+	ICat    []exchange.Category `json:"cat"`
+	IDomain string              `json:"domain"`
 }
 
 func (p publisher) ID() string {
-	return p.FID
+	return p.IID
 }
 
 func (p publisher) Name() string {
-	return p.FName
+	return p.IName
 }
 
 func (p publisher) Cat() []exchange.Category {
-	return p.FCat
+	return p.ICat
 }
 
 func (p publisher) Domain() string {
-	return p.FDomain
+	return p.IDomain
 }

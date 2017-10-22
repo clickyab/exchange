@@ -9,6 +9,7 @@ import (
 
 type BidRequest struct {
 	IID          string
+	ICID         string
 	IIP          net.IP
 	ISchema      string
 	ITest        bool
@@ -18,13 +19,13 @@ type BidRequest struct {
 	IUserAgent   string
 	IInventory   Inventory
 
-	IAttributes  map[string]interface{}
-	IImps        []Imp
-	ICategory    []exchange.Category
-	IPlatform    exchange.DeviceType
-	ITime        time.Time
-	ITMax        time.Duration
-	IDevice      Device
+	IAttributes map[string]interface{}
+	IImps       []Imp
+	ICategory   []exchange.Category
+	IPlatform   exchange.DeviceType
+	ITime       time.Time
+	ITMax       time.Duration
+	IDevice     Device
 }
 
 func (b *BidRequest) ID() string {
@@ -85,6 +86,10 @@ func (b *BidRequest) BlockedAdvertiserDomain() []string {
 
 func (b *BidRequest) Time() time.Time {
 	return b.ITime
+}
+
+func (b *BidRequest) CID() string {
+	return b.ICID
 }
 
 func (b *BidRequest) Attributes() map[string]interface{} {
