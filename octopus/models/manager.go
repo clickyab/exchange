@@ -1,6 +1,12 @@
 package models
 
-import "github.com/clickyab/services/mysql"
+import (
+	"net/http"
+
+	"clickyab.com/exchange/octopus/exchange"
+	"clickyab.com/exchange/octopus/models/internal/rtb"
+	"github.com/clickyab/services/mysql"
+)
 
 // Manager is the model manager
 type Manager struct {
@@ -50,4 +56,9 @@ func NewManager() *Manager {
 
 func init() {
 	mysql.Register(NewManager())
+}
+
+// GetBidRequest will generate bid-request from http request
+func GetBidRequest(supplier exchange.Supplier, q *http.Request) (exchange.BidRequest, error) {
+	return rtb.GetBidRequest(supplier, q)
 }
