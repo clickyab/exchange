@@ -9,19 +9,18 @@ import (
 	"syscall"
 
 	"clickyab.com/exchange/octopus/exchange"
+	md "clickyab.com/exchange/octopus/models"
 	"clickyab.com/exchange/octopus/suppliers/internal/models"
 	"clickyab.com/exchange/octopus/suppliers/internal/renderer"
 	"clickyab.com/exchange/octopus/suppliers/internal/restful"
 	"github.com/clickyab/services/mysql"
 
 	"github.com/sirupsen/logrus"
-
-	"clickyab.com/exchange/octopus/suppliers/internal/openrtb"
 )
 
 const (
 	rest = "rest"
-	rtb  = "rtb"
+	ortb = "rtb"
 )
 
 var (
@@ -101,8 +100,8 @@ func GetBidRequest(key string, r *http.Request) (exchange.BidRequest, error) {
 	switch sup.Type() {
 	case rest:
 		return restful.GetBidRequest(sup, r)
-	case rtb:
-		return openrtb.GetBidRequest(sup, r)
+	case ortb:
+		return md.GetBidRequest(sup, r)
 	default:
 		logrus.Panicf("Not a supported type: %s", sup.Type())
 		return nil, fmt.Errorf("not supported type: %s", sup.Type())
