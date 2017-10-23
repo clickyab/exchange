@@ -2,17 +2,14 @@ package restful
 
 import (
 	"clickyab.com/exchange/octopus/exchange"
+	"clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/random"
 )
 
 type Imp struct {
-	IID       string                  `json:"id"`
-	clid      string                  `json:"-"`
-	IBanner   *Banner                 `json:"Banner"`
-	IBidFloor float64                 `json:"bid_floor"`
-	IAttr     map[string]interface{}  `json:"attr"`
-	ISecure   int                     `json:"secure"`
-	IType     exchange.ImpressionType `json:"-"`
+	inner *srtb.Impression
+	clid  string                  `json:"-"`
+	IType exchange.ImpressionType `json:"-"`
 }
 
 func (i Imp) CID() string {

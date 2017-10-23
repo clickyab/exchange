@@ -56,9 +56,9 @@ func GetBidRequest(sup exchange.Supplier, r *http.Request) (exchange.BidRequest,
 	return req, nil
 }
 
-func getGeo(ip string) Geo {
+func getGeo(ip string) geo {
 	t := ip2location.GetAll(ip)
-	return Geo{
+	return geo{
 		IIsp: exchange.ISP{
 			Valid: t.Isp != "",
 			Name:  t.Isp,

@@ -2,11 +2,11 @@ package restful
 
 import "clickyab.com/exchange/octopus/exchange"
 
-type App struct {
+type app struct {
 	inventory
 }
 
-type Site struct {
+type site struct {
 	inventory
 }
 

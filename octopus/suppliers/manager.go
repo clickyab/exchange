@@ -131,7 +131,7 @@ func RenderBidRequestRtbToRest(bq exchange.BidRequest) restful.BidRequest {
 			IDeviceType: bq.Device().DeviceType(),
 			IIP:         bq.Device().IP(),
 			IUA:         bq.Device().UserAgent(),
-			IGeo: restful.Geo{
+			geo: restful.geo{
 				ILatLon: exchange.LatLon{
 					Lon:   bq.Device().Geo().LatLon().Lon,
 					Lat:   bq.Device().Geo().LatLon().Lat,
@@ -163,9 +163,9 @@ func RenderBidRequestRtbToRest(bq exchange.BidRequest) restful.BidRequest {
 		IWLang: bq.AllowedLanguage(),
 		IBAdv:  bq.BlockedAdvertiserDomain(),
 	}
-	if s, ok := bq.Inventory().Publisher().(*restful.Site); ok {
+	if s, ok := bq.Inventory().Publisher().(*restful.site); ok {
 		res.ISite = s
-	} else if a, ok := bq.Inventory().Publisher().(*restful.App); ok {
+	} else if a, ok := bq.Inventory().Publisher().(*restful.app); ok {
 		res.IApp = a
 	} else {
 		panic("[BUG] wrong bid request inventory")

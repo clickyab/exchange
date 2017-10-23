@@ -1,78 +1,87 @@
 package restful
 
 import (
+	"encoding/json"
+
 	"clickyab.com/exchange/octopus/exchange"
+	"clickyab.com/exchange/octopus/srtb"
 )
 
 type Device struct {
-	IUA         string                  `json:"ua"`
-	IIP         string                  `json:"ip"`
-	IGeo        Geo                     `json:"-"`
-	IDeviceType exchange.DeviceType     `json:"device_type"`
-	IMake       string                  `json:"make"`
-	IModel      string                  `json:"model"`
-	IConnType   exchange.ConnectionType `json:"conn_type"`
-	ICarrier    string                  `json:"carrier"`
-	IOs         string                  `json:"os"`
-	ILang       string                  `json:"lang"`
-	ILAC        string                  `json:"lac"`
-	IMNC        string                  `json:"mnc"`
-	IMCC        string                  `json:"mcc"`
-	ICID        string                  `json:"cid"`
+	inner *srtb.Device
+	geo   geo
+}
+
+func (d *Device) MarshalJSON() ([]byte, error) {
+	return json.Marshal(d.inner)
+}
+
+func (d *Device) UnmarshalJSON(a []byte) error {
+	i := srtb.Device{}
+	err := json.Unmarshal(a, &i)
+	if err != nil {
+		return err
+	}
+
+	//TODO check validation
+	//validate device
+
+	d.inner = &i
+	return nil
 }
 
 func (d Device) UserAgent() string {
-	return d.IUA
+	return d.inner.UA
 }
 
 func (d Device) Geo() exchange.Geo {
-	return d.IGeo
+	return d.geo
 }
 
 func (d Device) IP() string {
-	return d.IIP
+	return d.inner.IP
 }
 
 func (d Device) DeviceType() exchange.DeviceType {
-	return d.IDeviceType
+	return exchange.DeviceType(d.inner.DeviceType)
 }
 
 func (d Device) Make() string {
-	return d.IMake
+	return d.inner.Make
 }
 
 func (d Device) Model() string {
-	return d.IModel
+	return d.inner.Model
 }
 
 func (d Device) OS() string {
-	return d.IOs
+	return d.inner.Os
 }
 
 func (d Device) Language() string {
-	return d.ILang
+	return d.inner.Lang
 }
 
 func (d Device) Carrier() string {
-	return d.ILang
+	return d.inner.Lang
 }
 
 func (d Device) MCC() string {
-	return d.IMCC
+	return d.inner.MCC
 }
 
 func (d Device) MNC() string {
-	return d.IMNC
+	return d.inner.MNC
 }
 
 func (d Device) ConnType() exchange.ConnectionType {
-	return d.IConnType
+	return exchange.ConnectionType(d.inner.ConnType)
 }
 
 func (d Device) LAC() string {
-	return d.ILAC
+	return d.inner.LAC
 }
 
 func (d Device) CID() string {
-	return d.ICID
+	return d.inner.CID
 }

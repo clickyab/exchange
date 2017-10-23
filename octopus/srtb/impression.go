@@ -4,7 +4,7 @@ package srtb
 type Impression struct {
 	ID       string  `json:"id"`
 	lid      string  `json:"-"`
-	Banner   *Banner `json:"Banner"`
+	Banner   *Banner `json:"banner"`
 	BidFloor float64 `json:"bid_floor"`
 	Secure   int     `json:"secure"`
 }

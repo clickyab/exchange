@@ -5,11 +5,11 @@ import "time"
 // BidRequest is what is accepted from each publisher
 type BidRequest struct {
 	ID     string        `json:"id"`
-	Imp    []Impression  `json:"Imp"`
-	Site   *Site         `json:"Site,omitempty"`
-	App    *App          `json:"App,omitempty"`
-	Device Device        `json:"Device"`
-	UserID string        `json:"User"`
+	Imp    []Impression  `json:"imp"`
+	Site   *Site         `json:"site,omitempty"`
+	App    *App          `json:"app,omitempty"`
+	Device Device        `json:"device"`
+	UserID string        `json:"user_id,omitempty"`
 	Test   bool          `json:"test"`
 	TMax   time.Duration `json:"tmax,omitempty"`
 	WLang  []string      `json:"wlang,omitempty"`

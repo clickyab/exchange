@@ -51,16 +51,18 @@ func log(imp exchange.BidRequest) *logrus.Entry {
 func (d *demand) RenderBidRequest(ctx context.Context, r io.Writer, bq exchange.BidRequest) http.Header {
 	header := http.Header{}
 
-	if bq.Layer() == "rest" {
+	if bq.LayerType() == "rest" {
 		res, err := json.Marshal(bq)
 		assert.Nil(err)
-		r.Write(res)
+		_,err=r.Write(res)
+		assert.Nil(err)
 	} else {
 		// render in rtb style
 		obj := suppliers.RenderBidRequestRtbToRest(bq)
 		res, err := json.Marshal(obj)
 		assert.Nil(err)
-		r.Write(res)
+		_,err=r.Write(res)
+		assert.Nil(err)
 	}
 	return header
 }

@@ -56,5 +56,5 @@ type BidRequest interface {
 	Time() time.Time
 
 	Attributes() map[string]interface{}
-	Layer()string
+	LayerType()string
 }
