@@ -8,7 +8,7 @@ import (
 	"encoding/json"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/exchange/rtbobj"
+	"clickyab.com/exchange/octopus/exchange/ortb"
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 )
@@ -50,7 +50,7 @@ func (s *Supplier) Share() int {
 
 // RenderBidResponse will write the response to the writer
 func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
-	if b.LayerType() == rtbobj.ORTB {
+	if b.LayerType() == ortb.ORTB {
 		r, err := json.Marshal(b)
 		assert.Nil(err)
 		w.Write(r)
@@ -100,14 +100,14 @@ func (s *Supplier) TestMode() bool {
 
 // Type of supplier (ortb, srtb)
 func (s *Supplier) Type() string {
-	return rtbobj.ORTB
+	return ortb.ORTB
 }
 
 // GetBidRequest transform request object to internal model
 func (s *Supplier) GetBidRequest(ctx context.Context, r *http.Request) exchange.BidRequest {
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
-	res := rtbobj.NewBidRequest(s, &openrtb.BidRequest{})
+	res := ortb.NewBidRequest(s, &openrtb.BidRequest{})
 	assert.Nil(d.Decode(res))
 
 	return res
