@@ -31,6 +31,10 @@ type bidRequestRest struct {
 	latlon exchange.LatLon
 }
 
+func (ir *bidRequestRest) LayerType() string {
+	return "srtb"
+}
+
 func (ir *bidRequestRest) ID() string {
 	panic("implement me")
 }

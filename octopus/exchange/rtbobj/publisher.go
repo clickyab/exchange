@@ -1,4 +1,4 @@
-package rtb
+package rtbobj
 
 import "github.com/bsm/openrtb"
 

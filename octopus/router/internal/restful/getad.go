@@ -85,13 +85,13 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	log(nCtx, bq).WithField("count", len(res.Bids())).Debug("ads is passed the system select")
 	storeKeys(bq, res)
 
-	err = bq.Inventory().Supplier().Renderer().Render(nCtx, res, w)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		dec.Encode(struct {
-			Error string
-		}{
-			Error: err.Error(),
-		})
-	}
+	bq.Inventory().Supplier().RenderBidResponse(nCtx, w, res)
+	//if err != nil {
+	//	w.WriteHeader(http.StatusInternalServerError)
+	//	dec.Encode(struct {
+	//		Error string
+	//	}{
+	//		Error: err.Error(),
+	//	})
+	//}
 }

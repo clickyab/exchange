@@ -1,4 +1,4 @@
-package rtb
+package rtbobj
 
 import (
 	"clickyab.com/exchange/octopus/exchange"

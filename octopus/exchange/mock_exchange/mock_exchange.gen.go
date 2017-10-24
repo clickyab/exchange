@@ -8,6 +8,7 @@ import (
 	exchange "clickyab.com/exchange/octopus/exchange"
 	context "context"
 	gomock "github.com/golang/mock/gomock"
+	io "io"
 	http "net/http"
 	reflect "reflect"
 	time "time"
@@ -482,6 +483,18 @@ func (mr *MockSupplierMockRecorder) FloorCPM() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FloorCPM", reflect.TypeOf((*MockSupplier)(nil).FloorCPM))
 }
 
+// GetBidRequest mocks base method
+func (m *MockSupplier) GetBidRequest(arg0 context.Context, arg1 *http.Request) exchange.BidRequest {
+	ret := m.ctrl.Call(m, "GetBidRequest", arg0, arg1)
+	ret0, _ := ret[0].(exchange.BidRequest)
+	return ret0
+}
+
+// GetBidRequest indicates an expected call of GetBidRequest
+func (mr *MockSupplierMockRecorder) GetBidRequest(arg0, arg1 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBidRequest", reflect.TypeOf((*MockSupplier)(nil).GetBidRequest), arg0, arg1)
+}
+
 // Name mocks base method
 func (m *MockSupplier) Name() string {
 	ret := m.ctrl.Call(m, "Name")
@@ -494,16 +507,16 @@ func (mr *MockSupplierMockRecorder) Name() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Name", reflect.TypeOf((*MockSupplier)(nil).Name))
 }
 
-// Renderer mocks base method
-func (m *MockSupplier) Renderer() exchange.Renderer {
-	ret := m.ctrl.Call(m, "Renderer")
-	ret0, _ := ret[0].(exchange.Renderer)
+// RenderBidResponse mocks base method
+func (m *MockSupplier) RenderBidResponse(arg0 context.Context, arg1 io.Writer, arg2 exchange.BidResponse) http.Header {
+	ret := m.ctrl.Call(m, "RenderBidResponse", arg0, arg1, arg2)
+	ret0, _ := ret[0].(http.Header)
 	return ret0
 }
 
-// Renderer indicates an expected call of Renderer
-func (mr *MockSupplierMockRecorder) Renderer() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Renderer", reflect.TypeOf((*MockSupplier)(nil).Renderer))
+// RenderBidResponse indicates an expected call of RenderBidResponse
+func (mr *MockSupplierMockRecorder) RenderBidResponse(arg0, arg1, arg2 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenderBidResponse", reflect.TypeOf((*MockSupplier)(nil).RenderBidResponse), arg0, arg1, arg2)
 }
 
 // Share mocks base method
@@ -623,6 +636,18 @@ func (m *MockBidResponse) ID() string {
 // ID indicates an expected call of ID
 func (mr *MockBidResponseMockRecorder) ID() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ID", reflect.TypeOf((*MockBidResponse)(nil).ID))
+}
+
+// LayerType mocks base method
+func (m *MockBidResponse) LayerType() string {
+	ret := m.ctrl.Call(m, "LayerType")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// LayerType indicates an expected call of LayerType
+func (mr *MockBidResponseMockRecorder) LayerType() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LayerType", reflect.TypeOf((*MockBidResponse)(nil).LayerType))
 }
 
 // Supplier mocks base method
@@ -1038,6 +1063,18 @@ func (m *MockBidRequest) Inventory() exchange.Inventory {
 // Inventory indicates an expected call of Inventory
 func (mr *MockBidRequestMockRecorder) Inventory() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Inventory", reflect.TypeOf((*MockBidRequest)(nil).Inventory))
+}
+
+// LayerType mocks base method
+func (m *MockBidRequest) LayerType() string {
+	ret := m.ctrl.Call(m, "LayerType")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// LayerType indicates an expected call of LayerType
+func (mr *MockBidRequestMockRecorder) LayerType() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LayerType", reflect.TypeOf((*MockBidRequest)(nil).LayerType))
 }
 
 // TMax mocks base method
@@ -1934,15 +1971,15 @@ func (m *MockRenderer) EXPECT() *MockRendererMockRecorder {
 }
 
 // Render mocks base method
-func (m *MockRenderer) Render(arg0 exchange.BidResponse, arg1 http.ResponseWriter) error {
-	ret := m.ctrl.Call(m, "Render", arg0, arg1)
+func (m *MockRenderer) Render(arg0 context.Context, arg1 exchange.BidResponse, arg2 http.ResponseWriter) error {
+	ret := m.ctrl.Call(m, "Render", arg0, arg1, arg2)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Render indicates an expected call of Render
-func (mr *MockRendererMockRecorder) Render(arg0, arg1 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Render", reflect.TypeOf((*MockRenderer)(nil).Render), arg0, arg1)
+func (mr *MockRendererMockRecorder) Render(arg0, arg1, arg2 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Render", reflect.TypeOf((*MockRenderer)(nil).Render), arg0, arg1, arg2)
 }
 
 // MockUser is a mock of User interface

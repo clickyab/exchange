@@ -86,3 +86,7 @@ func (r rsp) Attributes() map[string]interface{} {
 func (r rsp) Supplier() exchange.Supplier {
 	return r.supplier
 }
+
+func (r rsp) LayerType() string {
+	return "ortb"
+}

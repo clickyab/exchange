@@ -18,13 +18,17 @@ type BidRequest struct {
 	IUserAgent   string
 	IInventory   Inventory
 
-	IAttributes  map[string]interface{}
-	IImps        []Imp
-	ICategory    []exchange.Category
-	IPlatform    exchange.DeviceType
-	ITime        time.Time
-	ITMax        time.Duration
-	IDevice      Device
+	IAttributes map[string]interface{}
+	IImps       []Imp
+	ICategory   []exchange.Category
+	IPlatform   exchange.DeviceType
+	ITime       time.Time
+	ITMax       time.Duration
+	IDevice     Device
+}
+
+func (b *BidRequest) LayerType() string {
+	return "ortb"
 }
 
 func (b *BidRequest) ID() string {

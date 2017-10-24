@@ -1,4 +1,4 @@
-package rtb
+package rtbobj
 
 import (
 	"encoding/json"
@@ -11,11 +11,23 @@ import (
 	"github.com/bsm/openrtb"
 )
 
+// ORTB is type of this layer
+const ORTB = "ortb"
+
+// NewBidRequest generate internal bid-request from open-rtb
+func NewBidRequest(s exchange.Supplier, rq *openrtb.BidRequest) exchange.BidRequest {
+	return &bidRequest{sup: s, inner: rq}
+}
+
 type bidRequest struct {
 	inner *openrtb.BidRequest
 	imps  []exchange.Impression
 	sup   exchange.Supplier
 	time  time.Time
+}
+
+func (b *bidRequest) LayerType() string {
+	return ORTB
 }
 
 func (b *bidRequest) UnmarshalJSON(d []byte) error {

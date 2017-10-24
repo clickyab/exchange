@@ -1,5 +1,11 @@
 package exchange
 
+import (
+	"context"
+	"io"
+	"net/http"
+)
+
 // SupplierClickMode means the click type that the supplier support
 type SupplierClickMode string
 
@@ -27,12 +33,14 @@ type Supplier interface {
 	ExcludedDemands() []string
 	// Share return the share of this supplier
 	Share() int
-	// Renderer return the renderer of this supplier
-	Renderer() Renderer
+	// RenderBidResponse return the renderer of this supplier
+	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header
 	// TestMode means this is in test mode, just pass them to test providers
 	TestMode() bool
 	// ClickMode return the supported click mode
 	ClickMode() SupplierClickMode
 	// Type return the supplier type currently only rest is supported
 	Type() string
+	// GetBidRequest generate bid-request from request
+	GetBidRequest(context.Context, *http.Request) BidRequest
 }
