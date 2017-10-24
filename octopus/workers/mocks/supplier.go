@@ -1,6 +1,11 @@
 package mocks
 
 import (
+	"context"
+	"net/http"
+
+	"io"
+
 	"clickyab.com/exchange/octopus/exchange"
 )
 
@@ -9,7 +14,14 @@ type Supplier struct {
 	SFloorCPM     int64
 	SSoftFloorCPM int64
 	SShare        int
-	SRenderer     exchange.Renderer
+}
+
+func (s Supplier) RenderBidResponse(context.Context, io.Writer, exchange.BidResponse) http.Header {
+	return http.Header{}
+}
+
+func (s Supplier) GetBidRequest(context.Context, *http.Request) exchange.BidRequest {
+	panic("implement me")
 }
 
 func (s Supplier) Name() string {
@@ -30,10 +42,6 @@ func (s Supplier) ExcludedDemands() []string {
 
 func (s Supplier) Share() int {
 	return s.SShare
-}
-
-func (s Supplier) Renderer() exchange.Renderer {
-	return s.SRenderer
 }
 
 func (s Supplier) TestMode() bool {

@@ -1,10 +1,6 @@
 package models
 
 import (
-	"net/http"
-
-	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/models/internal/rtb"
 	"github.com/clickyab/services/mysql"
 )
 
@@ -56,9 +52,4 @@ func NewManager() *Manager {
 
 func init() {
 	mysql.Register(NewManager())
-}
-
-// GetBidRequest will generate bid-request from http request
-func GetBidRequest(supplier exchange.Supplier, q *http.Request) (exchange.BidRequest, error) {
-	return rtb.GetBidRequest(supplier, q)
 }

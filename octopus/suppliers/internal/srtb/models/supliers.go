@@ -1,7 +1,13 @@
 package models
 
 import (
+	"context"
+	"net/http"
 	"strings"
+
+	"io"
+
+	"encoding/json"
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/assert"
@@ -27,13 +33,23 @@ type Supplier struct {
 	UserID int64  `json:"user_id" db:"user_id"`
 	Test   int    `json:"test_mode" db:"test_mode"`
 	Click  string `json:"click_mode" db:"click_mode"`
-
-	r exchange.Renderer
 }
 
-// Renderer return this supplier renderer
-func (s Supplier) Renderer() exchange.Renderer {
-	return s.r
+// RenderBidResponse will render srtb response
+func (s Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
+	if b.LayerType() == "srtb" {
+		r, err := json.Marshal(b)
+		assert.Nil(err)
+		w.Write(r)
+
+		return http.Header{}
+	}
+	panic("convert bid-response to srtb")
+}
+
+// GetBidRequest return this supplier renderer
+func (s Supplier) GetBidRequest(ctx context.Context, r *http.Request) exchange.BidRequest {
+	panic("implement me")
 }
 
 // Name of this supplier
@@ -100,7 +116,7 @@ func (m *Manager) GetSuppliers(factory RendererFactory) map[string]Supplier {
 	assert.Nil(err)
 	ret := make(map[string]Supplier, len(res))
 	for i := range res {
-		res[i].r = factory(res[i], res[i].SType)
+
 		ret[res[i].Key] = res[i]
 	}
 

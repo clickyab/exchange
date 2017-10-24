@@ -7,6 +7,10 @@ type bidResponse struct {
 	FID   string `json:"id"`
 }
 
+func (b bidResponse) LayerType() string {
+	return "ortb"
+}
+
 func (b bidResponse) ID() string {
 	return b.FID
 }
