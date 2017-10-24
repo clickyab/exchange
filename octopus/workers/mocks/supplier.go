@@ -48,10 +48,6 @@ func (s Supplier) TestMode() bool {
 	return false
 }
 
-func (s Supplier) ClickMode() exchange.SupplierClickMode {
-	panic("implement me")
-}
-
 func (s Supplier) Type() string {
 	panic("implement me")
 }

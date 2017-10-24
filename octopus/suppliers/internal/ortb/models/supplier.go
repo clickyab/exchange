@@ -21,7 +21,6 @@ type Supplier struct {
 	excludedDemands []string
 	share           int
 	test            bool
-	clickMode       exchange.SupplierClickMode
 }
 
 // Name of supplier
@@ -97,11 +96,6 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 // TestMode will determine if the supplier is in test mode or not
 func (s *Supplier) TestMode() bool {
 	return s.test
-}
-
-// ClickMode is no longer will used
-func (s *Supplier) ClickMode() exchange.SupplierClickMode {
-	return s.clickMode
 }
 
 // Type of supplier (ortb, srtb)

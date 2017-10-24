@@ -3,7 +3,6 @@ package models
 import (
 	"context"
 	"net/http"
-	"strings"
 
 	"io"
 
@@ -96,16 +95,6 @@ func (s Supplier) Share() int {
 // TestMode return true if this is a test demand
 func (s Supplier) TestMode() bool {
 	return s.Test != 0
-}
-
-// ClickMode return the click mode supported by this supplier
-func (s Supplier) ClickMode() exchange.SupplierClickMode {
-	c := strings.ToLower(s.Click)
-	switch exchange.SupplierClickMode(c) {
-	case exchange.SupplierClickModeReplaceB64, exchange.SupplierClickModeReplace, exchange.SupplierClickModeQueryParam, exchange.SupplierClickModeNone:
-		return exchange.SupplierClickMode(c)
-	}
-	return exchange.SupplierClickModeNone
 }
 
 // GetSuppliers return all suppliers

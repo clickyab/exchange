@@ -6,20 +6,6 @@ import (
 	"net/http"
 )
 
-// SupplierClickMode means the click type that the supplier support
-type SupplierClickMode string
-
-const (
-	// SupplierClickModeNone not supported click mode, just pass it as is
-	SupplierClickModeNone SupplierClickMode = "none"
-	// SupplierClickModeQueryParam url modified by adding query parameter to it
-	SupplierClickModeQueryParam SupplierClickMode = "query"
-	// SupplierClickModeReplace url is modified with replace command
-	SupplierClickModeReplace SupplierClickMode = "replace"
-	// SupplierClickModeReplaceB64 url is modified with replace command and with raw base64 // fucking adro
-	SupplierClickModeReplaceB64 SupplierClickMode = "replaceb"
-)
-
 // Supplier is the ad-network interface
 type Supplier interface {
 	// Name of Supplier
@@ -37,8 +23,7 @@ type Supplier interface {
 	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header
 	// TestMode means this is in test mode, just pass them to test providers
 	TestMode() bool
-	// ClickMode return the supported click mode
-	ClickMode() SupplierClickMode
+
 	// Type return the supplier type currently only rest is supported
 	Type() string
 	// GetBidRequest generate bid-request from request
