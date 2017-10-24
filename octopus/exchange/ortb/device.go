@@ -1,4 +1,4 @@
-package rtbobj
+package ortb
 
 import (
 	"strings"
