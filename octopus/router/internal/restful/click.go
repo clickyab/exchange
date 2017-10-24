@@ -3,14 +3,10 @@ package restful
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"encoding/base64"
 
-	"net/url"
-
-	"strings"
-
-	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/kv"
 	"github.com/rs/xmux"
@@ -54,39 +50,6 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var target = targetURL
-	var b64 = make([]byte, 2*len(targetURL))
-	switch sup.ClickMode() {
-	case exchange.SupplierClickModeNone:
-		// just redirect to user page. everything is fine
-		target = targetURL
-	case exchange.SupplierClickModeQueryParam:
-		u, err := url.Parse(supURL)
-		if err == nil {
-			base64.URLEncoding.WithPadding('.').Encode(b64, []byte(targetURL))
-			uq := u.Query()
-			uq.Set(supParam, string(b64))
-			u.RawQuery = uq.Encode()
-			target = u.String()
-		}
-	case exchange.SupplierClickModeReplace:
-		base64.URLEncoding.WithPadding('.').Encode(b64, []byte(targetURL))
-		target = strings.Replace(supURL, supParam, string(b64), -1)
-	case exchange.SupplierClickModeReplaceB64:
-		base64.URLEncoding.Encode(b64, []byte(targetURL))
-		target = strings.Replace(supURL, supParam, string(b64), -1)
-	}
-
-	if target == supURL {
-		// No replace? this is bad :/
-		logrus.WithFields(logrus.Fields{
-			"supplier":  supplier,
-			"sup_url":   supURL,
-			"sup_param": supParam,
-		}).Warn("supplier url is invalid, no replacement made")
-		target = targetURL
-	}
-
-	logrus.WithField("supplier", supplier).WithField("action", "redirect").Debug(target)
-	http.Redirect(w, r, target, http.StatusFound)
+	logrus.WithField("supplier", supplier).WithField("action", "redirect").Debug(targetURL)
+	http.Redirect(w, r, targetURL, http.StatusFound)
 }

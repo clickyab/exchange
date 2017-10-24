@@ -447,18 +447,6 @@ func (m *MockSupplier) EXPECT() *MockSupplierMockRecorder {
 	return m.recorder
 }
 
-// ClickMode mocks base method
-func (m *MockSupplier) ClickMode() exchange.SupplierClickMode {
-	ret := m.ctrl.Call(m, "ClickMode")
-	ret0, _ := ret[0].(exchange.SupplierClickMode)
-	return ret0
-}
-
-// ClickMode indicates an expected call of ClickMode
-func (mr *MockSupplierMockRecorder) ClickMode() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClickMode", reflect.TypeOf((*MockSupplier)(nil).ClickMode))
-}
-
 // ExcludedDemands mocks base method
 func (m *MockSupplier) ExcludedDemands() []string {
 	ret := m.ctrl.Call(m, "ExcludedDemands")
