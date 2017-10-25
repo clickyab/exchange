@@ -2,7 +2,6 @@ package ortb
 
 import (
 	"encoding/json"
-	"net/http"
 	"time"
 
 	"errors"
@@ -10,9 +9,6 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
 )
-
-// ORTB is type of this layer
-const ORTB = "ortb"
 
 // NewBidRequest generate internal bid-request from open-rtb
 func NewBidRequest(s exchange.Supplier, rq *openrtb.BidRequest) exchange.BidRequest {
@@ -27,7 +23,7 @@ type bidRequest struct {
 }
 
 func (b *bidRequest) LayerType() string {
-	return ORTB
+	return exchange.SupplierORTB
 }
 
 func (b *bidRequest) UnmarshalJSON(d []byte) error {
@@ -40,6 +36,7 @@ func (b *bidRequest) UnmarshalJSON(d []byte) error {
 	if err = i.Validate(); err != nil {
 		return err
 	}
+
 	// TODO: extra validate
 	if i.Device == nil || i.Device.IP == "" {
 		return errors.New("user ip (under device object) is required")
@@ -116,7 +113,7 @@ func (b *bidRequest) BlockedCategories() []string {
 }
 
 func (b *bidRequest) BlockedAdvertiserDomain() []string {
-	return b.BlockedAdvertiserDomain()
+	return b.inner.BAdv
 }
 
 func (b *bidRequest) Time() time.Time {
@@ -130,27 +127,9 @@ func (b *bidRequest) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Ext":     b.inner.Ext,
 		"AllImps": b.inner.AllImps,
-		"BAdv":    b.inner.BAdv,
 		"BApp":    b.inner.BApp,
 		"Bcat":    b.inner.Bcat,
-		"BSeat":   b.inner.BSeat,
 		"Cur":     b.inner.Cur,
 		"Regs":    b.inner.Regs,
-		"WLang":   b.inner.WLang,
-		"WSeat":   b.inner.WSeat,
 	}
-}
-
-// GetBidRequest will generate bid-request from http request
-func GetBidRequest(supplier exchange.Supplier, q *http.Request) (exchange.BidRequest, error) {
-	r := &bidRequest{}
-	jd := json.NewDecoder(q.Body)
-	defer q.Body.Close()
-	err := jd.Decode(r)
-	if err != nil {
-		return nil, err
-	}
-	r.sup = supplier
-	return r, nil
-
 }

@@ -9,9 +9,10 @@ import (
 	"syscall"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/suppliers/internal/srtb/models"
-	"clickyab.com/exchange/octopus/suppliers/internal/srtb/renderer"
+	"clickyab.com/exchange/octopus/suppliers/internal/base"
+	"clickyab.com/exchange/octopus/suppliers/internal/ortb"
 	"clickyab.com/exchange/octopus/suppliers/internal/srtb/restful"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 	"github.com/sirupsen/logrus"
 )
@@ -21,28 +22,16 @@ var (
 )
 
 type supplierManager struct {
-	suppliers map[string]models.Supplier
+	suppliers map[string]exchange.Supplier
 	lock      *sync.RWMutex
-}
-
-func restRendererFactory(sup exchange.Supplier, in string) exchange.Renderer {
-	switch in {
-	case "rest":
-		// TODO : /api is hardcoded
-		// TODO : restRenderFactory should have no arg
-		return renderer.NewRenderer()
-	default:
-		logrus.Panicf("supplier with key %s not found", in)
-	}
-	return nil
 }
 
 func (sm *supplierManager) loadSuppliers() {
 	sm.lock.Lock()
 	defer sm.lock.Unlock()
 
-	m := models.NewManager()
-	sm.suppliers = m.GetSuppliers(restRendererFactory)
+	m := NewManager()
+	sm.suppliers = m.GetSuppliers()
 }
 
 func (sm *supplierManager) Initialize() {
@@ -63,7 +52,7 @@ func GetSupplierByKey(key string) (exchange.Supplier, error) {
 	defer sm.lock.RUnlock()
 
 	if s, ok := sm.suppliers[key]; ok {
-		return &s, nil
+		return s, nil
 	}
 
 	return nil, fmt.Errorf("supplier with key %s not found", key)
@@ -103,4 +92,42 @@ func GetBidRequest(key string, r *http.Request) (exchange.BidRequest, error) {
 func init() {
 	sm = &supplierManager{lock: &sync.RWMutex{}}
 	mysql.Register(sm)
+}
+
+// Manager is the model manager
+type Manager struct {
+	mysql.Manager
+}
+
+// Initialize the model, its the interface, not really need this
+func (m *Manager) Initialize() {
+
+}
+
+// NewManager return a new manager object
+func NewManager() *Manager {
+	return &Manager{}
+}
+
+func init() {
+	mysql.Register(&Manager{})
+}
+
+// GetSuppliers return all suppliers
+func (m *Manager) GetSuppliers() map[string]exchange.Supplier {
+	q := "SELECT * FROM suppliers WHERE active <> 0"
+	var res []base.Supplier
+	_, err := m.GetRDbMap().Select(&res, q)
+	assert.Nil(err)
+	ret := make(map[string]exchange.Supplier, len(res))
+	for i := range res {
+		if res[i].Type() == exchange.SupplierORTB {
+			ret[res[i].Key] = &ortb.Supplier{
+				res[i],
+			}
+		}
+		panic("[BUG] not a valid supplier type")
+	}
+
+	return ret
 }

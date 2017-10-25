@@ -6,6 +6,23 @@ import (
 	"net/http"
 )
 
+const (
+	// ORTB is type of this layer
+	SupplierORTB = "ortb"
+	// SRTB is type of this layer
+	SupplierSRTB = "srtb"
+)
+
+// RenderBidResponser is
+type RenderBidResponser interface {
+	// RenderBidResponse return the renderer of this supplier
+	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header
+}
+type GetBidRequester interface {
+	// GetBidRequest generate bid-request from request
+	GetBidRequest(context.Context, *http.Request) BidRequest
+}
+
 // Supplier is the ad-network interface
 type Supplier interface {
 	// Name of Supplier
@@ -19,13 +36,11 @@ type Supplier interface {
 	ExcludedDemands() []string
 	// Share return the share of this supplier
 	Share() int
-	// RenderBidResponse return the renderer of this supplier
-	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header
 	// TestMode means this is in test mode, just pass them to test providers
 	TestMode() bool
-
 	// Type return the supplier type currently only rest is supported
 	Type() string
-	// GetBidRequest generate bid-request from request
-	GetBidRequest(context.Context, *http.Request) BidRequest
+
+	RenderBidResponser
+	GetBidRequester
 }
