@@ -1,20 +1,28 @@
-package models
+package base
 
 import (
-	"context"
-	"net/http"
-
-	"io"
-
-	"encoding/json"
-
 	"clickyab.com/exchange/octopus/exchange"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 )
 
-// RendererFactory is a factory function for a supplier base on its type
-type RendererFactory func(exchange.Supplier, string) exchange.Renderer
+type BaseSupplier interface {
+
+	// Name of Supplier
+	Name() string
+	// CPMFloor is the floor for this network. the publisher must be greeter equal to this
+	FloorCPM() int64
+	// SoftFloorCPM is the soft version of floor cpm. if the publisher ahs it, then the system
+	// try to use this as floor, but if this is not available, the FloorCPM is used
+	SoftFloorCPM() int64
+	// ExcludedDemands is the Excluded list network for this.
+	ExcludedDemands() []string
+	// Share return the share of this supplier
+	Share() int
+	// TestMode means this is in test mode, just pass them to test providers
+	TestMode() bool
+	// Type return the supplier type currently only rest is supported
+	Type() string
+}
 
 // Supplier is a supplier in our system
 type Supplier struct {
@@ -32,23 +40,6 @@ type Supplier struct {
 	UserID int64  `json:"user_id" db:"user_id"`
 	Test   int    `json:"test_mode" db:"test_mode"`
 	Click  string `json:"click_mode" db:"click_mode"`
-}
-
-// RenderBidResponse will render srtb response
-func (s Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
-	if b.LayerType() == "srtb" {
-		r, err := json.Marshal(b)
-		assert.Nil(err)
-		w.Write(r)
-
-		return http.Header{}
-	}
-	panic("convert bid-response to srtb")
-}
-
-// GetBidRequest return this supplier renderer
-func (s Supplier) GetBidRequest(ctx context.Context, r *http.Request) exchange.BidRequest {
-	panic("implement me")
 }
 
 // Name of this supplier
@@ -95,19 +86,4 @@ func (s Supplier) Share() int {
 // TestMode return true if this is a test demand
 func (s Supplier) TestMode() bool {
 	return s.Test != 0
-}
-
-// GetSuppliers return all suppliers
-func (m *Manager) GetSuppliers(factory RendererFactory) map[string]Supplier {
-	q := "SELECT * FROM suppliers WHERE active <> 0"
-	var res []Supplier
-	_, err := m.GetRDbMap().Select(&res, q)
-	assert.Nil(err)
-	ret := make(map[string]Supplier, len(res))
-	for i := range res {
-
-		ret[res[i].Key] = res[i]
-	}
-
-	return ret
 }
