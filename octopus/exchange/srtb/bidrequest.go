@@ -1,27 +1,27 @@
-package ortb
+package srtb
 
 import (
-	"encoding/json"
+	"errors"
 	"time"
 
-	"errors"
+	"encoding/json"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"github.com/bsm/openrtb"
+	"clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/random"
 )
 
-// NewBidRequest generate internal bid-request from open-rtb
-func NewBidRequest(s exchange.Supplier, rq *openrtb.BidRequest) exchange.BidRequest {
-	return &bidRequest{sup: s, inner: rq}
-}
-
 type bidRequest struct {
-	inner *openrtb.BidRequest
+	inner *srtb.BidRequest
 	imps  []exchange.Impression
 	sup   exchange.Supplier
 	time  time.Time
 	cid   string
+}
+
+// NewBidRequest generate internal bid-request from simple rtb
+func NewBidRequest(s exchange.Supplier, rq *srtb.BidRequest) exchange.BidRequest {
+	return &bidRequest{sup: s, inner: rq}
 }
 
 func (b *bidRequest) CID() string {
@@ -31,32 +31,32 @@ func (b *bidRequest) CID() string {
 	return b.cid
 }
 
-func (b *bidRequest) LayerType() string {
-	return exchange.SupplierORTB
-}
-
-func (b *bidRequest) UnmarshalJSON(d []byte) error {
-	i := openrtb.BidRequest{}
-	err := json.Unmarshal(d, &i)
+func (b *bidRequest) UnmarshalJSON(a []byte) error {
+	i := srtb.BidRequest{}
+	err := json.Unmarshal(a, &i)
 	if err != nil {
 		return err
 	}
-
-	if err = i.Validate(); err != nil {
-		return err
-	}
-
-	// TODO: extra validate
 	if i.Device == nil || i.Device.IP == "" {
 		return errors.New("user ip (under device object) is required")
 	}
-
+	if len(i.Imp) == 0 {
+		return errors.New("your bid request has no imp object")
+	}
+	for _, j := range i.Imp {
+		if j.Banner == nil {
+			return errors.New("imp object has no banner in it")
+		}
+	}
+	if i.Site == nil && i.App == nil {
+		return errors.New("there is no site or app object")
+	}
 	b.inner = &i
 	return nil
 }
 
 func (b *bidRequest) MarshalJSON() ([]byte, error) {
-	return json.Marshal(b.inner)
+	return json.Marshal(b)
 }
 
 func (b *bidRequest) ID() string {
@@ -74,10 +74,10 @@ func (b *bidRequest) Imp() []exchange.Impression {
 
 func (b *bidRequest) Inventory() exchange.Inventory {
 	if b.inner.Site != nil {
-		return &site{inner: b.inner.Site, sup: &b.sup}
+		return &site{inner: b.inner.Site}
 	}
 	if b.inner.App != nil {
-		return &app{inner: b.inner.App, sup: &b.sup}
+		return &app{inner: b.inner.App}
 	}
 	panic("[BUG] not valid inventory")
 }
@@ -91,14 +91,11 @@ func (b *bidRequest) User() exchange.User {
 }
 
 func (b *bidRequest) Test() bool {
-	if b.inner.Test == 1 {
-		return true
-	}
-	return false
+	return b.inner.Test
 }
 
 func (b *bidRequest) AuctionType() exchange.AuctionType {
-	return exchange.AuctionType(b.inner.AuctionType)
+	return exchange.AuctionTypeSecondPrice
 }
 
 func (b *bidRequest) TMax() time.Duration {
@@ -106,23 +103,23 @@ func (b *bidRequest) TMax() time.Duration {
 }
 
 func (b *bidRequest) WhiteList() []string {
-	return b.inner.WSeat
+	return []string{}
 }
 
 func (b *bidRequest) BlackList() []string {
-	return b.inner.BSeat
+	return []string{}
 }
 
 func (b *bidRequest) AllowedLanguage() []string {
-	return b.inner.WLang
+	return []string{}
 }
 
 func (b *bidRequest) BlockedCategories() []string {
-	return b.inner.Bcat
+	return b.inner.BCat
 }
 
 func (b *bidRequest) BlockedAdvertiserDomain() []string {
-	return b.inner.BAdv
+	return []string{}
 }
 
 func (b *bidRequest) Time() time.Time {
@@ -133,12 +130,9 @@ func (b *bidRequest) Time() time.Time {
 }
 
 func (b *bidRequest) Attributes() map[string]interface{} {
-	return map[string]interface{}{
-		"Ext":     b.inner.Ext,
-		"AllImps": b.inner.AllImps,
-		"BApp":    b.inner.BApp,
-		"Bcat":    b.inner.Bcat,
-		"Cur":     b.inner.Cur,
-		"Regs":    b.inner.Regs,
-	}
+	return make(map[string]interface{})
+}
+
+func (b *bidRequest) LayerType() string {
+	return exchange.SupplierSRTB
 }

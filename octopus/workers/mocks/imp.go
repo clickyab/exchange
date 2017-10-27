@@ -2,6 +2,7 @@ package mocks
 
 import (
 	"clickyab.com/exchange/octopus/exchange"
+	"github.com/clickyab/services/random"
 )
 
 type Imp struct {
@@ -12,7 +13,15 @@ type Imp struct {
 	SType     exchange.ImpressionType
 	SBidFloor float64
 	SSecure   bool
+	SCid      string
 	Attribute map[string]interface{}
+}
+
+func (i Imp) CID() string {
+	if i.SCid == "" {
+		i.SCid = <-random.ID
+	}
+	return i.SCid
 }
 
 func (i Imp) ID() string {
