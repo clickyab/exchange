@@ -11,7 +11,6 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/suppliers/internal/base"
 	"clickyab.com/exchange/octopus/suppliers/internal/ortb"
-	"clickyab.com/exchange/octopus/suppliers/internal/srtb/restful"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 	"github.com/sirupsen/logrus"
@@ -80,9 +79,9 @@ func GetBidRequest(key string, r *http.Request) (exchange.BidRequest, error) {
 
 	// Make sure the profit margin is added to the request
 	switch sup.Type() {
+	// TODO not called yet
 	case "rest":
-		return restful.GetBidRequest(sup, r)
-
+		return nil, nil
 	default:
 		logrus.Panicf("Not a supported type: %s", sup.Type())
 		return nil, fmt.Errorf("not supported type: %s", sup.Type())

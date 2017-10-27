@@ -3,6 +3,7 @@ package ortb
 import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
+	"github.com/clickyab/services/random"
 )
 
 type impression struct {
@@ -10,6 +11,14 @@ type impression struct {
 	banner exchange.Banner
 	video  exchange.Video
 	native exchange.Native
+	cid    string
+}
+
+func (m *impression) CID() string {
+	if m.cid == "" {
+		m.cid = <-random.ID
+	}
+	return m.cid
 }
 
 func (m *impression) ID() string {

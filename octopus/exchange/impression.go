@@ -30,4 +30,6 @@ type Impression interface {
 	Type() ImpressionType
 	// Secure tells if the ad required a https protocol
 	Secure() bool
+	// CID unique identifier for every request
+	CID() string
 }
