@@ -18,27 +18,35 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	j := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 	err := j.Decode(o)
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte{})
 		return
 	}
-	rj, err := json.Marshal(createResponse(o))
+
+	err = o.Validate()
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	rj, err := json.Marshal(createOrtbResponse(o))
 	assert.Nil(err)
 	w.Write(rj)
 	w.WriteHeader(http.StatusOK)
 
 }
 
-func createResponse(o *openrtb.BidRequest) openrtb.BidResponse {
+func createOrtbResponse(o *openrtb.BidRequest) openrtb.BidResponse {
 	seat := make([]openrtb.SeatBid, 0)
 	for _, v := range o.Imp {
 		if v.Banner != nil {
-			seat = append(seat, createBannerBide(o, &v))
+			seat = append(seat, createOrtbBannerBide(o, &v))
 		}
 	}
 	return openrtb.BidResponse{
-
 		ID:       <-random.ID,
 		Currency: "IRR",
 		SeatBid:  seat,
@@ -59,7 +67,7 @@ var cats = []string{
 	"iab-art",
 }
 
-func createBannerBide(o *openrtb.BidRequest, m *openrtb.Impression) openrtb.SeatBid {
+func createOrtbBannerBide(o *openrtb.BidRequest, m *openrtb.Impression) openrtb.SeatBid {
 	return openrtb.SeatBid{
 		Bid: []openrtb.Bid{
 			{
