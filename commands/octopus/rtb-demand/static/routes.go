@@ -11,6 +11,7 @@ type initRouter struct {
 func (initRouter) Routes(mux framework.Mux) {
 	// Exam paths
 	mux.POST("/exam/get/ortb", ortbHandler)
+	mux.POST("/exam/get/ortb", srtbHandler)
 }
 
 func init() {
