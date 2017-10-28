@@ -5,7 +5,8 @@ import (
 	"github.com/clickyab/services/mysql"
 )
 
-type BaseSupplier interface {
+// Common is partial/common supplier
+type Common interface {
 
 	// Name of Supplier
 	Name() string
