@@ -13,6 +13,7 @@ const (
 	SupplierSRTB = "srtb"
 )
 
+// SupplierBase base supplier interface
 type SupplierBase interface {
 	// Name of Supplier
 	Name() string
@@ -37,11 +38,14 @@ type Supplier interface {
 	GetBidRequester
 	RenderBidResponser
 }
+
+// GetBidRequester interface
 type GetBidRequester interface {
 	// GetBidRequest generate bid-request from request
 	GetBidRequest(context.Context, *http.Request) BidRequest
 }
 
+// RenderBidResponser interface
 type RenderBidResponser interface {
 	// RenderBidResponse return the renderer of this supplier
 	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header

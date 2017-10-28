@@ -58,11 +58,13 @@ func (e DemandType) IsValid() bool {
 	return false
 }
 
+// Demand demanad interface
 type Demand interface {
 	DemandBase
 	Provider
 }
 
+// Provider interface for handling the demand extra features
 type Provider interface {
 	// GeBidResponse try to get bid response from demand and make it proper
 	GetBidResponse(context.Context, *http.Response, Supplier) BidResponse
@@ -76,7 +78,7 @@ type Provider interface {
 	Provide(context.Context, BidRequest, chan BidResponse)
 }
 
-// Demand is the interface to handle ad in system base on impression
+// DemandBase is the interface to handle ad in system base on impression
 type DemandBase interface {
 	// Name return the name of this demand
 	Name() string
@@ -99,8 +101,12 @@ type DemandBase interface {
 	TestMode() bool
 	// Type of demand (ortb, srtb)
 	Type() DemandType
+	// Client get http client
 	Client() *http.Client
+	// HasLimits check demand limit
 	HasLimits() bool
+	// EndPoint demand end-point
 	EndPoint() string
+	// GetTimeout get demand timeout
 	GetTimeout() time.Duration
 }

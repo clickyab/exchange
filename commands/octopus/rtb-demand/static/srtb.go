@@ -32,12 +32,7 @@ func srtbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 }
 
 func createSrtbResponse(o *srtb.BidRequest) srtb.BidResponse {
-	seat := make([]srtb.Bid, 0)
-	for _, v := range o.Imp {
-		if v.Banner != nil {
-			seat = append(seat, createSrtbBid(v))
-		}
-	}
+
 	return srtb.BidResponse{
 		ID:   <-random.ID,
 		Bids: createSrtbBid(o),

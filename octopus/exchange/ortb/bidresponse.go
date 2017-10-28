@@ -7,6 +7,7 @@ import (
 	"github.com/bsm/openrtb"
 )
 
+// NewBidResponse new bid response
 func NewBidResponse(d exchange.Demand, s exchange.Supplier, o *openrtb.BidResponse) exchange.BidResponse {
 	return &bidResponse{
 		inner:    o,

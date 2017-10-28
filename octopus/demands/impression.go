@@ -216,3 +216,17 @@ func getRawBidRequest(bq exchange.BidRequest) interface{} {
 	}
 
 }
+
+// TODO: just for lint
+func init() {
+	if false {
+		var _ = rawPub{}
+		var _ = rawLocation{}
+		var _ = rawBidRequest{}
+		getRawPub(nil)
+		getRawLocation(nil)
+		getRawImps(nil)
+		getRawBidRequest(nil)
+	}
+
+}

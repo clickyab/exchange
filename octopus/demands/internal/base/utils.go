@@ -103,3 +103,11 @@ func getCPM(name string) (m, w, d, h, i int64) {
 
 	return
 }
+
+// TODO : just for lint
+func init() {
+	if false {
+		realVal(0, 0)
+		getCPM("")
+	}
+}

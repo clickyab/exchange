@@ -31,7 +31,7 @@ func (dm *demandManager) loadDemands() {
 			// TODO: register srtb
 			//core.Register(restful.NewRestfulClient(demand, getRawBidRequest), demand.GetTimeout())
 		case exchange.DemandTypeOrtb:
-			core.Register(ortb.Demand{DemandBase: demand}, demand.GetTimeout())
+			core.Register(&ortb.Demand{DemandBase: demand}, demand.GetTimeout())
 		default:
 			logrus.Panicf("Not supported demand type : %s", demand.Type)
 		}

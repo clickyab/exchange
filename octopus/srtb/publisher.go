@@ -5,15 +5,13 @@ type Publisher struct {
 	ID     string   `json:"id"`
 	Name   string   `json:"name,omitempty"`
 	Domain string   `json:"domain,omitempty"`
-	Ref    string   `json:"ref,omitempty"`
 	Cat    []string `json:"cat"`
 }
 
 // App is the app type of publisher
 type App struct {
 	Publisher
-	Bundle   string `json:"bundle,omitempty"`
-	StoreURL string `json:"storeurl,omitempty"`
+	Bundle string `json:"bundle,omitempty"`
 }
 
 // Site is the site type publisher
