@@ -16,9 +16,10 @@ import (
 
 // Supplier is ortb version of exchange-supplier
 type Supplier struct {
-	base.BaseSupplier
+	base.Common
 }
 
+// RenderBidResponse for rendering open-rtb
 func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
 	if b.LayerType() == exchange.SupplierORTB {
 		r, err := json.Marshal(b)

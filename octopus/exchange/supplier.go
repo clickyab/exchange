@@ -7,21 +7,11 @@ import (
 )
 
 const (
-	// ORTB is type of this layer
+	// SupplierORTB is type of this layer
 	SupplierORTB = "ortb"
-	// SRTB is type of this layer
+	// SupplierSRTB is type of this layer
 	SupplierSRTB = "srtb"
 )
-
-// RenderBidResponser is
-type RenderBidResponser interface {
-	// RenderBidResponse return the renderer of this supplier
-	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header
-}
-type GetBidRequester interface {
-	// GetBidRequest generate bid-request from request
-	GetBidRequest(context.Context, *http.Request) BidRequest
-}
 
 // Supplier is the ad-network interface
 type Supplier interface {
@@ -40,7 +30,8 @@ type Supplier interface {
 	TestMode() bool
 	// Type return the supplier type currently only rest is supported
 	Type() string
-
-	RenderBidResponser
-	GetBidRequester
+	// GetBidRequest generate bid-request from request
+	GetBidRequest(context.Context, *http.Request) BidRequest
+	// RenderBidResponse return the renderer of this supplier
+	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header
 }

@@ -6,7 +6,7 @@ type BidRequest struct {
 	Imp    []Impression `json:"imp"`
 	Site   *Site        `json:"site,omitempty"`
 	App    *App         `json:"app,omitempty"`
-	Device *Device       `json:"device"`
+	Device *Device      `json:"device"`
 	User   *User        `json:"user,omitempty"`
 	Test   bool         `json:"test"`
 	TMax   int          `json:"tmax,omitempty"`

@@ -1,6 +1,6 @@
 package srtb
 
-// Inventory is the publisher type which contains app and site
+// Publisher is the publisher type which contains app and site
 type Publisher struct {
 	ID     string   `json:"id"`
 	Name   string   `json:"name,omitempty"`

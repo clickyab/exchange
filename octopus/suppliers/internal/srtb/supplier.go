@@ -15,9 +15,10 @@ import (
 
 // Supplier is srtb version of exchange-supplier
 type Supplier struct {
-	base.BaseSupplier
+	base.Common
 }
 
+// RenderBidResponse for rendering simple rtb
 func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
 	if b.LayerType() == exchange.SupplierSRTB {
 		r, err := json.Marshal(b)

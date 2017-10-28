@@ -27,6 +27,10 @@ type BidRequest struct {
 	IDevice     Device
 }
 
+func (b *BidRequest) CID() string {
+	panic("implement me")
+}
+
 func (b *BidRequest) LayerType() string {
 	return "ortb"
 }
