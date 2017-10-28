@@ -6,14 +6,14 @@ import (
 	"github.com/clickyab/services/random"
 )
 
+// Impression ortb imp
 type Impression struct {
 	inner  *openrtb.Impression
 	banner exchange.Banner
-	video  exchange.Video
-	native exchange.Native
 	cid    string
 }
 
+// CID return ortb CID
 func (m *Impression) CID() string {
 	if m.cid == "" {
 		m.cid = <-random.ID
@@ -21,14 +21,17 @@ func (m *Impression) CID() string {
 	return m.cid
 }
 
+// ID return ortb ID
 func (m *Impression) ID() string {
 	return m.inner.ID
 }
 
+// BidFloor return ortb BidFloor
 func (m *Impression) BidFloor() float64 {
 	return m.inner.BidFloor
 }
 
+// Banner return ortb Banner
 func (m *Impression) Banner() exchange.Banner {
 	if m.Type() != exchange.AdTypeBanner {
 		return nil
@@ -39,14 +42,17 @@ func (m *Impression) Banner() exchange.Banner {
 	return m.banner
 }
 
+// Video return ortb Video
 func (m *Impression) Video() exchange.Video {
 	panic("implement video")
 }
 
+// Native return ortb Native
 func (m *Impression) Native() exchange.Native {
 	panic("implement native")
 }
 
+// Attributes return ortb Attributes
 func (m *Impression) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Audio":             m.inner.Audio,
@@ -62,6 +68,7 @@ func (m *Impression) Attributes() map[string]interface{} {
 	}
 }
 
+// Type return ortb Type
 func (m *Impression) Type() exchange.ImpressionType {
 	if m.inner.Banner != nil {
 		return exchange.AdTypeBanner
@@ -75,6 +82,7 @@ func (m *Impression) Type() exchange.ImpressionType {
 	panic("not valid ad type")
 }
 
+// Secure return ortb Secure
 func (m *Impression) Secure() bool {
 	if m.inner.Secure == 1 {
 		return true

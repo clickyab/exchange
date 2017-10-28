@@ -16,6 +16,7 @@ func NewBidRequest(s exchange.Supplier, rq *openrtb.BidRequest) exchange.BidRequ
 	return &BidRequest{sup: s, inner: rq}
 }
 
+// BidRequest bid request structure
 type BidRequest struct {
 	inner *openrtb.BidRequest
 	imps  []exchange.Impression
@@ -24,6 +25,7 @@ type BidRequest struct {
 	cid   string
 }
 
+// CID clickyab track id
 func (b *BidRequest) CID() string {
 	if b.cid == "" {
 		b.cid = <-random.ID
@@ -31,10 +33,12 @@ func (b *BidRequest) CID() string {
 	return b.cid
 }
 
+// LayerType (srtb/ortb)
 func (b *BidRequest) LayerType() string {
 	return exchange.SupplierORTB
 }
 
+// UnmarshalJSON json Unmarshaller
 func (b *BidRequest) UnmarshalJSON(d []byte) error {
 	i := openrtb.BidRequest{}
 	err := json.Unmarshal(d, &i)
@@ -55,14 +59,17 @@ func (b *BidRequest) UnmarshalJSON(d []byte) error {
 	return nil
 }
 
+// MarshalJSON json Marshaller
 func (b *BidRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(b.inner)
 }
 
+// ID bidrequest id
 func (b *BidRequest) ID() string {
 	return b.inner.ID
 }
 
+// Imp bidrequest imps
 func (b *BidRequest) Imp() []exchange.Impression {
 	if b.imps == nil {
 		for _, m := range b.inner.Imp {
@@ -72,6 +79,7 @@ func (b *BidRequest) Imp() []exchange.Impression {
 	return b.imps
 }
 
+// Inventory bidrequest inventory
 func (b *BidRequest) Inventory() exchange.Inventory {
 	if b.inner.Site != nil {
 		return &Site{inner: b.inner.Site, sup: b.sup}
@@ -82,14 +90,17 @@ func (b *BidRequest) Inventory() exchange.Inventory {
 	panic("[BUG] not valid inventory")
 }
 
+// Device device entity
 func (b *BidRequest) Device() exchange.Device {
 	return &Device{inner: b.inner.Device}
 }
 
+// User user entity
 func (b *BidRequest) User() exchange.User {
 	return &User{inner: b.inner.User}
 }
 
+// Test test mode
 func (b *BidRequest) Test() bool {
 	if b.inner.Test == 1 {
 		return true
@@ -97,34 +108,42 @@ func (b *BidRequest) Test() bool {
 	return false
 }
 
+// AuctionType (second/first pricing)
 func (b *BidRequest) AuctionType() exchange.AuctionType {
 	return exchange.AuctionType(b.inner.AuctionType)
 }
 
+// TMax max timeout
 func (b *BidRequest) TMax() time.Duration {
 	return time.Duration(b.inner.TMax) * time.Millisecond
 }
 
+// WhiteList bq whitelist
 func (b *BidRequest) WhiteList() []string {
 	return b.inner.WSeat
 }
 
+// BlackList bq blacklist
 func (b *BidRequest) BlackList() []string {
 	return b.inner.BSeat
 }
 
+// AllowedLanguage bq allowed language
 func (b *BidRequest) AllowedLanguage() []string {
 	return b.inner.WLang
 }
 
+// BlockedCategories bq BlockedCategories
 func (b *BidRequest) BlockedCategories() []string {
 	return b.inner.Bcat
 }
 
+// BlockedAdvertiserDomain bq BlockedAdvertiserDomain
 func (b *BidRequest) BlockedAdvertiserDomain() []string {
 	return b.inner.BAdv
 }
 
+// Time time for bidrequest
 func (b *BidRequest) Time() time.Time {
 	if b.time.IsZero() {
 		panic("[BUG] time is not set")
@@ -132,6 +151,7 @@ func (b *BidRequest) Time() time.Time {
 	return b.time
 }
 
+// Attributes return extra attributes
 func (b *BidRequest) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Ext":     b.inner.Ext,

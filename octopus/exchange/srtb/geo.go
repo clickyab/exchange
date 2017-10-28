@@ -5,7 +5,6 @@ import (
 )
 
 type geo struct {
-	ip      string
 	latlon  exchange.LatLon
 	country exchange.Country
 	region  exchange.Region

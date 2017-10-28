@@ -6,11 +6,13 @@ import (
 	"github.com/clickyab/services/ip2location"
 )
 
+// Geo ortb structure
 type Geo struct {
 	inner *openrtb.Geo
 	ip    string
 }
 
+// LatLon return LatLon
 func (g *Geo) LatLon() exchange.LatLon {
 	t := ip2location.GetAll(g.ip)
 	return exchange.LatLon{
@@ -20,6 +22,7 @@ func (g *Geo) LatLon() exchange.LatLon {
 	}
 }
 
+// Country return Country
 func (g *Geo) Country() exchange.Country {
 	t := ip2location.GetAll(g.ip)
 	return exchange.Country{
@@ -29,6 +32,7 @@ func (g *Geo) Country() exchange.Country {
 	}
 }
 
+// Region return Region
 func (g *Geo) Region() exchange.Region {
 	t := ip2location.GetAll(g.ip)
 	return exchange.Region{
@@ -38,6 +42,7 @@ func (g *Geo) Region() exchange.Region {
 	}
 }
 
+// ISP return ISP
 func (g *Geo) ISP() exchange.ISP {
 	t := ip2location.GetAll(g.ip)
 	return exchange.ISP{
@@ -46,6 +51,7 @@ func (g *Geo) ISP() exchange.ISP {
 	}
 }
 
+// Attributes return Attributes
 func (g *Geo) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Type":          g.inner.Type,

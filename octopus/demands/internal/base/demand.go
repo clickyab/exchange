@@ -42,22 +42,27 @@ type Demand struct {
 	FTestMode           bool                  `json:"test_mode" db:"test_mode"`
 }
 
+// Client get client
 func (d *Demand) Client() *http.Client {
 	panic("implement me")
 }
 
+// HasLimits check demand limit
 func (d *Demand) HasLimits() bool {
 	panic("implement me")
 }
 
+//EndPoint demand end point
 func (d *Demand) EndPoint() string {
 	panic("implement me")
 }
 
+//Name demand name
 func (d *Demand) Name() string {
 	return d.FName
 }
 
+//Win demand win action
 func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
 	incCPM(d.Name(), b.Price())
 	safe.GoRoutine(func() {
@@ -85,14 +90,17 @@ func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
 
 }
 
+//Status demand status
 func (d *Demand) Status(context.Context, http.ResponseWriter, *http.Request) {
 	panic("implement me")
 }
 
+// Handicap demand handicap
 func (d *Demand) Handicap() int64 {
 	return d.FHandicap
 }
 
+// CallRate demand callrate
 func (d *Demand) CallRate() int {
 	if d.Rate > 1 {
 		d.Rate = 1
@@ -103,22 +111,27 @@ func (d *Demand) CallRate() int {
 	return d.Rate
 }
 
+// WhiteListCountries  demand whiteListCountries
 func (d *Demand) WhiteListCountries() []string {
 	return d.FWhiteListCountries
 }
 
+// ExcludedSuppliers demand excludedSuppliers
 func (d *Demand) ExcludedSuppliers() []string {
 	return d.FExcludedSuppliers
 }
 
+// TestMode test mode
 func (d *Demand) TestMode() bool {
 	return d.FTestMode
 }
 
+// Type demand type (srtb/ortb)
 func (d *Demand) Type() exchange.DemandType {
 	return d.FType
 }
 
+// hasLimits demand check limit
 func (d *Demand) hasLimits() bool {
 	if d.MinuteLimit == 0 &&
 		d.HourLimit == 0 &&
@@ -164,4 +177,12 @@ func (m *Manager) ActiveDemands() []exchange.DemandBase {
 	assert.Nil(err)
 
 	return res
+}
+
+// TODO : just for lint
+func init() {
+	if false {
+		d := &Demand{}
+		d.hasLimits()
+	}
 }

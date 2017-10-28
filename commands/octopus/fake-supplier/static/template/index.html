@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Form Testing</title>
+    <link rel="stylesheet" href="fake/css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="fake/css/style.css" type="text/css">
+</head>
+<body>
+<div class="container">
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><a class="nav-link active" data-toggle="tab" role="tabpanel" href="#RTB">RTB</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" role="tabpanel" href="#rest">Rest</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="RTB" class="tab-pane active" role="tabpanel">
+            <h2>RTB</h2>
+            <form class="RTB-form" method="post" action="/rtb">
+                <input class="randomField" type="hidden" name="request[id]" value="" >
+                <div class="banner-input-wrapper RTB-banner-input-wrapper">
+                    <div class="RTB-banner-input banner-input">
+                        <input class="randomField" type="hidden" value="" data-impId="id">
+                        <div class="form-group">
+                            <label for="RTB-BannerSize">imp </label>
+                            <select class="form-control BannerSize" id="RTB-BannerSize" >
+                                <option>120x600</option>
+                                <option>160x600</option>
+                                <option>300x250</option>
+                                <option>336x280</option>
+                                <option>468x60</option>
+                                <option>728x90</option>
+                                <option>320x50</option>
+                                <option>800x440</option>
+                                <option>300x600</option>
+                                <option>970x90</option>
+                                <option>970x250</option>
+                                <option>250x250</option>
+                                <option>300x1050</option>
+                                <option>320x480</option>
+                                <option>480x320</option>
+                                <option>128x128</option>
+                            </select>
+                            <div class="col-md-6"></div>
+                            <input name="request[imp[banner][w]]" class="imp-banner" type="hidden" data-impBannerW="w">
+                            <input name="request[imp[banner][h]]" class="imp-banner" type="hidden" data-impBannerH="h">
+                            <input name="request[imp[banner][id]]" class="randomField" type="hidden" data-impBannerId="id" >
+
+                            <label for="bidfloor">bidfloor </label>
+                            <input name="request[imp[bidfloor]]" type="text" id="bidfloor" class="form-control" data-bidfloor="bidfloor">
+                            <input name="request[imp[bidfloorcur]]" type="hidden" value="IRR" data-bidfloorcur="bidfloorcur">
+
+                            <div class="form-group secure-radiobtn">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input name="request[imp[secure]]" class="form-check-input" type="checkbox" value="1" checked data-secure="secure">
+                                        Secure Connection
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn mb-4">+ Add Impression</button>
+                </div>
+
+                <div class="form-group">
+                    <input name="request[site[id]]" class="randomField" type="hidden" >
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="siteName">site name </label>
+                            <input name="request[site[name]]" type="text" id="siteName" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <input name="request[site[publisher][id]]" type="hidden" class="randomField">
+                            <label for="PublisherName">Publisher name </label>
+                            <input name="request[site[publisher][name]]" type="text" class="form-control" id="PublisherName">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="PublisherDomain">Publisher domain </label>
+                            <input name="request[site[publisher][domain]]" type="text" class="form-control" id="PublisherDomain">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sitePage">Site Page </label>
+                            <input name="request[site[page]]" type="text" class="form-control" id="sitePage">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="siteRef">Site ref </label>
+                            <input name="request[site[ref]]" type="text" class="form-control" id="siteRef">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="device">device IP </label>
+                            <input name="request[device[ip]]" type="text" id="device" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="useragent">User agent </label>
+                            <input name="request[device[useragent]]" type="text" id="useragent" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <input name="request[user[id]]" type="hidden" class="randomField">
+
+                <div class="form-group">
+                    <div class="form-group secure-radiobtn">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input name="request[test]" class="form-check-input" type="radio" value="1" checked>
+                                test
+                            </label>
+                            <label class="form-check-label">
+                                <input name="request[test]" class="form-check-input" type="radio" value="0">
+                                not test
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="timeOut">Max Timeout </label>
+                            <input name="request[tmax]" type="text" id="timeOut" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Wlang">Wlang </label>
+                        <input name="request[wlang[]]" type="text" id="wlang" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="bcat">bcat </label>
+                            <input name="request[bcat[]]" type="text" id="bcat" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="key">key </label>
+                            <input name="meta[key]" type="text" id="key" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+        </div>
+        <div id="rest" class="tab-pane" role="tabpanel">
+            <h3>REST</h3>
+            <form class="REST-form" method="post" action="/srtb">
+                <input class="randomField" type="hidden" name="id" value="" >
+                <div class="banner-input-wrapper REST-banner-input-wrapper">
+                    <div class="REST-banner-input banner-input">
+                        <input class="randomField" type="hidden" value="" data-impId="id">
+                        <div class="form-group">
+                            <label for="REST-BannerSize">imp </label>
+                            <select class="form-control BannerSize" id="REST-BannerSize" >
+                                <option>120x600</option>
+                                <option>160x600</option>
+                                <option>300x250</option>
+                                <option>336x280</option>
+                                <option>468x60</option>
+                                <option>728x90</option>
+                                <option>320x50</option>
+                                <option>800x440</option>
+                                <option>300x600</option>
+                                <option>970x90</option>
+                                <option>970x250</option>
+                                <option>250x250</option>
+                                <option>300x1050</option>
+                                <option>320x480</option>
+                                <option>480x320</option>
+                                <option>128x128</option>
+                            </select>
+                            <div class="col-md-6"></div>
+                            <input name="imp[banner][w]" class="imp-banner" type="hidden" data-impBannerW="w">
+                            <input name="imp[banner][h]" class="imp-banner" type="hidden" data-impBannerH="h">
+                            <input name="imp[banner][id]" class="randomField" type="hidden" data-impBannerId="id" >
+
+                            <label for="bidfloor-REST">bidfloor </label>
+                            <input name="imp[bidfloor]" type="text" id="bidfloor-REST" class="form-control" data-bidfloor="bidfloor">
+                            <input name="imp[bidfloorcur]" type="hidden" value="IRR" data-bidfloorcur="bidfloorcur">
+
+                            <div class="form-group secure-radiobtn">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input name="imp[secure]" class="form-check-input" type="checkbox" value="1" checked data-secure="secure">
+                                        Secure Connection
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn mb-4">+ Add Impression</button>
+                </div>
+
+                <div class="form-group">
+                    <input name="site[id]" class="randomField" type="hidden" >
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="siteName-REST">site name </label>
+                            <input name="site[name]" type="text" id="siteName-REST" class="form-control">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="PublisherDomain">Publisher domain </label>
+                            <input name="site[domain]" type="text" class="form-control" id="PublisherDomain-REST">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="siteRef">Site ref </label>
+                        <input name="site[ref]" type="text" class="form-control" id="siteRef-REST">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="site-cat-REST"> Site cat </label>
+                        <input name="site[cat][]" type="text" class="form-control" id="site-cat-REST">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="device-ua-REST">device-ua </label>
+                            <input name="device[ua]" type="text" id="device-ua-REST" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="device">device IP </label>
+                            <input name="device[ip]" type="text" id="device-REST" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="device-carrier-REST">device carrier </label>
+                            <input name="device[carrier]" type="text" id="device-carrier-REST" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="device-lang-REST">device lang </label>
+                            <input name="device[lang]" type="text" id="device-lang-REST" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="device-lac-REST">device lac </label>
+                            <input name="device[lac]" type="text" id="device-lac-REST" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="device-mnc-REST">device mnc </label>
+                            <input name="device[mnc]" type="text" id="device-mnc-REST" class="form-control">
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="device-mcc-REST">device mcc </label>
+                        <input name="device[mcc]" type="text" id="device-mcc-REST" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="device-mcc-REST">device cid </label>
+                        <input name="device[cid]" type="text" id="device-cid-REST" class="form-control">
+                    </div>
+                </div>
+
+                <input name="user[id]" type="hidden" class="randomField">
+
+                <div class="form-group">
+                    <div class="form-group secure-radiobtn">
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input name="test" class="form-check-input" type="radio" value="1" checked>
+                                test
+                            </label>
+                            <label class="form-check-label">
+                                <input name="test" class="form-check-input" type="radio" value="0">
+                                not test
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="timeOut-REST">Max Timeout </label>
+                            <input name="tmax" type="number" id="timeOut-REST" class="form-control">
+                        </div>
+                    </div>
+
+                    <input name="wlang[]" type="hidden" class="randomField" value="IR-fa">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="bcat-REST">bcat </label>
+                            <input name="bcat[]" type="text" id="bcat-REST" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="badv-REST">"" badv </label>
+                            <input name="badv[]" type="text" id="badv-REST" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="bseat-REST">bseat </label>
+                            <input name="bseat[]" type="text" id="bseat-REST" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Submit</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+<script src="fake/js/jquery-3.2.1.js"></script>
+<script src="fake/js/popper-1.11.1.js"></script>
+<script src="fake/js/bootstrap.js"></script>
+<script src="fake/js/jquery-serialize-object.js"></script>
+<script src="fake/js/main.js"></script>
+</body>
+</html>

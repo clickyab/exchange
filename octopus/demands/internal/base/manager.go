@@ -30,6 +30,7 @@ func init() {
 	mysql.Register(&Manager{})
 }
 
+// Provide provide ad for specified bid request
 func Provide(ctx context.Context, dem exchange.Demand, bq exchange.BidRequest, ch chan exchange.BidResponse) {
 	defer close(ch)
 	if !dem.HasLimits() {

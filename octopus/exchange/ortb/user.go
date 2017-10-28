@@ -2,14 +2,17 @@ package ortb
 
 import "github.com/bsm/openrtb"
 
+// User ortb user
 type User struct {
 	inner *openrtb.User
 }
 
+// ID return ortb ID
 func (u *User) ID() string {
 	return u.inner.ID
 }
 
+// Attributes return ortb Attributes
 func (u *User) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"BuyerID":    u.inner.BuyerID,

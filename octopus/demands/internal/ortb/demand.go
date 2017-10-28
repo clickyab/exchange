@@ -18,14 +18,17 @@ import (
 	"github.com/clickyab/services/xlog"
 )
 
+// Demand ortb demand structure
 type Demand struct {
 	exchange.DemandBase
 }
 
+// Provide method for demand
 func (d *Demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan exchange.BidResponse) {
 	base.Provide(ctx, d, bq, ch)
 }
 
+// GetBidResponse try to get bidresponse from response
 func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchange.Supplier) exchange.BidResponse {
 	l := &bytes.Buffer{}
 	k := &bytes.Buffer{}
@@ -37,6 +40,7 @@ func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchang
 	defer r.Body.Close()
 
 	p, err := l.ReadByte()
+	assert.Nil(err)
 	xlog.Get(ctx).WithField("key", d.Name()).WithField("result", string(p)).Debug("Call done")
 	de := json.NewDecoder(k)
 
@@ -46,6 +50,7 @@ func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchang
 	return res
 }
 
+// RenderBidRequest cast bid request to ortb
 func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
 	if bq.LayerType() == "ortb" {
 		j := json.NewEncoder(w)
