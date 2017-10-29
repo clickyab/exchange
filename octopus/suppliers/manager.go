@@ -122,7 +122,7 @@ func (m *Manager) GetSuppliers() map[string]exchange.Supplier {
 	for i := range res {
 		if res[i].Type() == exchange.SupplierORTB {
 			ret[res[i].Key] = &ortb.Supplier{
-				res[i],
+				SupplierBase: res[i],
 			}
 		}
 		panic("[BUG] not a valid supplier type")

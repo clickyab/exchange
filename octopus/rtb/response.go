@@ -55,10 +55,6 @@ func (b bid) Attributes() map[string]interface{} {
 	return b.bid.Attributes()
 }
 
-func (b bid) Win() {
-	b.bid.Win()
-}
-
 type rsp struct {
 	id         string
 	bids       []exchange.Bid

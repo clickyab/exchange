@@ -2,7 +2,10 @@ package mocks
 
 import (
 	"context"
+	"io"
 	"net/http"
+
+	"time"
 
 	"clickyab.com/exchange/octopus/exchange"
 )
@@ -15,15 +18,43 @@ type Demands struct {
 	IExcludeSupplier []string
 }
 
+func (d Demands) Win(context.Context, exchange.Bid) {
+	panic("implement me")
+}
+
+func (d Demands) Type() exchange.DemandType {
+	panic("implement me")
+}
+
+func (d Demands) Client() *http.Client {
+	panic("implement me")
+}
+
+func (d Demands) HasLimits() bool {
+	panic("implement me")
+}
+
+func (d Demands) EndPoint() string {
+	panic("implement me")
+}
+
+func (d Demands) GetTimeout() time.Duration {
+	panic("implement me")
+}
+
+func (d Demands) GetBidResponse(context.Context, *http.Response, exchange.Supplier) exchange.BidResponse {
+	panic("implement me")
+}
+
+func (d Demands) RenderBidRequest(context.Context, io.Writer, exchange.BidRequest) http.Header {
+	panic("implement me")
+}
+
 func (d Demands) Name() string {
 	return d.IName
 }
 
 func (Demands) Provide(context.Context, exchange.BidRequest, chan exchange.BidResponse) {
-	panic("implement me")
-}
-
-func (Demands) Win(context.Context, string, int64) {
 	panic("implement me")
 }
 

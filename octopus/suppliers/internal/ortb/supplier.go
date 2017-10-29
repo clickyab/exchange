@@ -9,14 +9,13 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/ortb"
-	"clickyab.com/exchange/octopus/suppliers/internal/base"
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 )
 
 // Supplier is ortb version of exchange-supplier
 type Supplier struct {
-	base.Common
+	exchange.SupplierBase
 }
 
 // RenderBidResponse for rendering open-rtb

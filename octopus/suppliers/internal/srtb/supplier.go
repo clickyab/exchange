@@ -9,13 +9,12 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/srtb"
 	srtb2 "clickyab.com/exchange/octopus/srtb"
-	"clickyab.com/exchange/octopus/suppliers/internal/base"
 	"github.com/clickyab/services/assert"
 )
 
 // Supplier is srtb version of exchange-supplier
 type Supplier struct {
-	base.Common
+	exchange.SupplierBase
 }
 
 // RenderBidResponse for rendering simple rtb

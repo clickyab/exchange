@@ -6,7 +6,7 @@ import (
 	"github.com/clickyab/services/random"
 )
 
-type impression struct {
+type Impression struct {
 	inner  *openrtb.Impression
 	banner exchange.Banner
 	video  exchange.Video
@@ -14,22 +14,22 @@ type impression struct {
 	cid    string
 }
 
-func (m *impression) CID() string {
+func (m *Impression) CID() string {
 	if m.cid == "" {
 		m.cid = <-random.ID
 	}
 	return m.cid
 }
 
-func (m *impression) ID() string {
+func (m *Impression) ID() string {
 	return m.inner.ID
 }
 
-func (m *impression) BidFloor() float64 {
+func (m *Impression) BidFloor() float64 {
 	return m.inner.BidFloor
 }
 
-func (m *impression) Banner() exchange.Banner {
+func (m *Impression) Banner() exchange.Banner {
 	if m.Type() != exchange.AdTypeBanner {
 		return nil
 	}
@@ -39,15 +39,15 @@ func (m *impression) Banner() exchange.Banner {
 	return m.banner
 }
 
-func (m *impression) Video() exchange.Video {
+func (m *Impression) Video() exchange.Video {
 	panic("implement video")
 }
 
-func (m *impression) Native() exchange.Native {
+func (m *Impression) Native() exchange.Native {
 	panic("implement native")
 }
 
-func (m *impression) Attributes() map[string]interface{} {
+func (m *Impression) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Audio":             m.inner.Audio,
 		"BidFloorCurrency":  m.inner.BidFloorCurrency,
@@ -62,7 +62,7 @@ func (m *impression) Attributes() map[string]interface{} {
 	}
 }
 
-func (m *impression) Type() exchange.ImpressionType {
+func (m *Impression) Type() exchange.ImpressionType {
 	if m.inner.Banner != nil {
 		return exchange.AdTypeBanner
 	}
@@ -75,7 +75,7 @@ func (m *impression) Type() exchange.ImpressionType {
 	panic("not valid ad type")
 }
 
-func (m *impression) Secure() bool {
+func (m *Impression) Secure() bool {
 	if m.inner.Secure == 1 {
 		return true
 	}

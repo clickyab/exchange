@@ -181,6 +181,30 @@ func (mr *MockDemandMockRecorder) CallRate() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CallRate", reflect.TypeOf((*MockDemand)(nil).CallRate))
 }
 
+// Client mocks base method
+func (m *MockDemand) Client() *http.Client {
+	ret := m.ctrl.Call(m, "Client")
+	ret0, _ := ret[0].(*http.Client)
+	return ret0
+}
+
+// Client indicates an expected call of Client
+func (mr *MockDemandMockRecorder) Client() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Client", reflect.TypeOf((*MockDemand)(nil).Client))
+}
+
+// EndPoint mocks base method
+func (m *MockDemand) EndPoint() string {
+	ret := m.ctrl.Call(m, "EndPoint")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// EndPoint indicates an expected call of EndPoint
+func (mr *MockDemandMockRecorder) EndPoint() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EndPoint", reflect.TypeOf((*MockDemand)(nil).EndPoint))
+}
+
 // ExcludedSuppliers mocks base method
 func (m *MockDemand) ExcludedSuppliers() []string {
 	ret := m.ctrl.Call(m, "ExcludedSuppliers")
@@ -193,6 +217,30 @@ func (mr *MockDemandMockRecorder) ExcludedSuppliers() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ExcludedSuppliers", reflect.TypeOf((*MockDemand)(nil).ExcludedSuppliers))
 }
 
+// GetBidResponse mocks base method
+func (m *MockDemand) GetBidResponse(arg0 context.Context, arg1 *http.Response, arg2 exchange.Supplier) exchange.BidResponse {
+	ret := m.ctrl.Call(m, "GetBidResponse", arg0, arg1, arg2)
+	ret0, _ := ret[0].(exchange.BidResponse)
+	return ret0
+}
+
+// GetBidResponse indicates an expected call of GetBidResponse
+func (mr *MockDemandMockRecorder) GetBidResponse(arg0, arg1, arg2 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBidResponse", reflect.TypeOf((*MockDemand)(nil).GetBidResponse), arg0, arg1, arg2)
+}
+
+// GetTimeout mocks base method
+func (m *MockDemand) GetTimeout() time.Duration {
+	ret := m.ctrl.Call(m, "GetTimeout")
+	ret0, _ := ret[0].(time.Duration)
+	return ret0
+}
+
+// GetTimeout indicates an expected call of GetTimeout
+func (mr *MockDemandMockRecorder) GetTimeout() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTimeout", reflect.TypeOf((*MockDemand)(nil).GetTimeout))
+}
+
 // Handicap mocks base method
 func (m *MockDemand) Handicap() int64 {
 	ret := m.ctrl.Call(m, "Handicap")
@@ -203,6 +251,18 @@ func (m *MockDemand) Handicap() int64 {
 // Handicap indicates an expected call of Handicap
 func (mr *MockDemandMockRecorder) Handicap() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Handicap", reflect.TypeOf((*MockDemand)(nil).Handicap))
+}
+
+// HasLimits mocks base method
+func (m *MockDemand) HasLimits() bool {
+	ret := m.ctrl.Call(m, "HasLimits")
+	ret0, _ := ret[0].(bool)
+	return ret0
+}
+
+// HasLimits indicates an expected call of HasLimits
+func (mr *MockDemandMockRecorder) HasLimits() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "HasLimits", reflect.TypeOf((*MockDemand)(nil).HasLimits))
 }
 
 // Name mocks base method
@@ -227,6 +287,18 @@ func (mr *MockDemandMockRecorder) Provide(arg0, arg1, arg2 interface{}) *gomock.
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Provide", reflect.TypeOf((*MockDemand)(nil).Provide), arg0, arg1, arg2)
 }
 
+// RenderBidRequest mocks base method
+func (m *MockDemand) RenderBidRequest(arg0 context.Context, arg1 io.Writer, arg2 exchange.BidRequest) http.Header {
+	ret := m.ctrl.Call(m, "RenderBidRequest", arg0, arg1, arg2)
+	ret0, _ := ret[0].(http.Header)
+	return ret0
+}
+
+// RenderBidRequest indicates an expected call of RenderBidRequest
+func (mr *MockDemandMockRecorder) RenderBidRequest(arg0, arg1, arg2 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RenderBidRequest", reflect.TypeOf((*MockDemand)(nil).RenderBidRequest), arg0, arg1, arg2)
+}
+
 // Status mocks base method
 func (m *MockDemand) Status(arg0 context.Context, arg1 http.ResponseWriter, arg2 *http.Request) {
 	m.ctrl.Call(m, "Status", arg0, arg1, arg2)
@@ -249,6 +321,18 @@ func (mr *MockDemandMockRecorder) TestMode() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TestMode", reflect.TypeOf((*MockDemand)(nil).TestMode))
 }
 
+// Type mocks base method
+func (m *MockDemand) Type() exchange.DemandType {
+	ret := m.ctrl.Call(m, "Type")
+	ret0, _ := ret[0].(exchange.DemandType)
+	return ret0
+}
+
+// Type indicates an expected call of Type
+func (mr *MockDemandMockRecorder) Type() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Type", reflect.TypeOf((*MockDemand)(nil).Type))
+}
+
 // WhiteListCountries mocks base method
 func (m *MockDemand) WhiteListCountries() []string {
 	ret := m.ctrl.Call(m, "WhiteListCountries")
@@ -262,13 +346,13 @@ func (mr *MockDemandMockRecorder) WhiteListCountries() *gomock.Call {
 }
 
 // Win mocks base method
-func (m *MockDemand) Win(arg0 context.Context, arg1 string, arg2 int64) {
-	m.ctrl.Call(m, "Win", arg0, arg1, arg2)
+func (m *MockDemand) Win(arg0 context.Context, arg1 exchange.Bid) {
+	m.ctrl.Call(m, "Win", arg0, arg1)
 }
 
 // Win indicates an expected call of Win
-func (mr *MockDemandMockRecorder) Win(arg0, arg1, arg2 interface{}) *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Win", reflect.TypeOf((*MockDemand)(nil).Win), arg0, arg1, arg2)
+func (mr *MockDemandMockRecorder) Win(arg0, arg1 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Win", reflect.TypeOf((*MockDemand)(nil).Win), arg0, arg1)
 }
 
 // MockPublisher is a mock of Publisher interface
@@ -816,16 +900,6 @@ func (m *MockBid) Price() int64 {
 // Price indicates an expected call of Price
 func (mr *MockBidMockRecorder) Price() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Price", reflect.TypeOf((*MockBid)(nil).Price))
-}
-
-// Win mocks base method
-func (m *MockBid) Win() {
-	m.ctrl.Call(m, "Win")
-}
-
-// Win indicates an expected call of Win
-func (mr *MockBidMockRecorder) Win() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Win", reflect.TypeOf((*MockBid)(nil).Win))
 }
 
 // WinURL mocks base method
