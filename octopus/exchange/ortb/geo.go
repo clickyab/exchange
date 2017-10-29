@@ -6,12 +6,12 @@ import (
 	"github.com/clickyab/services/ip2location"
 )
 
-type geo struct {
+type Geo struct {
 	inner *openrtb.Geo
 	ip    string
 }
 
-func (g *geo) LatLon() exchange.LatLon {
+func (g *Geo) LatLon() exchange.LatLon {
 	t := ip2location.GetAll(g.ip)
 	return exchange.LatLon{
 		Valid: true,
@@ -20,7 +20,7 @@ func (g *geo) LatLon() exchange.LatLon {
 	}
 }
 
-func (g *geo) Country() exchange.Country {
+func (g *Geo) Country() exchange.Country {
 	t := ip2location.GetAll(g.ip)
 	return exchange.Country{
 		Valid: t.CountryLong != "",
@@ -29,7 +29,7 @@ func (g *geo) Country() exchange.Country {
 	}
 }
 
-func (g *geo) Region() exchange.Region {
+func (g *Geo) Region() exchange.Region {
 	t := ip2location.GetAll(g.ip)
 	return exchange.Region{
 		Valid: t.Region != "",
@@ -38,7 +38,7 @@ func (g *geo) Region() exchange.Region {
 	}
 }
 
-func (g *geo) ISP() exchange.ISP {
+func (g *Geo) ISP() exchange.ISP {
 	t := ip2location.GetAll(g.ip)
 	return exchange.ISP{
 		Name:  t.Isp,
@@ -46,7 +46,7 @@ func (g *geo) ISP() exchange.ISP {
 	}
 }
 
-func (g *geo) Attributes() map[string]interface{} {
+func (g *Geo) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Type":          g.inner.Type,
 		"Accuracy":      g.inner.Accuracy,

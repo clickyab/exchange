@@ -56,8 +56,6 @@ type Bid interface {
 	Categories() []string
 	// Attributes returns the attribute about ad and bid
 	Attributes() map[string]interface{}
-	// Win tells demand the ad won
-	Win()
 	// Demand return demand
 	Demand() Demand
 }

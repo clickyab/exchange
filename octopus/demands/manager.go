@@ -7,27 +7,31 @@ import (
 	"syscall"
 
 	"clickyab.com/exchange/octopus/core"
-	"clickyab.com/exchange/octopus/demands/internal/models"
-	"clickyab.com/exchange/octopus/demands/internal/restful"
 	"github.com/clickyab/services/mysql"
 
+	"clickyab.com/exchange/octopus/demands/internal/base"
+	"clickyab.com/exchange/octopus/demands/internal/ortb"
+	"clickyab.com/exchange/octopus/exchange"
 	"github.com/sirupsen/logrus"
 )
 
 type demandManager struct {
-	activeDemands []models.Demand
+	activeDemands []exchange.DemandBase
 	lock          *sync.RWMutex
 }
 
 func (dm *demandManager) loadDemands() {
 	dm.lock.Lock()
 	defer dm.lock.Unlock()
-	dm.activeDemands = models.NewManager().ActiveDemands()
+	dm.activeDemands = base.NewManager().ActiveDemands()
 	core.ResetProviders()
 	for _, demand := range dm.activeDemands {
-		switch demand.Type {
-		case models.DemandTypeRest:
-			core.Register(restful.NewRestfulClient(demand, getRawBidRequest), demand.GetTimeout())
+		switch demand.Type() {
+		case exchange.DemandTypeSrtb:
+			// TODO: register srtb
+			//core.Register(restful.NewRestfulClient(demand, getRawBidRequest), demand.GetTimeout())
+		case exchange.DemandTypeOrtb:
+			core.Register(ortb.Demand{DemandBase: demand}, demand.GetTimeout())
 		default:
 			logrus.Panicf("Not supported demand type : %s", demand.Type)
 		}

@@ -9,79 +9,79 @@ import (
 	"github.com/bsm/openrtb"
 )
 
-type device struct {
+type Device struct {
 	inner *openrtb.Device
 	geo   exchange.Geo
 }
 
-func (d *device) UserAgent() string {
+func (d *Device) UserAgent() string {
 	return d.inner.UA
 }
 
-func (d *device) Geo() exchange.Geo {
+func (d *Device) Geo() exchange.Geo {
 	if d.geo == nil {
-		d.geo = &geo{inner: d.inner.Geo, ip: d.inner.IP}
+		d.geo = &Geo{inner: d.inner.Geo, ip: d.inner.IP}
 	}
 	return d.geo
 }
 
-func (d *device) IP() string {
+func (d *Device) IP() string {
 	return d.inner.IP
 }
 
-func (d *device) DeviceType() exchange.DeviceType {
+func (d *Device) DeviceType() exchange.DeviceType {
 	return exchange.DeviceType(d.inner.DeviceType)
 }
 
-func (d *device) Make() string {
+func (d *Device) Make() string {
 	return d.inner.Make
 }
 
-func (d *device) Model() string {
+func (d *Device) Model() string {
 	return d.inner.Model
 }
 
-func (d *device) OS() string {
+func (d *Device) OS() string {
 	return d.inner.OS
 }
 
-func (d *device) Language() string {
+func (d *Device) Language() string {
 	return d.inner.Language
 }
 
-func (d *device) Carrier() string {
+func (d *Device) Carrier() string {
 	return d.inner.Carrier
 }
 
-func (d *device) MCC() string {
+func (d *Device) MCC() string {
 	if x := strings.Split(d.inner.MCCMNC, "-"); len(x) == 2 {
 		return x[0]
 	}
 	return ""
 }
 
-func (d *device) MNC() string {
+func (d *Device) MNC() string {
 	if x := strings.Split(d.inner.MCCMNC, "-"); len(x) == 2 {
 		return x[1]
 	}
 	return ""
 }
 
-func (d *device) ConnType() exchange.ConnectionType {
+func (d *Device) ConnType() exchange.ConnectionType {
 	return exchange.ConnectionType(d.inner.ConnType)
 }
 
-func (d *device) LAC() string {
+func (d *Device) LAC() string {
 	return reflect.StructTag(d.inner.Ext).Get("lac")
 
 }
 
-func (d *device) CID() string {
+func (d *Device) CID() string {
 	return reflect.StructTag(d.inner.Ext).Get("cid")
 
 }
 
-func (d *device) Attributes() map[string]interface{} {
+func (d *Device) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"IPv6":       d.inner.IPv6,
 		"DeviceType": d.inner.DeviceType,

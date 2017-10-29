@@ -5,39 +5,39 @@ import (
 	"github.com/bsm/openrtb"
 )
 
-type app struct {
+type App struct {
 	inner *openrtb.App
-	sup   *exchange.Supplier
+	sup   exchange.Supplier
 	pub   exchange.Publisher
 }
 
-func (n *app) FloorCPM() int64 {
+func (n *App) FloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &Publisher{inner: n.inner.Publisher}
 	}
-	return (*n.sup).FloorCPM()
+	return n.sup.FloorCPM()
 }
 
-func (n *app) SoftFloorCPM() int64 {
+func (n *App) SoftFloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &Publisher{inner: n.inner.Publisher}
 	}
-	return (*n.sup).SoftFloorCPM()
+	return n.sup.SoftFloorCPM()
 }
 
-func (n *app) ID() string {
+func (n *App) ID() string {
 	return n.inner.ID
 }
 
-func (n *app) Name() string {
+func (n *App) Name() string {
 	return n.inner.Name
 }
 
-func (n *app) Domain() string {
+func (n *App) Domain() string {
 	return n.inner.Domain
 }
 
-func (n *app) Cat() []exchange.Category {
+func (n *App) Cat() []exchange.Category {
 	r := make([]exchange.Category, 0)
 	for _, v := range n.inner.Cat {
 		r = append(r, exchange.Category(v))
@@ -45,14 +45,14 @@ func (n *app) Cat() []exchange.Category {
 	return r
 }
 
-func (n *app) Publisher() exchange.Publisher {
+func (n *App) Publisher() exchange.Publisher {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &Publisher{inner: n.inner.Publisher}
 	}
 	return n.pub
 }
 
-func (n *app) Attributes() map[string]interface{} {
+func (n *App) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"SectionCat":    n.inner.SectionCat,
 		"PageCat":       n.inner.PageCat,
@@ -66,47 +66,47 @@ func (n *app) Attributes() map[string]interface{} {
 	}
 }
 
-func (n *app) Supplier() exchange.Supplier {
-	return *n.sup
+func (n *App) Supplier() exchange.Supplier {
+	return n.sup
 }
 
-func (n *app) Bundle() string {
+func (n *App) Bundle() string {
 	return n.inner.Bundle
 }
 
-type site struct {
+type Site struct {
 	inner *openrtb.Site
-	sup   *exchange.Supplier
+	sup   exchange.Supplier
 	pub   exchange.Publisher
 }
 
-func (n *site) FloorCPM() int64 {
+func (n *Site) FloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &Publisher{inner: n.inner.Publisher}
 	}
-	return (*n.sup).FloorCPM()
+	return n.sup.FloorCPM()
 }
 
-func (n *site) SoftFloorCPM() int64 {
+func (n *Site) SoftFloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &Publisher{inner: n.inner.Publisher}
 	}
-	return (*n.sup).SoftFloorCPM()
+	return n.sup.SoftFloorCPM()
 }
 
-func (n *site) ID() string {
+func (n *Site) ID() string {
 	return n.inner.ID
 }
 
-func (n *site) Name() string {
+func (n *Site) Name() string {
 	return n.inner.Name
 }
 
-func (n *site) Domain() string {
+func (n *Site) Domain() string {
 	return n.inner.Domain
 }
 
-func (n *site) Cat() []exchange.Category {
+func (n *Site) Cat() []exchange.Category {
 	r := make([]exchange.Category, 0)
 	for _, v := range n.inner.Cat {
 		r = append(r, exchange.Category(v))
@@ -114,14 +114,14 @@ func (n *site) Cat() []exchange.Category {
 	return r
 }
 
-func (n *site) Publisher() exchange.Publisher {
+func (n *Site) Publisher() exchange.Publisher {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &Publisher{inner: n.inner.Publisher}
 	}
 	return n.pub
 }
 
-func (n *site) Attributes() map[string]interface{} {
+func (n *Site) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Cat":           n.inner.Cat,
 		"SectionCat":    n.inner.SectionCat,
@@ -135,14 +135,14 @@ func (n *site) Attributes() map[string]interface{} {
 	}
 }
 
-func (n *site) Supplier() exchange.Supplier {
-	return *n.sup
+func (n *Site) Supplier() exchange.Supplier {
+	return n.sup
 }
 
-func (n *site) Page() string {
+func (n *Site) Page() string {
 	return n.inner.Page
 }
 
-func (n *site) Ref() string {
+func (n *Site) Ref() string {
 	return n.inner.Ref
 }
