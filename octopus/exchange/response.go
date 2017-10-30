@@ -37,6 +37,7 @@ type BidResponse interface {
 	Attributes() map[string]interface{}
 	// Supplier return supplier
 	Supplier() Supplier
+	LayerType()string
 }
 
 // Bid is designed the way it returns the data about the first bid of the seat bid

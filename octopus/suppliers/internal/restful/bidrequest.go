@@ -1,55 +1,50 @@
-package mocks
+package restful
 
 import (
-	"net"
 	"time"
 
 	"clickyab.com/exchange/octopus/exchange"
+	"clickyab.com/exchange/octopus/srtb"
+	"github.com/clickyab/services/random"
 )
 
 type BidRequest struct {
-	IID          string
-	ICID         string
-	IIP          net.IP
-	ISchema      string
-	ITest        bool
-	IAuctionType exchange.AuctionType
-	IUserTrackID string
-	IPageTrackID string
-	IUserAgent   string
-	IInventory   Inventory
+	inner *srtb.BidRequest
+	clid  string    `json:"-"`
+	time  time.Time `json:"-"`
+}
 
-	IAttributes map[string]interface{}
-	IImps       []Imp
-	ICategory   []exchange.Category
-	IPlatform   exchange.DeviceType
-	ITime       time.Time
-	ITMax       time.Duration
-	IDevice     Device
+func (b *BidRequest) Layer() string {
+	return "srtb"
 }
 
 func (b *BidRequest) ID() string {
-	return b.IID
+	return b.inner.ID
 }
 
 func (b *BidRequest) Imp() []exchange.Impression {
 	var res = make([]exchange.Impression, 0)
-	for _, val := range b.IImps {
-		res = append(res, val)
+	for i := range b.inner.Imp {
+		res = append(res, Imp{
+			inner: &b.inner.Imp[i],
+		})
 	}
 	return res
 }
 
 func (b *BidRequest) Inventory() exchange.Inventory {
-	return b.IInventory
+	if b.ISite != nil {
+		return b.ISite
+	}
+	return b.IApp
 }
 
 func (b *BidRequest) Device() exchange.Device {
-	return &b.IDevice
+	return b.IDevice
 }
 
 func (b *BidRequest) User() exchange.User {
-	panic("implement me")
+	return b.IUser
 }
 
 func (b *BidRequest) Test() bool {
@@ -57,7 +52,7 @@ func (b *BidRequest) Test() bool {
 }
 
 func (b *BidRequest) AuctionType() exchange.AuctionType {
-	return b.IAuctionType
+	return exchange.AuctionTypeSecondPrice
 }
 
 func (b *BidRequest) TMax() time.Duration {
@@ -73,25 +68,28 @@ func (b *BidRequest) BlackList() []string {
 }
 
 func (b *BidRequest) AllowedLanguage() []string {
-	return []string{}
+	return b.IWLang
 }
 
 func (b *BidRequest) BlockedCategories() []string {
-	return []string{}
+	return b.IBCat
 }
 
 func (b *BidRequest) BlockedAdvertiserDomain() []string {
-	return []string{}
+	return b.IBAdv
 }
 
 func (b *BidRequest) Time() time.Time {
-	return b.ITime
-}
-
-func (b *BidRequest) CID() string {
-	return b.ICID
+	return b.time
 }
 
 func (b *BidRequest) Attributes() map[string]interface{} {
-	return b.IAttributes
+	return b.IAttr
+}
+
+func (b *BidRequest) CID() string {
+	if b.clid == "" {
+		return <-random.ID
+	}
+	return b.clid
 }

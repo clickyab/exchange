@@ -16,6 +16,8 @@ const (
 type Impression interface {
 	// ID represent unique id for impression
 	ID() string
+	// CID unique random identifier for our tracking
+	CID() string
 	// BidFloor returns the bid floor (and also a floor for biding 8-) )
 	BidFloor() float64
 	// Banner return banner of current imp

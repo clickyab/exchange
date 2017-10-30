@@ -9,7 +9,7 @@ type ThirdParty interface {
 	// Name of publisher i.e clickyab
 	Name() string
 	// Cat is the category of publisher, empty means all
-	Cat() []string
+	Cat() []Category
 	// Domain of the publisher, optional
 	Domain() string
 }

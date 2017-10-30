@@ -2,6 +2,7 @@ package exchange
 
 import (
 	"context"
+	"io"
 	"net/http"
 )
 
@@ -32,4 +33,8 @@ type Demand interface {
 	// TestMode return true if this demand is a test demand. just test mode supplier are
 	// sent to this demand
 	TestMode() bool
+	// RenderBidRequest try to render bid request due to the proper demand (rest/rtb)
+	RenderBidRequest(context.Context, io.Writer, BidRequest) http.Header
+	// GeBidResponse try to get bid response from demand and make it proper
+	GeBidResponse(context.Context, *http.Response) BidResponse
 }
