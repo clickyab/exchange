@@ -24,7 +24,6 @@ type Demand struct {
 	FName               string                `db:"name" json:"name"`
 	FType               exchange.DemandType   `db:"type" json:"type"`
 	GetURL              string                `db:"get_url" json:"get_url"`
-	WinURL              mysql.NullString      `db:"win_url" json:"win_url"`
 	MinuteLimit         int64                 `db:"minute_limit" json:"minute_limit"`
 	HourLimit           int64                 `db:"hour_limit" json:"hour_limit"`
 	DayLimit            int64                 `db:"day_limit" json:"day_limit"`
@@ -50,12 +49,35 @@ func (d *Demand) Client() *http.Client {
 
 // HasLimits check demand limit
 func (d *Demand) HasLimits() bool {
-	panic("implement me")
+	if d.MinuteLimit == 0 &&
+		d.HourLimit == 0 &&
+		d.DayLimit == 0 &&
+		d.WeekLimit == 0 &&
+		d.MonthLimit == 0 {
+		return true
+	}
+	mo, we, da, ho, mi := getCPM(d.Name())
+	if mo > 0 && mo >= d.MonthLimit {
+		return false
+	}
+	if we > 0 && we >= d.WeekLimit {
+		return false
+	}
+	if da > 0 && da >= d.DayLimit {
+		return false
+	}
+	if ho > 0 && ho >= d.HourLimit {
+		return false
+	}
+	if mi > 0 && mi >= d.MinuteLimit {
+		return false
+	}
+	return true
 }
 
 //EndPoint demand end point
 func (d *Demand) EndPoint() string {
-	panic("implement me")
+	return d.GetURL
 }
 
 //Name demand name
@@ -132,34 +154,6 @@ func (d *Demand) Type() exchange.DemandType {
 	return d.FType
 }
 
-// hasLimits demand check limit
-func (d *Demand) hasLimits() bool {
-	if d.MinuteLimit == 0 &&
-		d.HourLimit == 0 &&
-		d.DayLimit == 0 &&
-		d.WeekLimit == 0 &&
-		d.MonthLimit == 0 {
-		return true
-	}
-	mo, we, da, ho, mi := getCPM(d.Name())
-	if mo > 0 && mo >= d.MonthLimit {
-		return false
-	}
-	if we > 0 && we >= d.WeekLimit {
-		return false
-	}
-	if da > 0 && da >= d.DayLimit {
-		return false
-	}
-	if ho > 0 && ho >= d.HourLimit {
-		return false
-	}
-	if mi > 0 && mi >= d.MinuteLimit {
-		return false
-	}
-	return true
-}
-
 // GetTimeout return the timeout for this demand
 func (d *Demand) GetTimeout() time.Duration {
 	if time.Duration(d.Timeout) < 100*time.Millisecond {
@@ -196,12 +190,4 @@ func (m *Manager) ActiveDemands() []exchange.DemandBase {
 		res = append(res, &demands[i])
 	}
 	return res
-}
-
-// TODO : just for lint
-func init() {
-	if false {
-		d := &Demand{}
-		d.hasLimits()
-	}
 }

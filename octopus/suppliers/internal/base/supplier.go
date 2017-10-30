@@ -18,7 +18,7 @@ type Supplier struct {
 	SShare        int                   `json:"-" db:"share"`
 	SActive       int                   `json:"-" db:"active"`
 	UserID        int64                 `json:"user_id" db:"user_id"`
-	Test          int                   `json:"test_mode" db:"test_mode"`
+	Test          bool                  `json:"test_mode" db:"test_mode"`
 	Click         string                `json:"click_mode" db:"click_mode"`
 }
 
@@ -65,5 +65,5 @@ func (s Supplier) Share() int {
 
 // TestMode return true if this is a test demand
 func (s Supplier) TestMode() bool {
-	return s.Test != 0
+	return s.Test
 }
