@@ -34,7 +34,10 @@ func (b *bidResponse) UnmarshalJSON(d []byte) error {
 	if err != nil {
 		return err
 	}
-	// TODO: validate here
+	err = o.Validate()
+	if err != nil {
+		return err
+	}
 	b.inner = o
 	return nil
 }
@@ -120,11 +123,6 @@ func (b *bid) Categories() []string {
 
 func (b *bid) Attributes() map[string]interface{} {
 	return map[string]interface{}{}
-}
-
-func (b *bid) Win() {
-	panic("implement win")
-
 }
 
 func (b *bid) Demand() exchange.Demand {

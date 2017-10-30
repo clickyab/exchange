@@ -61,10 +61,6 @@ func (b Bid) Attributes() map[string]interface{} {
 	return b.IAttr
 }
 
-func (b Bid) Win() {
-	panic("implement me")
-}
-
 func (b Bid) Demand() exchange.Demand {
 	return b.IDemand
 }

@@ -40,11 +40,12 @@ type Demand struct {
 	FExcludedSuppliers  mysql.StringJSONArray `json:"excluded_suppliers" db:"excluded_suppliers"`
 	UserID              int64                 `json:"user_id" db:"user_id"`
 	FTestMode           bool                  `json:"test_mode" db:"test_mode"`
+	client              *http.Client
 }
 
 // Client get client
 func (d *Demand) Client() *http.Client {
-	panic("implement me")
+	return d.client
 }
 
 // HasLimits check demand limit
@@ -173,9 +174,27 @@ func (d *Demand) GetTimeout() time.Duration {
 // ActiveDemands list all active demands
 func (m *Manager) ActiveDemands() []exchange.DemandBase {
 	var res []exchange.DemandBase
-	_, err := m.GetRDbMap().Select(&res, "SELECT * FROM demands WHERE active <> 0")
+	var demands []Demand
+	_, err := m.GetRDbMap().Select(&demands, "SELECT * FROM demands WHERE active <> 0")
 	assert.Nil(err)
+	for i := range demands {
+		demands[i].client = &http.Client{
+			Transport: &http.Transport{
+				MaxIdleConnsPerHost: demands[i].IdleConnections,
+			},
+			Timeout: func() time.Duration {
+				if time.Duration(demands[i].Timeout) < 100*time.Millisecond {
+					return 100 * time.Millisecond
+				}
+				if time.Duration(demands[i].Timeout) > time.Second {
+					return time.Second
+				}
+				return time.Duration(demands[i].Timeout)
+			}(),
+		}
 
+		res = append(res, &demands[i])
+	}
 	return res
 }
 

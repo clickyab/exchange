@@ -665,32 +665,32 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.css": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCss,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.css.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCssMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.min.css": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCss,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.min.css.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCssMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-reboot.css": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCss,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-reboot.css.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCssMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-reboot.min.css": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootMinCss,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.css":           homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCss,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.css.map":       homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCssMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.min.css":       homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCss,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-grid.min.css.map":   homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCssMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-reboot.css":         homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCss,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-reboot.css.map":     homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCssMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-reboot.min.css":     homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootMinCss,
 	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap-reboot.min.css.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootMinCssMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.css": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCss,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.css.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCssMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.min.css": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCss,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.min.css.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCssMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/style.css": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssStyleCss,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/index.html": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateIndexHtml,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJs,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.js.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJsMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.min.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleMinJs,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.min.js.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleMinJsMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJs,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.js.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJsMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.min.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJs,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.min.js.map": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJsMap,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/jquery-3.2.1.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquery321Js,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/jquery-serialize-object.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquerySerializeObjectJs,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/main.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsMainJs,
-	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/popper-1.11.1.js": homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsPopper1111Js,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.css":                homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCss,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.css.map":            homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCssMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.min.css":            homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCss,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/bootstrap.min.css.map":        homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCssMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/css/style.css":                    homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssStyleCss,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/index.html":                       homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateIndexHtml,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.js":           homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJs,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.js.map":       homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJsMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.min.js":       homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleMinJs,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.bundle.min.js.map":   homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleMinJsMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.js":                  homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJs,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.js.map":              homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJsMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.min.js":              homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJs,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/bootstrap.min.js.map":          homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJsMap,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/jquery-3.2.1.js":               homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquery321Js,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/jquery-serialize-object.js":    homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquerySerializeObjectJs,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/main.js":                       homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsMainJs,
+	"home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/js/popper-1.11.1.js":              homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsPopper1111Js,
 }
 
 // AssetDir returns the file names below a certain
@@ -732,6 +732,7 @@ type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
 }
+
 var _bintree = &bintree{nil, map[string]*bintree{
 	"home": &bintree{nil, map[string]*bintree{
 		"develop": &bintree{nil, map[string]*bintree{
@@ -745,34 +746,34 @@ var _bintree = &bintree{nil, map[string]*bintree{
 										"static": &bintree{nil, map[string]*bintree{
 											"template": &bintree{nil, map[string]*bintree{
 												"css": &bintree{nil, map[string]*bintree{
-													"bootstrap-grid.css": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCss, map[string]*bintree{}},
-													"bootstrap-grid.css.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCssMap, map[string]*bintree{}},
-													"bootstrap-grid.min.css": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCss, map[string]*bintree{}},
-													"bootstrap-grid.min.css.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCssMap, map[string]*bintree{}},
-													"bootstrap-reboot.css": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCss, map[string]*bintree{}},
-													"bootstrap-reboot.css.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCssMap, map[string]*bintree{}},
-													"bootstrap-reboot.min.css": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootMinCss, map[string]*bintree{}},
+													"bootstrap-grid.css":           &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCss, map[string]*bintree{}},
+													"bootstrap-grid.css.map":       &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridCssMap, map[string]*bintree{}},
+													"bootstrap-grid.min.css":       &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCss, map[string]*bintree{}},
+													"bootstrap-grid.min.css.map":   &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapGridMinCssMap, map[string]*bintree{}},
+													"bootstrap-reboot.css":         &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCss, map[string]*bintree{}},
+													"bootstrap-reboot.css.map":     &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootCssMap, map[string]*bintree{}},
+													"bootstrap-reboot.min.css":     &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootMinCss, map[string]*bintree{}},
 													"bootstrap-reboot.min.css.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapRebootMinCssMap, map[string]*bintree{}},
-													"bootstrap.css": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCss, map[string]*bintree{}},
-													"bootstrap.css.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCssMap, map[string]*bintree{}},
-													"bootstrap.min.css": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCss, map[string]*bintree{}},
-													"bootstrap.min.css.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCssMap, map[string]*bintree{}},
-													"style.css": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssStyleCss, map[string]*bintree{}},
+													"bootstrap.css":                &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCss, map[string]*bintree{}},
+													"bootstrap.css.map":            &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapCssMap, map[string]*bintree{}},
+													"bootstrap.min.css":            &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCss, map[string]*bintree{}},
+													"bootstrap.min.css.map":        &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssBootstrapMinCssMap, map[string]*bintree{}},
+													"style.css":                    &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateCssStyleCss, map[string]*bintree{}},
 												}},
 												"index.html": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateIndexHtml, map[string]*bintree{}},
 												"js": &bintree{nil, map[string]*bintree{
-													"bootstrap.bundle.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJs, map[string]*bintree{}},
-													"bootstrap.bundle.js.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJsMap, map[string]*bintree{}},
-													"bootstrap.bundle.min.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleMinJs, map[string]*bintree{}},
+													"bootstrap.bundle.js":         &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJs, map[string]*bintree{}},
+													"bootstrap.bundle.js.map":     &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleJsMap, map[string]*bintree{}},
+													"bootstrap.bundle.min.js":     &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleMinJs, map[string]*bintree{}},
 													"bootstrap.bundle.min.js.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapBundleMinJsMap, map[string]*bintree{}},
-													"bootstrap.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJs, map[string]*bintree{}},
-													"bootstrap.js.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJsMap, map[string]*bintree{}},
-													"bootstrap.min.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJs, map[string]*bintree{}},
-													"bootstrap.min.js.map": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJsMap, map[string]*bintree{}},
-													"jquery-3.2.1.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquery321Js, map[string]*bintree{}},
-													"jquery-serialize-object.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquerySerializeObjectJs, map[string]*bintree{}},
-													"main.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsMainJs, map[string]*bintree{}},
-													"popper-1.11.1.js": &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsPopper1111Js, map[string]*bintree{}},
+													"bootstrap.js":                &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJs, map[string]*bintree{}},
+													"bootstrap.js.map":            &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapJsMap, map[string]*bintree{}},
+													"bootstrap.min.js":            &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJs, map[string]*bintree{}},
+													"bootstrap.min.js.map":        &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsBootstrapMinJsMap, map[string]*bintree{}},
+													"jquery-3.2.1.js":             &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquery321Js, map[string]*bintree{}},
+													"jquery-serialize-object.js":  &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsJquerySerializeObjectJs, map[string]*bintree{}},
+													"main.js":                     &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsMainJs, map[string]*bintree{}},
+													"popper-1.11.1.js":            &bintree{homeDevelopGoSrcClickyabComExchangeCommandsOctopusFakeSupplierStaticTemplateJsPopper1111Js, map[string]*bintree{}},
 												}},
 											}},
 										}},
@@ -833,4 +834,3 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
-
