@@ -2,7 +2,6 @@ package main
 
 import (
 	"clickyab.com/exchange/commands"
-	_ "clickyab.com/exchange/commands/octopus/fakedemand/static"
 
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/initializer"
