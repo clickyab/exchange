@@ -20,7 +20,6 @@ func (initRouter) Routes(mux framework.Mux) {
 	mux.GET("/demands/status/:name", demands.Status)
 	mux.POST("/demands/status/:name", demands.Status)
 	mux.DELETE("/demands/status/:name", demands.Status)
-	mux.HEAD("/demands/status/:name", demands.Status)
 	mux.PUT("/demands/status/:name", demands.Status)
 	mux.OPTIONS("/demands/status/:name", demands.Status)
 }

@@ -6,7 +6,7 @@ import "clickyab.com/exchange/octopus/exchange"
 type Device struct {
 	UA       string `json:"ua"`
 	IP       string `json:"ip"`
-	Geo      Geo    `json:"geo"`
+	Geo      Geo    `json:"geo,omitempty"`
 	ConnType int    `json:"connectiontype,omitempty"`
 	Carrier  string `json:"carrier,omitempty"`
 	Lang     string `json:"lang,omitempty"`
@@ -21,5 +21,5 @@ type Geo struct {
 	LatLon  exchange.LatLon  `json:"latlon,omitempty"`
 	Region  exchange.Region  `json:"region,omitempty"`
 	Country exchange.Country `json:"country,omitempty"`
-	ISP     exchange.ISP     `json:"isp,ommitempty"`
+	ISP     exchange.ISP     `json:"isp,omitempty"`
 }

@@ -10,6 +10,7 @@ import (
 	"clickyab.com/exchange/octopus/exchange/srtb"
 	srtb2 "clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/assert"
+	"github.com/sirupsen/logrus"
 )
 
 // Supplier is srtb version of exchange-supplier
@@ -50,6 +51,7 @@ func (s *Supplier) GetBidRequest(ctx context.Context, r *http.Request) exchange.
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 	res := srtb.NewBidRequest(s, &srtb2.BidRequest{})
+	logrus.Warn(s.FloorCPM())
 	assert.Nil(d.Decode(res))
 	return res
 }
