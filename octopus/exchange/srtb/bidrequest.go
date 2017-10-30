@@ -107,28 +107,27 @@ func RenderBidRequestRtbToRest(w io.Writer, bq exchange.BidRequest) {
 			Ref:  s.Ref(),
 			Page: s.Page(),
 		}
-	} else {
-		s, ok := bq.Inventory().(exchange.App)
-		if ok {
-			res.inner.App = &srtb.App{
-				Publisher: srtb.Publisher{
-					ID:     s.ID(),
-					Domain: s.Domain(),
-					Cat: func() []string {
-						res := []string{}
-						for i := range s.Cat() {
-							res = append(res, string(s.Cat()[i]))
-						}
-						return res
-					}(),
-					Name: s.Name(),
-				},
-				Bundle: s.Bundle(),
-			}
-		} else {
-			panic("[BUG]")
+	} else if s, ok := bq.Inventory().(exchange.App); ok {
+		res.inner.App = &srtb.App{
+			Publisher: srtb.Publisher{
+				ID:     s.ID(),
+				Domain: s.Domain(),
+				Cat: func() []string {
+					res := []string{}
+					for i := range s.Cat() {
+						res = append(res, string(s.Cat()[i]))
+					}
+					return res
+				}(),
+				Name: s.Name(),
+			},
+			Bundle: s.Bundle(),
 		}
+
+	} else {
+		panic("[BUG]")
 	}
+
 	enc := json.NewEncoder(w)
 	err := enc.Encode(res)
 	assert.Nil(err)

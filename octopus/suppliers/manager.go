@@ -2,7 +2,6 @@ package suppliers
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"os/signal"
 	"sync"
@@ -11,6 +10,7 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/suppliers/internal/base"
 	"clickyab.com/exchange/octopus/suppliers/internal/ortb"
+	"clickyab.com/exchange/octopus/suppliers/internal/srtb"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
 	"github.com/sirupsen/logrus"
@@ -70,24 +70,6 @@ func GetSupplierByName(name string) (exchange.Supplier, error) {
 	return nil, fmt.Errorf("supplier with name %s not found", name)
 }
 
-// GetBidRequest try to get an bid request from a http request
-func GetBidRequest(key string, r *http.Request) (exchange.BidRequest, error) {
-	sup, err := GetSupplierByKey(key)
-	if err != nil {
-		return nil, err
-	}
-
-	// Make sure the profit margin is added to the request
-	switch sup.Type() {
-	// TODO not called yet
-	case "rest":
-		return nil, nil
-	default:
-		logrus.Panicf("Not a supported type: %s", sup.Type())
-		return nil, fmt.Errorf("not supported type: %s", sup.Type())
-	}
-}
-
 func init() {
 	sm = &supplierManager{lock: &sync.RWMutex{}}
 	mysql.Register(sm)
@@ -124,8 +106,14 @@ func (m *Manager) GetSuppliers() map[string]exchange.Supplier {
 			ret[res[i].Key] = &ortb.Supplier{
 				SupplierBase: res[i],
 			}
+		} else if res[i].Type() == exchange.SupplierSRTB {
+			ret[res[i].Key] = &srtb.Supplier{
+				SupplierBase: res[i],
+			}
+		} else {
+			panic("[BUG] not a valid supplier type")
+
 		}
-		panic("[BUG] not a valid supplier type")
 	}
 
 	return ret

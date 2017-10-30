@@ -18,7 +18,6 @@ type Demands struct {
 	IExcludeSupplier []string
 }
 
-
 func (d Demands) Win(context.Context, exchange.Bid) {
 	panic("implement me")
 }

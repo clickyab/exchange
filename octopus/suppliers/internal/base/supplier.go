@@ -17,10 +17,9 @@ type Supplier struct {
 	Excluded      mysql.StringJSONArray `json:"excluded_demands" db:"excluded_demands"`
 	SShare        int                   `json:"-" db:"share"`
 	SActive       int                   `json:"-" db:"active"`
-
-	UserID int64  `json:"user_id" db:"user_id"`
-	Test   int    `json:"test_mode" db:"test_mode"`
-	Click  string `json:"click_mode" db:"click_mode"`
+	UserID        int64                 `json:"user_id" db:"user_id"`
+	Test          int                   `json:"test_mode" db:"test_mode"`
+	Click         string                `json:"click_mode" db:"click_mode"`
 }
 
 // Name of this supplier

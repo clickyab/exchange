@@ -52,7 +52,7 @@ func (b *BidRequest) UnmarshalJSON(d []byte) error {
 
 	// TODO: extra validate
 	if i.Device == nil || i.Device.IP == "" {
-		return errors.New("User ip (under Device object) is required")
+		return errors.New("user ip (under Device object) is required")
 	}
 
 	b.inner = &i

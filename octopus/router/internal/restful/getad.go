@@ -63,8 +63,8 @@ func storeKeys(bq exchange.BidRequest, res exchange.BidResponse) {
 func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	dec := json.NewEncoder(w)
 	key := xmux.Param(ctx, "key")
+	sup, err := suppliers.GetSupplierByKey(key)
 
-	bq, err := suppliers.GetBidRequest(key, r)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		dec.Encode(struct {
@@ -74,6 +74,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+	bq := sup.GetBidRequest(ctx, r)
 	// OK push it to broker
 	jImp := materialize.ImpressionJob(bq)
 	broker.Publish(jImp)
@@ -86,12 +87,5 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	storeKeys(bq, res)
 
 	bq.Inventory().Supplier().RenderBidResponse(nCtx, w, res)
-	//if err != nil {
-	//	w.WriteHeader(http.StatusInternalServerError)
-	//	dec.Encode(struct {
-	//		Error string
-	//	}{
-	//		Error: err.Error(),
-	//	})
-	//}
+
 }
