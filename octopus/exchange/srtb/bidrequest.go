@@ -24,7 +24,7 @@ type bidRequest struct {
 
 // NewBidRequest generate internal bid-request from simple rtb
 func NewBidRequest(s exchange.Supplier, rq *srtb.BidRequest) exchange.BidRequest {
-	return &bidRequest{sup: s, inner: rq}
+	return &bidRequest{sup: s, inner: rq, time: time.Now()}
 }
 
 // RenderBidRequestRtbToRest change bidrequest rtb to rest
@@ -180,7 +180,7 @@ func (b *bidRequest) ID() string {
 func (b *bidRequest) Imp() []exchange.Impression {
 	if b.imps == nil {
 		for _, m := range b.inner.Imp {
-			b.imps = append(b.imps, &impression{inner: &m})
+			b.imps = append(b.imps, &impression{inner: &m, banner: &banner{inner: m.Banner}})
 		}
 	}
 	return b.imps
@@ -189,10 +189,10 @@ func (b *bidRequest) Imp() []exchange.Impression {
 // Inventory return srtb Inventory
 func (b *bidRequest) Inventory() exchange.Inventory {
 	if b.inner.Site != nil {
-		return &site{inner: b.inner.Site}
+		return &site{inner: b.inner.Site, sup: b.sup}
 	}
 	if b.inner.App != nil {
-		return &app{inner: b.inner.App}
+		return &app{inner: b.inner.App, sup: b.sup}
 	}
 	panic("[BUG] not valid inventory")
 }
