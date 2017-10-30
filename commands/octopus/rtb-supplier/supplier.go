@@ -29,11 +29,12 @@ type e struct {
 }
 
 var exchangeURL = "http://exchange.clickyab.ae/rest/get"
+var prefix = "home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template"
 
 func (s) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
-	g := xmux.Param(c, "ggg")
+	g := xmux.Param(c, "static")
 	if g == "/" {
-		b, e := Asset("home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template/index.html")
+		b, e := Asset(prefix + "/index.html")
 
 		if e != nil {
 			w.WriteHeader(http.StatusNotFound)
@@ -44,7 +45,7 @@ func (s) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 	g = g[5:]
 
-	b, e := Asset("home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template" + g)
+	b, e := Asset(prefix + g)
 	if e != nil {
 		w.WriteHeader(http.StatusNotFound)
 		return

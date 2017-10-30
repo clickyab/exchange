@@ -1,4 +1,4 @@
-package static
+package main
 
 import (
 	"github.com/clickyab/services/framework"
@@ -9,10 +9,12 @@ type initRouter struct {
 }
 
 func (initRouter) Routes(mux framework.Mux) {
+
 	// Exam paths
-	mux.POST("/exam/get/ad", demandHandler)
-	mux.GET("/exam/ad/:impTrackID/:slotTrackId/:width/:height", adHandler)
-	mux.GET("/exam/click/:impTrackID/:slotTrackId", clickHandler)
+	f := mux.RootMux()
+	f.GET("/fake/*static", s{})
+	f.POST("/fake/rtb", d{})
+	f.POST("/fake/srtb", e{})
 }
 
 func init() {
