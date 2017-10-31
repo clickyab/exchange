@@ -14,6 +14,8 @@ import (
 
 	"io/ioutil"
 
+	"fmt"
+
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 	"github.com/rs/xmux"
@@ -29,13 +31,19 @@ type e struct {
 }
 
 var exchangeURL = "http://exchange.clickyab.ae/rest/get"
-var prefix = "home/develop/go/src/clickyab.com/exchange/commands/octopus/fake-supplier/static/template"
+var prefix = "commands/octopus/rtb-supplier/static/template"
 
 func (s) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
 	g := xmux.Param(c, "static")
+	for key := range _bindata {
+		fmt.Println(key)
+	}
+	fmt.Println(g)
 	if g == "/" {
+		_, x := Asset("commands/octopus/rtb-supplier/static/template/index.html")
+		fmt.Println(x)
 		b, e := Asset(prefix + "/index.html")
-
+		println(e)
 		if e != nil {
 			w.WriteHeader(http.StatusNotFound)
 			return
