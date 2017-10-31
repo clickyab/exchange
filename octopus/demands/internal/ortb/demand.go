@@ -53,8 +53,7 @@ func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchang
 // RenderBidRequest cast bid request to ortb
 func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
 	if bq.LayerType() == "ortb" {
-		j := json.NewEncoder(w)
-		err := j.Encode(bq)
+		err := json.NewEncoder(w).Encode(bq)
 		assert.Nil(err)
 		return http.Header{}
 	}

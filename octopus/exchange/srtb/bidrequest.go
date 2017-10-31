@@ -6,11 +6,8 @@ import (
 
 	"encoding/json"
 
-	"io"
-
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/srtb"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
 )
 
@@ -22,115 +19,9 @@ type bidRequest struct {
 	cid   string
 }
 
-// NewBidRequest generate internal bid-request from simple rtb
+// NewBidRequest generate internal bid-request from srtb
 func NewBidRequest(s exchange.Supplier, rq *srtb.BidRequest) exchange.BidRequest {
 	return &bidRequest{sup: s, inner: rq, time: time.Now()}
-}
-
-// RenderBidRequestRtbToRest change bidrequest rtb to rest
-func RenderBidRequestRtbToRest(w io.Writer, bq exchange.BidRequest) {
-	imps := []srtb.Impression{}
-	for i := range bq.Imp() {
-		imps = append(imps, srtb.Impression{
-			ID: bq.Imp()[i].ID(),
-			Banner: &srtb.Banner{
-				ID:     bq.Imp()[i].Banner().ID(),
-				Height: bq.Imp()[i].Banner().Height(),
-				Width:  bq.Imp()[i].Banner().Width(),
-			},
-			BidFloor: bq.Imp()[i].BidFloor(),
-			Secure: func() int {
-				if bq.Imp()[i].Secure() {
-					return 1
-				}
-				return 0
-			}(),
-		})
-	}
-	res := bidRequest{
-		inner: &srtb.BidRequest{
-			Imp: imps,
-			ID:  bq.ID(),
-			Device: &srtb.Device{
-				UA:       bq.Device().UserAgent(),
-				IP:       bq.Device().IP(),
-				ConnType: int(bq.Device().ConnType()),
-				Carrier:  bq.Device().Carrier(),
-				Lang:     bq.Device().Language(),
-				CID:      bq.Device().CID(),
-				LAC:      bq.Device().LAC(),
-				MNC:      bq.Device().MNC(),
-				MCC:      bq.Device().MCC(),
-				Geo: srtb.Geo{
-					Country: exchange.Country{
-						Name:  bq.Device().Geo().Country().Name,
-						ISO:   bq.Device().Geo().Country().Name,
-						Valid: bq.Device().Geo().Country().Valid,
-					},
-					Region: exchange.Region{
-						Name:  bq.Device().Geo().Region().Name,
-						ISO:   bq.Device().Geo().Region().ISO,
-						Valid: bq.Device().Geo().Region().Valid,
-					},
-					LatLon: exchange.LatLon{
-						Lat:   bq.Device().Geo().LatLon().Lat,
-						Lon:   bq.Device().Geo().LatLon().Lon,
-						Valid: bq.Device().Geo().LatLon().Valid,
-					},
-					ISP: exchange.ISP{},
-				},
-			},
-			User: &srtb.User{
-				ID: bq.User().ID(),
-			},
-			BCat: bq.BlockedCategories(),
-			Test: bq.Test(),
-			TMax: int(bq.TMax() / time.Millisecond),
-		},
-	}
-
-	s, ok := bq.Inventory().(exchange.Site)
-	if ok {
-		res.inner.Site = &srtb.Site{
-			Publisher: srtb.Publisher{
-				ID:     s.ID(),
-				Domain: s.Domain(),
-				Cat: func() []string {
-					res := []string{}
-					for i := range s.Cat() {
-						res = append(res, string(s.Cat()[i]))
-					}
-					return res
-				}(),
-				Name: s.Name(),
-			},
-			Ref:  s.Ref(),
-			Page: s.Page(),
-		}
-	} else if s, ok := bq.Inventory().(exchange.App); ok {
-		res.inner.App = &srtb.App{
-			Publisher: srtb.Publisher{
-				ID:     s.ID(),
-				Domain: s.Domain(),
-				Cat: func() []string {
-					res := []string{}
-					for i := range s.Cat() {
-						res = append(res, string(s.Cat()[i]))
-					}
-					return res
-				}(),
-				Name: s.Name(),
-			},
-			Bundle: s.Bundle(),
-		}
-
-	} else {
-		panic("[BUG]")
-	}
-
-	enc := json.NewEncoder(w)
-	err := enc.Encode(res)
-	assert.Nil(err)
 }
 
 // CID return srtb CID
