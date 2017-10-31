@@ -1,6 +1,68 @@
 $(function () {
 
+    RandomIdGen(".randomField");
 
+
+    // Show SITE OR APP FOR VIA RADIO BTN CHANGE
+    var site = true;
+    SelectAppSiteFormRTB();
+    SelectAppSiteFormREST();
+
+
+    $(document).on("change", ".site-app-RTB", function () {
+        SelectAppSiteFormRTB();
+    });
+    $(document).on("change", ".site-app-REST", function () {
+        SelectAppSiteFormREST();
+    });
+
+    function SelectAppSiteFormRTB() {
+        $("[data-SiteSelect]:checked").each(function () {
+                $(".site-form-RTB").show();
+                $(".app-form-RTB").hide();
+                site = true;
+            }
+        );
+        $("[data-AppSelect]:checked").each(function () {
+            $(".site-form-RTB").hide();
+            $(".app-form-RTB").show();
+            site = false;
+        });
+    }
+    function SelectAppSiteFormREST() {
+        $("[data-SiteSelect-REST]:checked").each(function () {
+                $(".site-form-REST").show();
+                $(".app-form-REST").hide();
+                site = true;
+            }
+        );
+        $("[data-AppSelect-REST]:checked").each(function () {
+            $(".site-form-REST").hide();
+            $(".app-form-REST").show();
+              site = false;
+        });
+    }
+
+
+    // Get Width and Height of Device
+
+    $("#device-H-RTB").attr("value" , $(window).height() ) ;
+    $("#device-W-RTB").attr("value" , $(window).width() ) ;
+
+
+    // Initialize of Ip and user-agent value
+    // GET IP of user from api
+    var ip = "127.0.0.1" ;
+    $.getJSON( "https://freegeoip.net/json/",
+        function(data){
+           ip = data.ip ;
+            $("#device-IP-RTB").attr("value" , ip );
+            $("#device-IP-REST").attr("value" ,  ip);
+        }
+    );
+    // set user agent
+    $("#useragent-RTB").attr("value" , navigator.userAgent );
+    $("#device-ua-REST").attr("value" , navigator.userAgent );
 
     // Create Dynamic form with specific name
     // this element will update when you update your form in html
@@ -42,16 +104,50 @@ $(function () {
     }
 
 
-    function createJsonObj(elem){
+    function createJsonIMPORTB(elem){
+
+       obj = {} ;
+       obj.id = $(elem).find("[data-impId]").val();
+       obj.banner= {} ;
+       obj.banner.w         = $(elem).find("[data-impBannerW]").val();
+       obj.banner.h         = $(elem).find("[data-impBannerH]").val();
+       obj.banner.id        = $(elem).find("[data-impBannerId]").val();
+       obj.banner.btype     = $(elem).find("[data-impBannerBtype]").val();
+       obj.banner.battr     = $(elem).find("[data-impBannerBattr]").val();
+       obj.banner.mimes     = $(elem).find("[data-impBannerMimes]").val();
+       obj.bidfloor         = $(elem).find("[data-bidfloor]").val();
+       obj.bidfloorcur      = $(elem).find("[data-bidfloorcur]").val();
+
+       obj.banner.btype  = obj.banner.btype.split(",") ;
+       obj.banner.battr  = obj.banner.battr.split(",") ;
+       obj.banner.mimes  = obj.banner.mimes.split(",") ;
+
+       ArrayElemToInt(obj.banner.btype);
+       ArrayElemToInt(obj.banner.battr);
+
+
+
+       if($(elem).find("[data-secure]:checked").length ===1){
+           obj.secure = 1 ;
+       }
+       else{
+           obj.secure = 0 ;
+       }
+       return obj ;
+    }
+
+    function createJsonIMPREST(elem){
 
         obj = {} ;
         obj.id = $(elem).find("[data-impId]").val();
         obj.banner= {} ;
-        obj.banner.w      = $(elem).find("[data-impBannerW]").val();
-        obj.banner.h      = $(elem).find("[data-impBannerH]").val();
-        obj.banner.id     = $(elem).find("[data-impBannerId]").val();
-        obj.bidfloor      = $(elem).find("[data-bidfloor]").val();
-        obj.bidfloorcur   = $(elem).find("[data-bidfloorcur]").val();
+        obj.banner.w         = $(elem).find("[data-impBannerW]").val();
+        obj.banner.h         = $(elem).find("[data-impBannerH]").val();
+        obj.banner.id        = $(elem).find("[data-impBannerId]").val();
+        obj.bidfloor         = $(elem).find("[data-bidfloor]").val();
+        obj.bidfloorcur      = $(elem).find("[data-bidfloorcur]").val();
+
+
 
         if($(elem).find("[data-secure]:checked").length ===1){
             obj.secure = 1 ;
@@ -62,12 +158,32 @@ $(function () {
         return obj ;
     }
 
+    function toIntAndEmpty(obj) {
+        obj = parseInt(obj) || "";
+    }
+
+    function ArrayElemToInt(obj) {
+        if (obj != "") {
+            obj = obj.map(function (x) {
+                return toIntAndEmpty(x);
+            });
+        }
+    }
+
     // Get all impressions as object
-    function getDynamicForm(elem) {
+    function getDynamicFormORTB(elem) {
         var obj = [];
         elemAppend = $(elem);
         for (var i = 0; i < elemAppend.length; i++) {
-            obj[i] = (createJsonObj(elemAppend[i]));
+            obj[i] = (createJsonIMPORTB(elemAppend[i]));
+        }
+        return obj ;
+    }
+    function getDynamicFormREST(elem) {
+        var obj = [];
+        elemAppend = $(elem);
+        for (var i = 0; i < elemAppend.length; i++) {
+            obj[i] = (createJsonIMPREST(elemAppend[i]));
         }
         return obj ;
     }
@@ -91,44 +207,82 @@ $(function () {
     // remove form action
     $("body").on("click", ".btn-minus", function (event) {
         event.preventDefault();
-        console.log($(this).parent());
         $(this).parent().remove();
     });
 
 
     $(".RTB-form").submit(function (event) {
         event.preventDefault();
-        RandomIdGen(".randomField");
         BannerSplitor("#RTB-BannerSize") ;
-        obj = getDynamicForm(".RTB-form .banner-input");
+        obj = getDynamicFormORTB(".RTB-form .banner-input");
 
 
         // Shortcut to add splited array of bcat input to object
         var jsonForm = $(this).serializeObject();
-        var splitedBcat = splitElemVal("#bcat", ",");
-        var splitedWlang = splitElemVal("#wlang", ",");
-        jsonForm.request.bcat = splitedBcat;
-        jsonForm.request.wlang = splitedWlang;
-        jsonForm.request.imp = obj ;
+        var splitedBcat = splitElemVal("#bcat-RTB", ",");
+        var splitedWlang = splitElemVal("#wlang-RTB", ",");
+        jsonForm.bcat = splitedBcat;
+        jsonForm.wlang = splitedWlang;
+        jsonForm.imp = obj ;
         var impLength = obj.length;
         for (var i=0 ; i < impLength ; i++)
         {
-            jsonForm.request.imp[i].banner.w = parseInt( jsonForm.request.imp[i].banner.w);
-            jsonForm.request.imp[i].banner.h = parseInt( jsonForm.request.imp[i].banner.h);
-            jsonForm.request.imp[i].bidfloor = parseInt( jsonForm.request.imp[i].bidfloor);
-            jsonForm.request.imp[i].bidfloorcur = parseInt( jsonForm.request.imp[i].bidfloorcur);
+            toIntAndEmpty(jsonForm.imp[i].banner.w);
+            toIntAndEmpty(jsonForm.imp[i].banner.h);
+            toIntAndEmpty(jsonForm.imp[i].bidfloor);
+            toIntAndEmpty(jsonForm.imp[i].bidfloorcur);
         }
 
+        jsonForm.device.mccmnc = (jsonForm.device.mccmnc).split("-");
 
-        jsonForm.request.tmax = parseInt( jsonForm.tmax);
-        jsonForm.request.test= parseInt( jsonForm.test);
+        toIntAndEmpty(jsonForm.device.geo.lat);
+        toIntAndEmpty(jsonForm.device.geo.lon );
+        toIntAndEmpty(jsonForm.device.geo.type );
+        toIntAndEmpty(jsonForm.device.geo.accuracy);
 
-        var url = $(".RTB-form").attr("action");
+
+        toIntAndEmpty(jsonForm.device.h);
+        toIntAndEmpty(jsonForm.device.w);
+
+        toIntAndEmpty(jsonForm.tmax);
+        toIntAndEmpty(jsonForm.test);
+        toIntAndEmpty(jsonForm.at);
+
+
+        jsonForm.wseat  = (jsonForm.wseat).split(",");
+        jsonForm.bseat  = (jsonForm.bseat).split(",");
+        jsonForm.cur    = (jsonForm.cur).split(",");
+        jsonForm.badv   = (jsonForm.badv).split(",");
+        jsonForm.bapp   = (jsonForm.bapp).split(",");
+
+        delete jsonForm.radioSite;
+        if(site){
+           delete jsonForm.app;
+           jsonForm.site.cat              = (jsonForm.site.cat).split(",");
+           jsonForm.site.sectioncat       = (jsonForm.site.sectioncat).split(",");
+           jsonForm.site.pagecat          = (jsonForm.site.pagecat).split(",");
+           jsonForm.site.publisher.cat    = (jsonForm.site.publisher.cat).split(",");
+        }
+        else{
+            delete jsonForm.site;
+            jsonForm.app.cat              = (jsonForm.app.cat).split(",");
+            jsonForm.app.sectioncat       = (jsonForm.app.sectioncat).split(",");
+            jsonForm.app.pagecat          = (jsonForm.app.pagecat).split(",");
+            jsonForm.app.publisher.cat    = (jsonForm.app.publisher.cat).split(",");
+        }
+        var JSONOut = {};
+        JSONOut.request = jsonForm;
+        JSONOut.meta = {};
+        JSONOut.meta.key = $("#key-RTB").val() ;
+
+
+
+        var url =$(".RTB-form").attr("action") ;
 
         $.ajax({
             url: url,
             type: 'POST',
-            data: JSON.stringify(jsonForm),
+            data: JSON.stringify(JSONOut),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             async: false,
@@ -137,47 +291,48 @@ $(function () {
             }
         });
 
-        console.log(JSON.stringify(jsonForm));
+        console.log(JSON.stringify(JSONOut));
 
     });
 
 
-
-
     $(".REST-form").submit(function (event) {
         event.preventDefault();
-        RandomIdGen(".randomField");
         BannerSplitor("#REST-BannerSize") ;
-        obj = getDynamicForm(".REST-form .banner-input");
+        obj = getDynamicFormREST(".REST-form .banner-input");
 
 
         // Shortcut to add splited array of bcat input to object
         var jsonForm = $(this).serializeObject();
         var splitedBcat = splitElemVal("#bcat-REST", ",");
-        var splitedBadv = splitElemVal("#badv-REST", ",");
-        var splitedBseat = splitElemVal("#bseat-REST", ",");
         jsonForm.bcat = splitedBcat;
-        jsonForm.badv = splitedBadv;
-        jsonForm.bseat = splitedBseat;
         jsonForm.imp = obj ;
         var impLength = obj.length;
         for (var i=0 ; i < impLength ; i++)
         {
-            jsonForm.imp[i].banner.w = parseInt( jsonForm.imp[i].banner.w);
-            jsonForm.imp[i].banner.h = parseInt( jsonForm.imp[i].banner.h);
-            jsonForm.imp[i].bidfloor = parseInt( jsonForm.imp[i].bidfloor);
-            jsonForm.imp[i].bidfloorcur = parseInt( jsonForm.imp[i].bidfloorcur);
+            toIntAndEmpty(jsonForm.imp[i].banner.w);
+            toIntAndEmpty(jsonForm.imp[i].banner.h);
+            toIntAndEmpty(jsonForm.imp[i].bidfloor);
+            toIntAndEmpty(jsonForm.imp[i].bidfloorcur);
+
         }
 
-        jsonForm.tmax = parseInt( jsonForm.tmax);
-        jsonForm.test= parseInt( jsonForm.test);
 
-        var url = $(".REST-form").attr("action");
+
+        toIntAndEmpty(jsonForm.tmax);
+        toIntAndEmpty(jsonForm.test);
+
+        var JSONOut = {} ;
+        JSONOut.request = jsonForm;
+        JSONOut.meta = {} ;
+        JSONOut.meta.key = $("#key-REST").val() ;
+       var url =$(".REST-form").attr("action") ;
+
 
         $.ajax({
             url: url,
             type: 'POST',
-            data: JSON.stringify(jsonForm),
+            data: JSON.stringify(JSONOut),
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             async: false,
@@ -186,7 +341,7 @@ $(function () {
             }
         });
 
-        console.log(JSON.stringify(jsonForm));
+        console.log(JSON.stringify(JSONOut));
 
     });
 });

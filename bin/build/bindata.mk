@@ -15,6 +15,6 @@ ip2location: $(ROOT)/contrib/IP-COUNTRY-REGION-CITY-ISP.BIN
 prepare: $(ROOT)/contrib/IP-COUNTRY-REGION-CITY-ISP.BIN
 
 codegen-fake: go-bindata
-	cd $(ROOT) && $(BIN)/go-bindata -o $(ROOT)/commands/octopus/fake-supplier/template.gen.go -nomemcopy=true -pkg=main $(ROOT)/commands/octopus/fake-supplier/static/template/...
+	$(BIN)/go-bindata -o commands/octopus/rtb-supplier/template.gen.go -nomemcopy=true -pkg=main commands/octopus/rtb-supplier/static/template/...
 
 .PHONY: go-bindata
