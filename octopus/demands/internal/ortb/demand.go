@@ -121,8 +121,7 @@ func impression(m []exchange.Impression) []openrtb.Impression {
 	ms := make([]openrtb.Impression, 0)
 	for _, v := range m {
 		t := openrtb.Impression{
-			ID:     v.ID(),
-			Banner: banner(v.Banner()),
+			ID: v.ID(),
 			Secure: func() openrtb.NumberOrString {
 				if v.Secure() {
 					return openrtb.NumberOrString(1)
@@ -131,8 +130,6 @@ func impression(m []exchange.Impression) []openrtb.Impression {
 			}(),
 			BidFloor:         v.BidFloor(),
 			BidFloorCurrency: "IRR",
-			Video:            video(v.Video()),
-			Native:           native(v.Native()),
 		}
 		switch v.Type() {
 		case exchange.AdTypeBanner:

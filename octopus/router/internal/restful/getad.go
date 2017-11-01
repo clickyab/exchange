@@ -74,7 +74,13 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	bq := sup.GetBidRequest(ctx, r)
+	bq, err := sup.GetBidRequest(ctx, r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		xlog.Get(ctx).WithField("bidrequest rendering issue", err.Error())
+		return
+	}
+
 	// OK push it to broker
 	jImp := materialize.ImpressionJob(bq)
 	broker.Publish(jImp)

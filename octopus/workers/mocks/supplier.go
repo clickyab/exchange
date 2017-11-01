@@ -20,7 +20,7 @@ func (s Supplier) RenderBidResponse(context.Context, io.Writer, exchange.BidResp
 	return http.Header{}
 }
 
-func (s Supplier) GetBidRequest(context.Context, *http.Request) exchange.BidRequest {
+func (s Supplier) GetBidRequest(context.Context, *http.Request) (exchange.BidRequest, error) {
 	panic("implement me")
 }
 

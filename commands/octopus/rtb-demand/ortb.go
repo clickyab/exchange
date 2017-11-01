@@ -34,6 +34,7 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	rj, err := json.Marshal(createOrtbResponse(o))
 	assert.Nil(err)
+	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(rj)
 
@@ -96,6 +97,14 @@ func stringSlicer(m []string) []string {
 }
 
 func slicer(m int) (s, e int32) {
-	i := rand.Int31n(int32(m))
+	var i int32
+	for {
+
+		i = rand.Int31n(int32(m))
+		if i != 0 {
+			break
+		}
+	}
+
 	return rand.Int31n(i), i
 }
