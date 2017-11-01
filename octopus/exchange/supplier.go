@@ -42,7 +42,7 @@ type Supplier interface {
 // GetBidRequester interface
 type GetBidRequester interface {
 	// GetBidRequest generate bid-request from request
-	GetBidRequest(context.Context, *http.Request) BidRequest
+	GetBidRequest(context.Context, *http.Request) (BidRequest, error)
 }
 
 // RenderBidResponser interface

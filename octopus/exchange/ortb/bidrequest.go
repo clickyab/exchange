@@ -8,21 +8,31 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
+	"github.com/clickyab/services/ip2location"
 	"github.com/clickyab/services/random"
 )
 
 // NewBidRequest generate internal bid-request from open-rtb
-func NewBidRequest(s exchange.Supplier, rq *openrtb.BidRequest) exchange.BidRequest {
-	return &BidRequest{sup: s, inner: rq}
+func NewBidRequest(s exchange.Supplier, rq *BidRequest) exchange.BidRequest {
+	record := ip2location.GetAll(rq.inner.Device.IP)
+	rq.inner.Device.Geo = &openrtb.Geo{
+		Region:  record.Region,
+		Lon:     float64(record.Longitude),
+		Lat:     float64(record.Latitude),
+		City:    record.City,
+		Country: record.CountryLong,
+	}
+	return &BidRequest{sup: s, inner: rq.inner, time: time.Now()}
 }
 
 // BidRequest bid request structure
 type BidRequest struct {
-	inner *openrtb.BidRequest
-	imps  []exchange.Impression
-	sup   exchange.Supplier
-	time  time.Time
-	cid   string
+	inner  *openrtb.BidRequest
+	imps   []exchange.Impression
+	sup    exchange.Supplier
+	device exchange.Device
+	time   time.Time
+	cid    string
 }
 
 // CID clickyab track id
@@ -92,7 +102,13 @@ func (b *BidRequest) Inventory() exchange.Inventory {
 
 // Device device entity
 func (b *BidRequest) Device() exchange.Device {
-	return &Device{inner: b.inner.Device}
+	return &Device{
+		inner: b.inner.Device,
+		geo: &Geo{
+			inner: b.inner.Device.Geo,
+			ip:    b.inner.Device.IP,
+		},
+	}
 }
 
 // User user entity

@@ -41,11 +41,12 @@ func Provide(ctx context.Context, dem exchange.Demand, bq exchange.BidRequest, c
 
 	header := dem.RenderBidRequest(ctx, buf, bq)
 	req, err := http.NewRequest("POST", dem.EndPoint(), bytes.NewBuffer(buf.Bytes()))
-	req.Header = header
 	if err != nil {
-		logrus.Debug(err)
+		xlog.Get(ctx).WithField("exchange to demand request rendering", err.Error()).Debug()
 		return
 	}
+
+	req.Header = header
 	xlog.Get(ctx).WithField("key", dem.Name()).Debug("calling demand")
 	resp, err := dem.Client().Do(req.WithContext(ctx))
 	if err != nil {
