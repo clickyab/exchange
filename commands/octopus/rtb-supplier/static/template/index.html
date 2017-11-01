@@ -20,7 +20,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                         <label>id</label>
-                        <input class="randomField form-control" type="text" disabled name="id" value="">
+                        <input class="randomField form-control" type="text"  name="id" value="">
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>id imp</label>
-                                    <input class="randomField form-control" type="text" disabled value="" data-impId="id">
+                                    <input class="randomField form-control" type="text"  value="" data-impId="id">
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                             <div class="form-group secure-radiobtn">
                                 <div class="form-check">
                                     <label class="form-check-label">
-                                        <input name="imp[secure]]" class="form-check-input" type="checkbox" value="1"
+                                        <input name="imp[secure]" class="form-check-input" type="checkbox" value="1"
                                                checked data-secure="secure">
                                         Secure Connection
                                     </label>
@@ -168,7 +168,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <input name="site[publisher][id]" type="hidden" class="randomField-RTB">
+                            <input name="site[publisher][id]" type="hidden" class="randomField">
                             <label for="PublisherName-RTB">Publisher name </label>
                             <input name="site[publisher][name]" type="text" class="form-control" id="PublisherName-RTB" data-sitePublisherName="publisherName">
                         </div>
@@ -285,7 +285,7 @@
     <div class="col-md-3">
         <label for="device-H-RTB">device H  </label>
         <input name="device[h]" type="text" id="device-H-RTB"  class="form-control">
-    </div>
+    </div>mysupkey
     <div class="col-md-3">
         <label for="device-W-RTB">device W  </label>
         <input name="device[w]" type="text" id="device-W-RTB"  class="form-control">
@@ -355,7 +355,7 @@
                     </div>
                     <div class="col-md-3">
                         <label for="Wlang-RTB">Wlang </label>
-                        <input name="wlang[]" type="text" id="wlang-RTB" class="form-control">
+                        <input name="wlang" type="text" id="wlang-RTB" class="form-control">
                     </div>
                 </div>
                 <div class="row">
@@ -368,7 +368,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="bcat-RTB">bcat </label>
-                            <input name="bcat[]" type="text" id="bcat-RTB" class="form-control">
+                            <input name="bcat" type="text" id="bcat-RTB" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -395,19 +395,21 @@
 
                 <button class="btn btn-primary" type="submit">Submit</button>
             </form>
+            <p>Result:</p>
+            <pre class="json-out-RTB"></pre>
         </div>
         <div id="rest" class="tab-pane" role="tabpanel">
             <h3>REST</h3>
             <form class="REST-form" method="post" action="srtb">
                 <div class="form-group">
-                <label >id</label>
-                <input class="randomField form-control" disabled type="text" name="id" value="">
+                    <label >id</label>
+                    <input class="randomField form-control"  type="text" name="id" value="">
                 </div>
                 <div class="REST-banner-input-wrapper REST-banner-input-wrapper">
                     <div class="REST-banner-input banner-input">
                         <div class="form-group">
                         <label >imp ID</label>
-                        <input class="randomField form-control" disabled type="text" value="" data-impId="id">
+                        <input class="randomField form-control" type="text" value="" data-impId="id">
                         </div>
                         <div class="form-group">
                             <label for="REST-BannerSize">imp </label>
@@ -437,7 +439,6 @@
                             <label for="bidfloor-REST">bidfloor </label>
                             <input name="imp[bidfloor]" type="text" id="bidfloor-REST" class="form-control"
                                    data-bidfloor="bidfloor">
-                            <input name="imp[bidfloorcur]" type="hidden" value="IRR" data-bidfloorcur="bidfloorcur">
 
                             <div class="form-group secure-radiobtn">
                                 <div class="form-check">
@@ -519,7 +520,7 @@
                         </div>
                         <div class="col-md-6">
                             <label for="app-cat-REST"> app cat </label>
-                            <input name="app[cat][]" type="text" class="form-control" id="app-cat-REST">
+                            <input name="app[cat]" type="text" class="form-control" id="app-cat-REST">
                         </div>
                     </div>
                 </div>
@@ -601,7 +602,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="bcat-REST">bcat </label>
-                            <input name="bcat[]" type="text" id="bcat-REST" class="form-control">
+                            <input name="bcat" type="text" id="bcat-REST" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -616,6 +617,8 @@
                 </div>
                 <button class="btn btn-primary" type="submit">Submit</button>
             </form>
+            <p>Result:</p>
+            <pre class="json-out-REST"></pre>
         </div>
 
     </div>

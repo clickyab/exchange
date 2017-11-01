@@ -77,8 +77,8 @@ func (b *bidRequest) ID() string {
 // Imp return srtb Imp
 func (b *bidRequest) Imp() []exchange.Impression {
 	if b.imps == nil {
-		for _, m := range b.inner.Imp {
-			b.imps = append(b.imps, &impression{inner: &m, banner: &banner{inner: m.Banner}})
+		for i := range b.inner.Imp {
+			b.imps = append(b.imps, &impression{inner: &b.inner.Imp[i], banner: &banner{inner: b.inner.Imp[i].Banner}})
 		}
 	}
 	return b.imps
