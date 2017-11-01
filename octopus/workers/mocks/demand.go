@@ -42,7 +42,7 @@ func (d Demands) GetTimeout() time.Duration {
 	panic("implement me")
 }
 
-func (d Demands) GetBidResponse(context.Context, *http.Response, exchange.Supplier) exchange.BidResponse {
+func (d Demands) GetBidResponse(context.Context, *http.Response, exchange.Supplier) (exchange.BidResponse, error) {
 	panic("implement me")
 }
 

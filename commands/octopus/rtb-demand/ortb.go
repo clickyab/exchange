@@ -1,4 +1,4 @@
-package static
+package main
 
 import (
 	"context"
@@ -34,8 +34,8 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	rj, err := json.Marshal(createOrtbResponse(o))
 	assert.Nil(err)
-	w.Write(rj)
 	w.WriteHeader(http.StatusOK)
+	w.Write(rj)
 
 }
 

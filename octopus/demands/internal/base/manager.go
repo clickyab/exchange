@@ -3,6 +3,7 @@ package base
 import (
 	"bytes"
 	"context"
+	"io/ioutil"
 	"net/http"
 
 	"clickyab.com/exchange/octopus/exchange"
@@ -39,19 +40,27 @@ func Provide(ctx context.Context, dem exchange.Demand, bq exchange.BidRequest, c
 	buf := &bytes.Buffer{}
 
 	header := dem.RenderBidRequest(ctx, buf, bq)
-	req, err := http.NewRequest("POST", dem.EndPoint(), buf)
+	req, err := http.NewRequest("POST", dem.EndPoint(), bytes.NewBuffer(buf.Bytes()))
 	req.Header = header
 	if err != nil {
 		logrus.Debug(err)
 		return
 	}
-
 	xlog.Get(ctx).WithField("key", dem.Name()).Debug("calling demand")
 	resp, err := dem.Client().Do(req.WithContext(ctx))
 	if err != nil {
 		logrus.Debug(err)
 		return
 	}
-
-	ch <- dem.GetBidResponse(ctx, resp, bq.Inventory().Supplier())
+	if resp.StatusCode != http.StatusOK {
+		body, _ := ioutil.ReadAll(resp.Body)
+		resp.Body.Close()
+		xlog.Get(ctx).WithField("status", resp.StatusCode).Debug(string(body))
+		return
+	}
+	result, err := dem.GetBidResponse(ctx, resp, bq.Inventory().Supplier())
+	if err != nil {
+		return
+	}
+	ch <- result
 }

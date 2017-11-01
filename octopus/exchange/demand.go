@@ -67,7 +67,7 @@ type Demand interface {
 // Provider interface for handling the demand extra features
 type Provider interface {
 	// GeBidResponse try to get bid response from demand and make it proper
-	GetBidResponse(context.Context, *http.Response, Supplier) BidResponse
+	GetBidResponse(context.Context, *http.Response, Supplier) (BidResponse, error)
 	// RenderBidRequest try to render bid request due to the proper demand (rest/rtb)
 	RenderBidRequest(context.Context, io.Writer, BidRequest) http.Header
 	// Provide is the function to handle the request, provider should response

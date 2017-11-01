@@ -30,7 +30,7 @@ type d struct {
 type e struct {
 }
 
-var exchangeURL = "http://exchange.clickyab.ae/rest/get"
+var exchangeURL = "http://127.0.0.1/rest/get"
 var prefix = "commands/octopus/rtb-supplier/static/template"
 
 func (s) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {

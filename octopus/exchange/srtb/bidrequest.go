@@ -21,6 +21,13 @@ type bidRequest struct {
 
 // NewBidRequest generate internal bid-request from srtb
 func NewBidRequest(s exchange.Supplier, rq *srtb.BidRequest) exchange.BidRequest {
+	geo := extractGeoFromIP(rq.Device.IP)
+	rq.Device.Geo = srtb.Geo{
+		ISP:     geo.ISP(),
+		Region:  geo.Region(),
+		Country: geo.Country(),
+		LatLon:  geo.LatLon(),
+	}
 	return &bidRequest{sup: s, inner: rq, time: time.Now()}
 }
 
@@ -59,7 +66,7 @@ func (b *bidRequest) UnmarshalJSON(a []byte) error {
 
 // MarshalJSON return srtb MarshalJSON
 func (b *bidRequest) MarshalJSON() ([]byte, error) {
-	return json.Marshal(b)
+	return json.Marshal(b.inner)
 }
 
 // ID return srtb ID
@@ -100,7 +107,10 @@ func (b *bidRequest) User() exchange.User {
 
 // Test return srtb Test
 func (b *bidRequest) Test() bool {
-	return b.inner.Test
+	if b.inner.Test == 1 {
+		return true
+	}
+	return false
 }
 
 // AuctionType return srtb AuctionType

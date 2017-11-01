@@ -10,7 +10,7 @@ import (
 
 type bidResponse struct {
 	inner    *srtb.BidResponse
-	bids     []*srtb.Bid
+	bids     []exchange.Bid
 	demand   exchange.Demand
 	supplier exchange.Supplier
 }
@@ -25,14 +25,15 @@ func (b bidResponse) ID() string {
 }
 
 func (b bidResponse) Bids() []exchange.Bid {
-	res := make([]exchange.Bid, 0)
-	for i := range b.bids {
-		res = append(res, &bid{
-			inner:  b.bids[i],
-			demand: b.demand,
-		})
+	if b.bids == nil {
+		for _, i := range b.inner.Bids {
+			b.bids = append(b.bids, &bid{
+				inner:  &i,
+				demand: b.demand,
+			})
+		}
 	}
-	return res
+	return b.bids
 }
 
 func (b bidResponse) Excuse() int {

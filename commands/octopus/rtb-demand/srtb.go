@@ -1,4 +1,4 @@
-package static
+package main
 
 import (
 	"context"
@@ -26,8 +26,8 @@ func srtbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	rj, err := json.Marshal(createSrtbResponse(o))
 	assert.Nil(err)
-	w.Write(rj)
 	w.WriteHeader(http.StatusOK)
+	w.Write(rj)
 
 }
 

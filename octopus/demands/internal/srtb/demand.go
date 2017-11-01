@@ -29,7 +29,7 @@ func (d *Demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 }
 
 // GetBidResponse try to get bidresponse from response
-func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup exchange.Supplier) exchange.BidResponse {
+func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup exchange.Supplier) (exchange.BidResponse, error) {
 	l := &bytes.Buffer{}
 	k := &bytes.Buffer{}
 
@@ -43,11 +43,12 @@ func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup ex
 	assert.Nil(err)
 	xlog.Get(ctx).WithField("key", d.Name()).WithField("result", string(p)).Debug("Call done")
 	de := json.NewDecoder(k)
-
 	res := &s.BidResponse{}
 	err = de.Decode(res)
-	assert.Nil(err)
-	return srtb.NewBidResponse(d, sup, res)
+	if err != nil {
+		return nil, err
+	}
+	return srtb.NewBidResponse(d, sup, res), nil
 }
 
 // RenderBidRequest cast bid request to ortb
@@ -119,7 +120,12 @@ func bidRequestRtbToRest(bq exchange.BidRequest) *s.BidRequest {
 			ID: bq.User().ID(),
 		},
 		BCat: bq.BlockedCategories(),
-		Test: bq.Test(),
+		Test: func() int {
+			if bq.Test() {
+				return 1
+			}
+			return 0
+		}(),
 		TMax: int(bq.TMax() / time.Millisecond),
 	}
 
