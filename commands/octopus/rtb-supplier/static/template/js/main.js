@@ -29,6 +29,7 @@ $(function () {
             site = false;
         });
     }
+
     function SelectAppSiteFormREST() {
         $("[data-SiteSelect-REST]:checked").each(function () {
                 $(".site-form-REST").show();
@@ -46,23 +47,23 @@ $(function () {
 
     // Get Width and Height of Device
 
-    $("#device-H-RTB").attr("value" , $(window).height() ) ;
-    $("#device-W-RTB").attr("value" , $(window).width() ) ;
+    $("#device-H-RTB").attr("value", $(window).height());
+    $("#device-W-RTB").attr("value", $(window).width());
 
 
     // Initialize of Ip and user-agent value
     // GET IP of user from api
-    var ip = "127.0.0.1" ;
-    $.getJSON( "https://freegeoip.net/json/",
-        function(data){
-            ip = data.ip ;
-            $("#device-IP-RTB").attr("value" , ip );
-            $("#device-IP-REST").attr("value" ,  ip);
+    var ip = "127.0.0.1";
+    $.getJSON("https://freegeoip.net/json/",
+        function (data) {
+            ip = data.ip;
+            $("#device-IP-RTB").attr("value", ip);
+            $("#device-IP-REST").attr("value", ip);
         }
     );
     // set user agent
-    $("#useragent-RTB").attr("value" , navigator.userAgent );
-    $("#device-ua-REST").attr("value" , navigator.userAgent );
+    $("#useragent-RTB").attr("value", navigator.userAgent);
+    $("#device-ua-REST").attr("value", navigator.userAgent);
 
     // Create Dynamic form with specific name
     // this element will update when you update your form in html
@@ -87,7 +88,7 @@ $(function () {
     function RandomIdGen(elem) {
         var elem = $(elem);
         for (var i = 0; i < elem.length; i++) {
-            $(elem[i]).attr("value",(Math.ceil(Math.random() * 100000000000)));
+                $(elem[i]).attr("value", (Math.ceil(Math.random() * 100000000000)));
         }
     }
 
@@ -100,7 +101,7 @@ $(function () {
     function fillValue(elem, array) {
         if (elem.length === array.length) {
             for (var i = 0; i < elem.length; i++) {
-                $((elem)[i]).attr("value" , array[i]) ;
+                $((elem)[i]).attr("value", array[i]);
             }
         }
         else {
@@ -109,77 +110,75 @@ $(function () {
     }
 
 
-    function createJsonIMPORTB(elem){
+    function createJsonIMPORTB(elem) {
 
-        obj = {} ;
+        obj = {};
         obj.id = $(elem).find("[data-impId]").val();
-        obj.banner= {} ;
-        obj.banner.w         = $(elem).find("[data-impBannerW]").val();
-        obj.banner.h         = $(elem).find("[data-impBannerH]").val();
-        obj.banner.id        = $(elem).find("[data-impBannerId]").val();
-        obj.banner.btype     = $(elem).find("[data-impBannerBtype]").val();
-        obj.banner.battr     = $(elem).find("[data-impBannerBattr]").val();
-        obj.banner.mimes     = $(elem).find("[data-impBannerMimes]").val();
-        obj.bidfloor         = $(elem).find("[data-bidfloor]").val();
-        obj.bidfloorcur      = $(elem).find("[data-bidfloorcur]").val();
+        obj.banner = {};
+        obj.banner.w = $(elem).find("[data-impBannerW]").val();
+        obj.banner.h = $(elem).find("[data-impBannerH]").val();
+        obj.banner.id = $(elem).find("[data-impBannerId]").val();
+        obj.banner.btype = $(elem).find("[data-impBannerBtype]").val();
+        obj.banner.battr = $(elem).find("[data-impBannerBattr]").val();
+        obj.banner.mimes = $(elem).find("[data-impBannerMimes]").val();
+        obj.bidfloor = $(elem).find("[data-bidfloor]").val();
+        obj.bidfloorcur = $(elem).find("[data-bidfloorcur]").val();
 
-        obj.banner.btype  = obj.banner.btype.split(",") ;
-        obj.banner.battr  = obj.banner.battr.split(",") ;
-        obj.banner.mimes  = obj.banner.mimes.split(",") ;
-
-        obj.banner.w = parseInt(obj.banner.w);
-        obj.banner.h = parseInt(obj.banner.h);
-
-        ArrayElemToInt(obj.banner.btype);
-        ArrayElemToInt(obj.banner.battr);
-
-
-
-        if($(elem).find("[data-secure]:checked").length ===1){
-            obj.secure = 1 ;
-        }
-        else{
-            obj.secure = 0 ;
-        }
-        return obj ;
-    }
-
-    function createJsonIMPREST(elem){
-
-        obj = {} ;
-        obj.id = $(elem).find("[data-impId]").val();
-        obj.banner= {} ;
-        obj.banner.w         = $(elem).find("[data-impBannerW]").val();
-        obj.banner.h         = $(elem).find("[data-impBannerH]").val();
-        obj.banner.id        = $(elem).find("[data-impBannerId]").val();
-        obj.bidfloor         = $(elem).find("[data-bidfloor]").val();
-        obj.bidfloorcur      = $(elem).find("[data-bidfloorcur]").val();
 
         obj.banner.w = parseInt(obj.banner.w);
         obj.banner.h = parseInt(obj.banner.h);
 
 
-
-        if($(elem).find("[data-secure]:checked").length ===1){
-            obj.secure = 1 ;
-        }
-        else{
-            obj.secure = 0 ;
-        }
-        return obj ;
-    }
-
-    function toIntAndEmpty(obj) {
-        obj = parseInt(obj) || "";
-    }
-
-    function ArrayElemToInt(obj) {
-        if (obj != "") {
-            obj = obj.map(function (x) {
-                return toIntAndEmpty(x);
+        if (obj.banner.btype != "") {
+            obj.banner.btype = obj.banner.btype.split(",");
+            obj.banner.btype = obj.banner.btype.map(function (x) {
+                return parseInt(x);
             });
         }
+        if (obj.banner.battr != "") {
+            obj.banner.battr = obj.banner.battr.split(",");
+            obj.banner.battr = obj.banner.battr.map(function (x) {
+                return parseInt(x);
+            });
+        }
+
+        if (obj.banner.mimes != "") {
+            obj.banner.mimes = obj.banner.mimes.split(",");
+        }
+
+
+        if ($(elem).find("[data-secure]:checked").length === 1) {
+            obj.secure = 1;
+        }
+        else {
+            obj.secure = 0;
+        }
+        return obj;
     }
+
+    function createJsonIMPREST(elem) {
+
+        obj = {};
+        obj.id = $(elem).find("[data-impId]").val();
+        obj.banner = {};
+        obj.banner.w = $(elem).find("[data-impBannerW]").val();
+        obj.banner.h = $(elem).find("[data-impBannerH]").val();
+        obj.banner.id = $(elem).find("[data-impBannerId]").val();
+        obj.bidfloor = $(elem).find("[data-bidfloor]").val();
+
+        obj.banner.w = parseInt(obj.banner.w);
+        obj.banner.h = parseInt(obj.banner.h);
+
+
+        if ($(elem).find("[data-secure]:checked").length === 1) {
+            obj.secure = 1;
+        }
+        else {
+            obj.secure = 0;
+        }
+        return obj;
+    }
+
 
     // Get all impressions as object
     function getDynamicFormORTB(elem) {
@@ -189,37 +188,52 @@ $(function () {
         for (var i = 0; i < elemAppend.length; i++) {
             obj[i] = (createJsonIMPORTB(elemAppend[i]));
         }
-        return obj ;
+        return obj;
     }
+
     function getDynamicFormREST(elem) {
         var obj = [];
         elemAppend = $(elem);
         for (var i = 0; i < elemAppend.length; i++) {
             obj[i] = (createJsonIMPREST(elemAppend[i]));
         }
-        return obj ;
+        return obj;
     }
 
-    function BannerSplitor(elemSelector){
+    function BannerSplitor(elemSelector) {
         SplitElems = $(elemSelector);
-        for (i = 0 ; i< SplitElems.length ; i++){
-            var impBanner =  $(".imp-banner") ;
+        for (i = 0; i < SplitElems.length; i++) {
+            var impBanner = $(".imp-banner");
             var splitedBanner = ($(SplitElems[i]).val()).split("x");
             impBanner[i] = splitedBanner;
-            $(SplitElems[i]).parent().find("[data-impBannerW]").attr("value" , (impBanner[i])[0]) ;
-            $(SplitElems[i]).parent().find("[data-impBannerH]").attr("value" , (impBanner[i])[1]) ;
+            $(SplitElems[i]).parent().find("[data-impBannerW]").attr("value", (impBanner[i])[0]);
+            $(SplitElems[i]).parent().find("[data-impBannerH]").attr("value", (impBanner[i])[1]);
         }
     }
+
+    function clean(obj) {
+        var propNames = Object.getOwnPropertyNames(obj);
+        for (var i = 0; i < propNames.length; i++) {
+            var propName = propNames[i];
+            if (obj[propName] === null  || obj[propName] === undefined || obj[propName] === "") {
+                delete obj[propName];
+            }
+        }
+    }
+
+
     // append form action
     $(".RTB-banner-input-wrapper button").on("click", function (event) {
         appendElem = createFormORTB();
         event.preventDefault();
         $(this).parent().append(appendElem);
+        RandomIdGen(".randomField");
     });
     $(".REST-banner-input-wrapper button").on("click", function (event) {
         appendElem = createFormREST();
         event.preventDefault();
         $(this).parent().append(appendElem);
+        RandomIdGen(".randomField");
     });
 
 
@@ -232,72 +246,112 @@ $(function () {
 
     $(".RTB-form").submit(function (event) {
         event.preventDefault();
-        BannerSplitor(".RTB-BannerSize") ;
+        BannerSplitor(".RTB-BannerSize");
         obj = getDynamicFormORTB(".RTB-form .RTB-banner-input");
 
 
         // Shortcut to add splited array of bcat input to object
         var jsonForm = $(this).serializeObject();
-        var splitedBcat = splitElemVal("#bcat-RTB", ",");
-        var splitedWlang = splitElemVal("#wlang-RTB", ",");
-        jsonForm.bcat = splitedBcat;
-        jsonForm.wlang = splitedWlang;
-        jsonForm.imp = obj ;
+        jsonForm.imp = obj;
         var impLength = obj.length;
-        for (var i=0 ; i < impLength ; i++)
-        {
-            toIntAndEmpty(jsonForm.imp[i].banner.w);
-            toIntAndEmpty(jsonForm.imp[i].banner.h);
-            toIntAndEmpty(jsonForm.imp[i].bidfloor);
-            toIntAndEmpty(jsonForm.imp[i].bidfloorcur);
+        for (var i = 0; i < impLength; i++) {
+            jsonForm.imp[i].banner.w = parseInt(jsonForm.imp[i].banner.w);
+            jsonForm.imp[i].banner.h = parseInt(jsonForm.imp[i].banner.h);
+            jsonForm.imp[i].bidfloor = parseInt(jsonForm.imp[i].bidfloor) || "";
+            jsonForm.imp[i].bidfloorcur = parseInt(jsonForm.imp[i].bidfloorcur) || "";
+            clean(jsonForm.imp[i]);
+            clean(jsonForm.imp[i].banner);
+
         }
 
+        if (jsonForm.bcat !== "") {
+            jsonForm.bcat = (jsonForm.bcat).split(",");
+        }
+        if (jsonForm.wlang !== "") {
+            jsonForm.wlang = (jsonForm.wlang).split(",");
+        }
         jsonForm.device.mccmnc = (jsonForm.device.mccmnc).split("-");
 
-        toIntAndEmpty(jsonForm.device.geo.lat);
-        toIntAndEmpty(jsonForm.device.geo.lon );
-        toIntAndEmpty(jsonForm.device.geo.type );
-        toIntAndEmpty(jsonForm.device.geo.accuracy);
+        jsonForm.device.geo.lat = parseInt(jsonForm.device.geo.lat) || "";
+        jsonForm.device.geo.lon = parseInt(jsonForm.device.geo.lon) || "";
+        jsonForm.device.geo.type = parseInt(jsonForm.device.geo.type) || "";
+        jsonForm.device.geo.accuracy = parseInt(jsonForm.device.geo.accuracy) || "";
 
 
-        toIntAndEmpty(jsonForm.device.h);
-        toIntAndEmpty(jsonForm.device.w);
+        jsonForm.device.h = parseInt(jsonForm.device.h);
+        jsonForm.device.w = parseInt(jsonForm.device.w);
+        jsonForm.device.connectiontype = parseInt(jsonForm.device.connectiontype);
 
-        toIntAndEmpty(jsonForm.tmax);
-        toIntAndEmpty(jsonForm.test);
-        toIntAndEmpty(jsonForm.at);
+        jsonForm.tmax = parseInt(jsonForm.tmax);
+        jsonForm.test = parseInt(jsonForm.test);
+        jsonForm.at = parseInt(jsonForm.at);
 
 
-        jsonForm.wseat  = (jsonForm.wseat).split(",");
-        jsonForm.bseat  = (jsonForm.bseat).split(",");
-        jsonForm.cur    = (jsonForm.cur).split(",");
-        jsonForm.badv   = (jsonForm.badv).split(",");
-        jsonForm.bapp   = (jsonForm.bapp).split(",");
+        if (jsonForm.wseat !== "") {
+            jsonForm.wseat = (jsonForm.wseat).split(",");
+        }
+        if (jsonForm.bseat !== "") {
+            jsonForm.bseat = (jsonForm.bseat).split(",");
+        }
+        if (jsonForm.cur !== "") {
+            jsonForm.cur = (jsonForm.cur).split(",");
+        }
+        if (jsonForm.badv !== "") {
+            jsonForm.badv = (jsonForm.badv).split(",");
+        }
+        if (jsonForm.bapp !== "") {
+            jsonForm.bapp = (jsonForm.bapp).split(",");
+        }
 
         delete jsonForm.radioSite;
-        if(site){
+        if (site) {
             delete jsonForm.app;
-            jsonForm.site.cat              = (jsonForm.site.cat).split(",");
-            jsonForm.site.sectioncat       = (jsonForm.site.sectioncat).split(",");
-            jsonForm.site.pagecat          = (jsonForm.site.pagecat).split(",");
-            jsonForm.site.publisher.cat    = (jsonForm.site.publisher.cat).split(",");
+            if (jsonForm.site.cat !== "") {
+                jsonForm.site.cat = (jsonForm.site.cat).split(",");
+            }
+            if (jsonForm.site.sectioncat !== "") {
+                jsonForm.site.sectioncat = (jsonForm.site.sectioncat).split(",");
+            }
+            if (jsonForm.site.pagecat !== "") {
+                jsonForm.site.pagecat = (jsonForm.site.pagecat).split(",");
+            }
+            if (jsonForm.site.publisher.cat !== "") {
+                jsonForm.site.publisher.cat = (jsonForm.site.publisher.cat).split(",");
+            }
+            clean((jsonForm.site.publisher));
+            clean((jsonForm.site));
+
         }
-        else{
+        else {
             delete jsonForm.site;
-            jsonForm.app.cat              = (jsonForm.app.cat).split(",");
-            jsonForm.app.sectioncat       = (jsonForm.app.sectioncat).split(",");
-            jsonForm.app.pagecat          = (jsonForm.app.pagecat).split(",");
-            jsonForm.app.publisher.cat    = (jsonForm.app.publisher.cat).split(",");
+            if (jsonForm.app.cat !== "") {
+                jsonForm.app.cat = (jsonForm.app.cat).split(",");
+            }
+            if (jsonForm.app.sectioncat !== "") {
+                jsonForm.app.sectioncat = (jsonForm.app.sectioncat).split(",");
+            }
+            if (jsonForm.app.pagecat !== "") {
+                jsonForm.app.pagecat = (jsonForm.app.pagecat).split(",");
+            }
+            if (jsonForm.app.publisher.cat !== "") {
+                jsonForm.app.publisher.cat = (jsonForm.app.publisher.cat).split(",");
+            }
+            clean((jsonForm.app.publisher));
+            clean((jsonForm.app));
         }
+        clean(jsonForm);
+        clean((jsonForm.device.geo));
+        clean((jsonForm.device.ext));
+        clean((jsonForm.device));
+
         var JSONOut = {};
         JSONOut.request = jsonForm;
         JSONOut.meta = {};
-        JSONOut.meta.key = $("#key-RTB").val() ;
+        JSONOut.meta.key = $("#key-RTB").val();
 
 
-
-        var url =$(".RTB-form").attr("action") ;
-        var jsonRes ;
+        var url = $(".RTB-form").attr("action");
+        var jsonRes;
 
         $.ajax({
             url: url,
@@ -306,61 +360,73 @@ $(function () {
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             async: false,
-            success: function(msg) {
-                jsonRes =  msg ;
-                $(".json-out").innerHTML = syntaxHighlight(JSON.stringify(jsonRes, undefined, 4));
+            success: function (msg) {
+                jsonRes = msg;
+                $(".json-out-RTB").html( syntaxHighlight(JSON.stringify(jsonRes, undefined, 4)));
             }
         });
 
         console.log(JSON.stringify(JSONOut));
-        $(".json-out-RTB").html = syntaxHighlight(JSON.stringify(JSONOut, undefined, 4));
-        $(".json-out-RTB").innerHTML ="hello";
+
+
 
     });
 
 
     $(".REST-form").submit(function (event) {
         event.preventDefault();
-        BannerSplitor(".REST-BannerSize") ;
+        BannerSplitor(".REST-BannerSize");
         obj = getDynamicFormREST(".REST-form .REST-banner-input");
 
 
-        // Shortcut to add splited array of bcat input to object
         var jsonForm = $(this).serializeObject();
-        var splitedBcat = splitElemVal("#bcat-REST", ",");
-        jsonForm.bcat = splitedBcat;
-        jsonForm.imp = obj ;
+        jsonForm.imp = obj;
         var impLength = obj.length;
-        for (var i=0 ; i < impLength ; i++)
-        {
-            toIntAndEmpty(jsonForm.imp[i].banner.w);
-            toIntAndEmpty(jsonForm.imp[i].banner.h);
-            toIntAndEmpty(jsonForm.imp[i].bidfloor);
-            toIntAndEmpty(jsonForm.imp[i].bidfloorcur);
+        for (var i = 0; i < impLength; i++) {
 
+            jsonForm.imp[i].banner.w = parseInt(jsonForm.imp[i].banner.w);
+            jsonForm.imp[i].banner.h = parseInt(jsonForm.imp[i].banner.h);
+            jsonForm.imp[i].bidfloor = parseInt(jsonForm.imp[i].bidfloor) || "";
+            clean(jsonForm.imp[i]);
         }
 
 
+        if (jsonForm.bcat !== "") {
+            jsonForm.bcat = (jsonForm.bcat).split(",");
+        }
+        jsonForm.device.h = parseInt(jsonForm.device.h) || "";
+        jsonForm.device.w = parseInt(jsonForm.device.w) || "";
+        jsonForm.device.connectiontype = parseInt(jsonForm.device.connectiontype);
 
-        toIntAndEmpty(jsonForm.tmax);
-        toIntAndEmpty(jsonForm.test);
+        jsonForm.tmax = parseInt(jsonForm.tmax) || "";
+        jsonForm.test = parseInt(jsonForm.test) || "";
+        jsonForm.at = parseInt(jsonForm.at) || "";
 
         delete jsonForm.radioSite;
-        if(site){
+        if (site) {
             delete jsonForm.app;
-            jsonForm.site.cat              = (jsonForm.site.cat).split(",");
+            if (jsonForm.site.cat !== "") {
+                jsonForm.site.cat = (jsonForm.site.cat).split(",");
+            }
+            clean((jsonForm.site));
         }
-        else{
+        else {
             delete jsonForm.site;
-            jsonForm.app.cat              = (jsonForm.app.cat).split(",");
-        }
+            if (jsonForm.app.cat !== "") {
+                jsonForm.app.cat = (jsonForm.app.cat).split(",");
+            }
+            clean((jsonForm.app));
 
-        var JSONOut = {} ;
+        }
+        clean(jsonForm);
+        clean((jsonForm.device));
+
+        var JSONOut = {};
         JSONOut.request = jsonForm;
-        JSONOut.meta = {} ;
-        JSONOut.meta.key = $("#key-REST").val() ;
-        var url =$(".REST-form").attr("action") ;
-        var jsonRes ;
+        JSONOut.meta = {};
+        JSONOut.meta.key = $("#key-REST").val();
+        var url = $(".REST-form").attr("action");
+        var jsonRes;
 
 
         $.ajax({
@@ -370,9 +436,10 @@ $(function () {
             contentType: 'application/json; charset=utf-8',
             dataType: 'json',
             async: false,
-            success: function(msg) {
-                jsonRes =  msg ;
-                $(".json-out").innerHTML = syntaxHighlight(JSON.stringify(jsonRes, undefined, 4));
+            success: function (msg) {
+                jsonRes = msg;
+                $(".json-out-REST").html(syntaxHighlight(JSON.stringify(jsonRes, undefined, 4)));
+
             }
         });
 

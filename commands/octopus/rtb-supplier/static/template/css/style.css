@@ -7,3 +7,9 @@
 .secure-radiobtn .form-check-label{
     margin-right:15px;
 }
+.key{
+    color:red
+}
+.number , .string{
+    color: green;
+}

@@ -55,7 +55,7 @@ func Provide(ctx context.Context, dem exchange.Demand, bq exchange.BidRequest, c
 	}
 	if resp.StatusCode != http.StatusOK {
 		body, _ := ioutil.ReadAll(resp.Body)
-		resp.Body.Close()
+		defer resp.Body.Close()
 		xlog.Get(ctx).WithField("status", resp.StatusCode).Debug(string(body))
 		return
 	}

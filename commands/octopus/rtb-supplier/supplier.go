@@ -30,7 +30,7 @@ type d struct {
 type e struct {
 }
 
-var exchangeURL = "http://127.0.0.1/rest/get"
+var exchangeURL = "http://127.0.0.1:8090/api/rest/get"
 var prefix = "commands/octopus/rtb-supplier/static/template"
 
 func (s) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
@@ -98,7 +98,7 @@ func (d) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
 	g := &bytes.Buffer{}
 	_, err = g.Write(res)
 	assert.Nil(err)
-	req, err := http.NewRequest("POST", exchangeURL+"/"+"mysupkey", bytes.NewBuffer(g.Bytes()))
+	req, err := http.NewRequest("POST", exchangeURL+"/"+i.Meta.Key, bytes.NewBuffer(g.Bytes()))
 	assert.Nil(err)
 	client := &http.Client{}
 	resp, err := client.Do(req.WithContext(c))
@@ -133,7 +133,7 @@ func (e) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(buf)
 	assert.Nil(enc.Encode(payload.Request))
 
-	req, err := http.NewRequest("POST", exchangeURL+"/"+"mysupkey", bytes.NewBuffer(buf.Bytes()))
+	req, err := http.NewRequest("POST", exchangeURL+"/"+payload.Meta.Key, bytes.NewBuffer(buf.Bytes()))
 	assert.Nil(err)
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
@@ -148,6 +148,9 @@ func (e) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
 		w.Write(data2)
 		return
 	}
-	w.Write([]byte(data2))
-	w.WriteHeader(http.StatusOK)
+	var result = &srtb.BidResponse{}
+	err = json.Unmarshal(data2, &result)
+	assert.Nil(err)
+	enc1 := json.NewEncoder(w)
+	enc1.Encode(result)
 }
