@@ -15,7 +15,7 @@
     <div class="tab-content">
         <div id="RTB" class="tab-pane active" role="tabpanel">
             <h2>ORTB</h2>
-            <form class="RTB-form" method="post" action="fake/rtb">
+            <form class="RTB-form" method="post" action="rtb">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="banner-input-wrapper RTB-banner-input-wrapper">
+                <div class="RTB-banner-input-wrapper RTB-banner-input-wrapper">
                     <div class="RTB-banner-input banner-input">
                         <div class="row">
                             <div class="col-md-12">
@@ -36,7 +36,7 @@
                         </div>
                         <div class="form-group">
                             <label for="RTB-BannerSize">imp </label>
-                            <select class="form-control BannerSize" id="RTB-BannerSize">
+                            <select class="form-control BannerSize RTB-BannerSize" id="RTB-BannerSize">
                                 <option>120x600</option>
                                 <option>160x600</option>
                                 <option>300x250</option>
@@ -398,12 +398,12 @@
         </div>
         <div id="rest" class="tab-pane" role="tabpanel">
             <h3>REST</h3>
-            <form class="REST-form" method="post" action="fake/rest">
+            <form class="REST-form" method="post" action="srtb">
                 <div class="form-group">
                 <label >id</label>
                 <input class="randomField form-control" disabled type="text" name="id" value="">
                 </div>
-                <div class="banner-input-wrapper REST-banner-input-wrapper">
+                <div class="REST-banner-input-wrapper REST-banner-input-wrapper">
                     <div class="REST-banner-input banner-input">
                         <div class="form-group">
                         <label >imp ID</label>
@@ -411,7 +411,7 @@
                         </div>
                         <div class="form-group">
                             <label for="REST-BannerSize">imp </label>
-                            <select class="form-control BannerSize" id="REST-BannerSize">
+                            <select class="form-control BannerSize REST-BannerSize" id="REST-BannerSize">
                                 <option>120x600</option>
                                 <option>160x600</option>
                                 <option>300x250</option>
@@ -493,7 +493,7 @@
                     </div>
                     <div class="col-md-4">
                         <label for="site-cat-REST"> Site cat </label>
-                        <input name="site[cat][]" type="text" class="form-control" id="site-cat-REST">
+                        <input name="site[cat]" type="text" class="form-control" id="site-cat-REST">
                     </div>
                 </div>
                 </div>
@@ -535,7 +535,7 @@
                         </div>
                         <div class="col-md-3">
                             <label for="device-CON-TYPE-REST">device connection-type </label>
-                            <input name="device[connectiontype]" type="text" id="device-CON-TYPE-REST" class="form-control">
+                            <input name="device[connectiontype]" type="text" id="device-CON-TYPE-REST" value="0" class="form-control">
                         </div>
                         <div class="col-md-3">
                             <label for="device-carrier-REST">device carrier </label>

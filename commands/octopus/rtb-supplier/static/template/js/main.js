@@ -39,7 +39,7 @@ $(function () {
         $("[data-AppSelect-REST]:checked").each(function () {
             $(".site-form-REST").hide();
             $(".app-form-REST").show();
-              site = false;
+            site = false;
         });
     }
 
@@ -55,7 +55,7 @@ $(function () {
     var ip = "127.0.0.1" ;
     $.getJSON( "https://freegeoip.net/json/",
         function(data){
-           ip = data.ip ;
+            ip = data.ip ;
             $("#device-IP-RTB").attr("value" , ip );
             $("#device-IP-REST").attr("value" ,  ip);
         }
@@ -67,15 +67,20 @@ $(function () {
     // Create Dynamic form with specific name
     // this element will update when you update your form in html
     // remove name to avoid conflict of new element with SerializeObject plugin
-    function createForm() {
+    function createFormORTB() {
 
-        var createElement = $(".banner-input").clone();
+        var createElement = $(".RTB-banner-input").clone();
         var inputElem = createElement.find("input");
 
-        // for(var i=0 ; i<inputElem.length ; i++ ){
-        //   $(inputElem[i]).removeAttr("name");
-        // }
-        return '<div class="banner-input">' + createElement.html() + '<button type="button" class="btn-minus btn">- Remove Impression</button></div>';
+        return '<div class="RTB-banner-input">' + createElement.html() + '<button type="button" class="btn-minus btn">- Remove Impression</button></div>';
+    }
+
+    function createFormREST() {
+
+        var createElement = $(".REST-banner-input").clone();
+        var inputElem = createElement.find("input");
+
+        return '<div class="REST-banner-input">' + createElement.html() + '<button type="button" class="btn-minus btn">- Remove Impression</button></div>';
     }
 
 
@@ -106,34 +111,37 @@ $(function () {
 
     function createJsonIMPORTB(elem){
 
-       obj = {} ;
-       obj.id = $(elem).find("[data-impId]").val();
-       obj.banner= {} ;
-       obj.banner.w         = $(elem).find("[data-impBannerW]").val();
-       obj.banner.h         = $(elem).find("[data-impBannerH]").val();
-       obj.banner.id        = $(elem).find("[data-impBannerId]").val();
-       obj.banner.btype     = $(elem).find("[data-impBannerBtype]").val();
-       obj.banner.battr     = $(elem).find("[data-impBannerBattr]").val();
-       obj.banner.mimes     = $(elem).find("[data-impBannerMimes]").val();
-       obj.bidfloor         = $(elem).find("[data-bidfloor]").val();
-       obj.bidfloorcur      = $(elem).find("[data-bidfloorcur]").val();
+        obj = {} ;
+        obj.id = $(elem).find("[data-impId]").val();
+        obj.banner= {} ;
+        obj.banner.w         = $(elem).find("[data-impBannerW]").val();
+        obj.banner.h         = $(elem).find("[data-impBannerH]").val();
+        obj.banner.id        = $(elem).find("[data-impBannerId]").val();
+        obj.banner.btype     = $(elem).find("[data-impBannerBtype]").val();
+        obj.banner.battr     = $(elem).find("[data-impBannerBattr]").val();
+        obj.banner.mimes     = $(elem).find("[data-impBannerMimes]").val();
+        obj.bidfloor         = $(elem).find("[data-bidfloor]").val();
+        obj.bidfloorcur      = $(elem).find("[data-bidfloorcur]").val();
 
-       obj.banner.btype  = obj.banner.btype.split(",") ;
-       obj.banner.battr  = obj.banner.battr.split(",") ;
-       obj.banner.mimes  = obj.banner.mimes.split(",") ;
+        obj.banner.btype  = obj.banner.btype.split(",") ;
+        obj.banner.battr  = obj.banner.battr.split(",") ;
+        obj.banner.mimes  = obj.banner.mimes.split(",") ;
 
-       ArrayElemToInt(obj.banner.btype);
-       ArrayElemToInt(obj.banner.battr);
+        obj.banner.w = parseInt(obj.banner.w);
+        obj.banner.h = parseInt(obj.banner.h);
+
+        ArrayElemToInt(obj.banner.btype);
+        ArrayElemToInt(obj.banner.battr);
 
 
 
-       if($(elem).find("[data-secure]:checked").length ===1){
-           obj.secure = 1 ;
-       }
-       else{
-           obj.secure = 0 ;
-       }
-       return obj ;
+        if($(elem).find("[data-secure]:checked").length ===1){
+            obj.secure = 1 ;
+        }
+        else{
+            obj.secure = 0 ;
+        }
+        return obj ;
     }
 
     function createJsonIMPREST(elem){
@@ -146,6 +154,9 @@ $(function () {
         obj.banner.id        = $(elem).find("[data-impBannerId]").val();
         obj.bidfloor         = $(elem).find("[data-bidfloor]").val();
         obj.bidfloorcur      = $(elem).find("[data-bidfloorcur]").val();
+
+        obj.banner.w = parseInt(obj.banner.w);
+        obj.banner.h = parseInt(obj.banner.h);
 
 
 
@@ -174,6 +185,7 @@ $(function () {
     function getDynamicFormORTB(elem) {
         var obj = [];
         elemAppend = $(elem);
+        console.log(elemAppend.length);
         for (var i = 0; i < elemAppend.length; i++) {
             obj[i] = (createJsonIMPORTB(elemAppend[i]));
         }
@@ -199,11 +211,18 @@ $(function () {
         }
     }
     // append form action
-    $(".banner-input-wrapper button").on("click", function (event) {
-        appendElem = createForm();
+    $(".RTB-banner-input-wrapper button").on("click", function (event) {
+        appendElem = createFormORTB();
         event.preventDefault();
         $(this).parent().append(appendElem);
     });
+    $(".REST-banner-input-wrapper button").on("click", function (event) {
+        appendElem = createFormREST();
+        event.preventDefault();
+        $(this).parent().append(appendElem);
+    });
+
+
     // remove form action
     $("body").on("click", ".btn-minus", function (event) {
         event.preventDefault();
@@ -213,8 +232,8 @@ $(function () {
 
     $(".RTB-form").submit(function (event) {
         event.preventDefault();
-        BannerSplitor("#RTB-BannerSize") ;
-        obj = getDynamicFormORTB(".RTB-form .banner-input");
+        BannerSplitor(".RTB-BannerSize") ;
+        obj = getDynamicFormORTB(".RTB-form .RTB-banner-input");
 
 
         // Shortcut to add splited array of bcat input to object
@@ -257,11 +276,11 @@ $(function () {
 
         delete jsonForm.radioSite;
         if(site){
-           delete jsonForm.app;
-           jsonForm.site.cat              = (jsonForm.site.cat).split(",");
-           jsonForm.site.sectioncat       = (jsonForm.site.sectioncat).split(",");
-           jsonForm.site.pagecat          = (jsonForm.site.pagecat).split(",");
-           jsonForm.site.publisher.cat    = (jsonForm.site.publisher.cat).split(",");
+            delete jsonForm.app;
+            jsonForm.site.cat              = (jsonForm.site.cat).split(",");
+            jsonForm.site.sectioncat       = (jsonForm.site.sectioncat).split(",");
+            jsonForm.site.pagecat          = (jsonForm.site.pagecat).split(",");
+            jsonForm.site.publisher.cat    = (jsonForm.site.publisher.cat).split(",");
         }
         else{
             delete jsonForm.site;
@@ -278,6 +297,7 @@ $(function () {
 
 
         var url =$(".RTB-form").attr("action") ;
+        var jsonRes ;
 
         $.ajax({
             url: url,
@@ -287,19 +307,22 @@ $(function () {
             dataType: 'json',
             async: false,
             success: function(msg) {
-                alert(msg);
+                jsonRes =  msg ;
+                $(".json-out").innerHTML = syntaxHighlight(JSON.stringify(jsonRes, undefined, 4));
             }
         });
 
         console.log(JSON.stringify(JSONOut));
+        $(".json-out-RTB").html = syntaxHighlight(JSON.stringify(JSONOut, undefined, 4));
+        $(".json-out-RTB").innerHTML ="hello";
 
     });
 
 
     $(".REST-form").submit(function (event) {
         event.preventDefault();
-        BannerSplitor("#REST-BannerSize") ;
-        obj = getDynamicFormREST(".REST-form .banner-input");
+        BannerSplitor(".REST-BannerSize") ;
+        obj = getDynamicFormREST(".REST-form .REST-banner-input");
 
 
         // Shortcut to add splited array of bcat input to object
@@ -322,11 +345,22 @@ $(function () {
         toIntAndEmpty(jsonForm.tmax);
         toIntAndEmpty(jsonForm.test);
 
+        delete jsonForm.radioSite;
+        if(site){
+            delete jsonForm.app;
+            jsonForm.site.cat              = (jsonForm.site.cat).split(",");
+        }
+        else{
+            delete jsonForm.site;
+            jsonForm.app.cat              = (jsonForm.app.cat).split(",");
+        }
+
         var JSONOut = {} ;
         JSONOut.request = jsonForm;
         JSONOut.meta = {} ;
         JSONOut.meta.key = $("#key-REST").val() ;
-       var url =$(".REST-form").attr("action") ;
+        var url =$(".REST-form").attr("action") ;
+        var jsonRes ;
 
 
         $.ajax({
@@ -337,11 +371,33 @@ $(function () {
             dataType: 'json',
             async: false,
             success: function(msg) {
-                alert(msg);
+                jsonRes =  msg ;
+                $(".json-out").innerHTML = syntaxHighlight(JSON.stringify(jsonRes, undefined, 4));
             }
         });
 
         console.log(JSON.stringify(JSONOut));
 
     });
+
+
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
 });

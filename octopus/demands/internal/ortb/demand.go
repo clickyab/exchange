@@ -29,7 +29,7 @@ func (d *Demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 }
 
 // GetBidResponse try to get bidresponse from response
-func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchange.Supplier) exchange.BidResponse {
+func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchange.Supplier) (exchange.BidResponse, error) {
 	l := &bytes.Buffer{}
 	k := &bytes.Buffer{}
 
@@ -46,8 +46,10 @@ func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchang
 
 	res := ortb.NewBidResponse(d, s, &openrtb.BidResponse{})
 	err = de.Decode(&res)
-	assert.Nil(err)
-	return res
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
 }
 
 // RenderBidRequest cast bid request to ortb

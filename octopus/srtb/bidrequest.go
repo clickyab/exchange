@@ -8,7 +8,7 @@ type BidRequest struct {
 	App    *App         `json:"app,omitempty"`
 	Device *Device      `json:"device"`
 	User   *User        `json:"user,omitempty"`
-	Test   bool         `json:"test"`
+	Test   int          `json:"test"`
 	TMax   int          `json:"tmax,omitempty"`
 	BCat   []string     `json:"bcat,omitempty"`
 }

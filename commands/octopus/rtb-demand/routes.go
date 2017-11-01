@@ -1,4 +1,4 @@
-package static
+package main
 
 import (
 	"github.com/clickyab/services/framework"
@@ -11,7 +11,7 @@ type initRouter struct {
 func (initRouter) Routes(mux framework.Mux) {
 	// Exam paths
 	mux.POST("/exam/get/ortb", ortbHandler)
-	mux.POST("/exam/get/ortb", srtbHandler)
+	mux.POST("/exam/get/srtb", srtbHandler)
 }
 
 func init() {
