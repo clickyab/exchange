@@ -9,7 +9,6 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/mysql"
 	"github.com/clickyab/services/xlog"
-	"github.com/sirupsen/logrus"
 )
 
 // Manager is the model manager
@@ -42,21 +41,20 @@ func Provide(ctx context.Context, dem exchange.Demand, bq exchange.BidRequest, c
 	header := dem.RenderBidRequest(ctx, buf, bq)
 	req, err := http.NewRequest("POST", dem.EndPoint(), bytes.NewBuffer(buf.Bytes()))
 	if err != nil {
-		xlog.Get(ctx).WithField("exchange to demand request rendering", err.Error()).Debug()
+		xlog.GetWithField(ctx, "exchange to demand request rendering", err.Error()).Debug()
 		return
 	}
 
 	req.Header = header
-	xlog.Get(ctx).WithField("key", dem.Name()).Debug("calling demand")
+	xlog.GetWithField(ctx, "key", dem.Name()).Debug("calling demand")
 	resp, err := dem.Client().Do(req.WithContext(ctx))
 	if err != nil {
-		logrus.Debug(err)
 		return
 	}
 	if resp.StatusCode != http.StatusOK {
 		body, _ := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
-		xlog.Get(ctx).WithField("status", resp.StatusCode).Debug(string(body))
+		xlog.GetWithField(ctx, "status", resp.StatusCode).Debug(string(body))
 		return
 	}
 	result, err := dem.GetBidResponse(ctx, resp, bq.Inventory().Supplier())

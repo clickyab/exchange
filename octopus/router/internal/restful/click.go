@@ -9,6 +9,7 @@ import (
 
 	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
 )
@@ -30,7 +31,7 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	targetURL = string(translated)
 	sup, err := suppliers.GetSupplierByName(supplier)
 	if err != nil {
-		logrus.WithError(err).WithField("supplier", supplier).Debug("supplier not found")
+		xlog.GetWithError(ctx, err).WithField("supplier", supplier).Debug("supplier not found")
 		http.Redirect(w, r, targetURL, http.StatusFound)
 		return
 	}
@@ -41,7 +42,7 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	supParam := strings.TrimSpace(megaImpStore.SubKey("SUP_PARAM"))
 
 	if supURL == "" || supParam == "" {
-		logrus.WithFields(logrus.Fields{
+		xlog.GetWithFields(ctx, logrus.Fields{
 			"supplier":  supplier,
 			"sup_url":   supURL,
 			"sup_param": supParam,
@@ -50,6 +51,6 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logrus.WithField("supplier", supplier).WithField("action", "redirect").Debug(targetURL)
+	xlog.GetWithField(ctx, "supplier", supplier).WithField("action", "redirect").Debug(targetURL)
 	http.Redirect(w, r, targetURL, http.StatusFound)
 }

@@ -30,21 +30,17 @@ func (d *Demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 
 // GetBidResponse try to get bidresponse from response
 func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup exchange.Supplier) (exchange.BidResponse, error) {
-	l := &bytes.Buffer{}
-	k := &bytes.Buffer{}
-
-	t := io.MultiWriter(l, k)
+	t := &bytes.Buffer{}
 	_, err := io.Copy(t, resp.Body)
 	assert.Nil(err)
 
 	defer resp.Body.Close()
 
-	p, err := l.ReadByte()
-	assert.Nil(err)
+	p := t.Bytes()
 	xlog.Get(ctx).WithField("key", d.Name()).WithField("result", string(p)).Debug("Call done")
-	de := json.NewDecoder(k)
+
 	res := &s.BidResponse{}
-	err = de.Decode(res)
+	err = json.Unmarshal(p, res)
 	if err != nil {
 		return nil, err
 	}
@@ -54,18 +50,20 @@ func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup ex
 // RenderBidRequest cast bid request to ortb
 func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
 	j := json.NewEncoder(w)
-	if bq.LayerType() == exchange.SupplierSRTB {
-		err := j.Encode(bq)
-		assert.Nil(err)
-		return http.Header{}
+	var br interface{} = bq
+	if bq.LayerType() != exchange.SupplierSRTB {
+		br = bidRequestToSRTB(ctx, bq)
 	}
 	// render in rtb style
-	j.Encode(srtb.NewBidRequest(bq.Inventory().Supplier(), bidRequestRtbToRest(bq)))
+	err := j.Encode(br)
+	assert.Nil(err)
+	// TODO : simple rtb headers
 	return http.Header{}
 }
 
-// bidRequestRtbToRest change bid-request to srtb
-func bidRequestRtbToRest(bq exchange.BidRequest) *s.BidRequest {
+// bidRequestToSRTB change bid-request to srtb
+// TODO : Split it to multiple simpler function
+func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *s.BidRequest {
 	imps := []s.Impression{}
 	for i := range bq.Imp() {
 		imps = append(imps, s.Impression{
@@ -129,7 +127,8 @@ func bidRequestRtbToRest(bq exchange.BidRequest) *s.BidRequest {
 		TMax: int(bq.TMax() / time.Millisecond),
 	}
 
-	if n, ok := bq.Inventory().(exchange.Site); ok {
+	switch n := bq.Inventory().(type) {
+	case exchange.Site:
 		res.Site = &s.Site{
 			Publisher: s.Publisher{
 				ID:     n.ID(),
@@ -146,7 +145,7 @@ func bidRequestRtbToRest(bq exchange.BidRequest) *s.BidRequest {
 			Ref:  n.Ref(),
 			Page: n.Page(),
 		}
-	} else if n, ok := bq.Inventory().(exchange.App); ok {
+	case exchange.App:
 		res.App = &s.App{
 			Publisher: s.Publisher{
 				ID:     n.ID(),
@@ -163,10 +162,9 @@ func bidRequestRtbToRest(bq exchange.BidRequest) *s.BidRequest {
 			Bundle: n.Bundle(),
 		}
 
-	} else {
-		panic("[BUG] not a valid inventory")
+	default:
+		xlog.Get(ctx).Panic("[BUG] not a valid inventory")
 	}
 
 	return res
-
 }
