@@ -111,7 +111,7 @@ func (m *Manager) GetSuppliers() map[string]exchange.Supplier {
 				SupplierBase: res[i],
 			}
 		} else {
-			panic("[BUG] not a valid supplier type")
+			logrus.Panic("[BUG] not a valid supplier type")
 
 		}
 	}
