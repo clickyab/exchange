@@ -3,9 +3,10 @@ package restful
 import (
 	"context"
 	"net/http"
-	"strings"
 
 	"encoding/base64"
+
+	"strings"
 
 	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/kv"
@@ -15,6 +16,9 @@ import (
 )
 
 // Click is the route for click worker
+// TODO : the click is entirely problematic. must re-write it
+// TODO : where to send the parameter to the fucking demand?
+// TODO : where to get the parameter from the fucking supplier?
 func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	supplier := xmux.Param(ctx, "supplier")
 	trackID := xmux.Param(ctx, "trackID")
