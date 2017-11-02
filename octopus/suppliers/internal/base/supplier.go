@@ -57,8 +57,8 @@ func (s Supplier) Share() int {
 	if s.SShare > 100 {
 		return 100
 	}
-	if s.SShare < 1 {
-		s.SShare = 1
+	if s.SShare < 0 {
+		s.SShare = 0
 	}
 	return s.SShare
 }

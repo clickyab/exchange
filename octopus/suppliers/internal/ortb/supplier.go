@@ -24,6 +24,7 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 		r, err := json.Marshal(b)
 		assert.Nil(err)
 		w.Write(r)
+		// TODO : open rtb header
 		return http.Header{}
 	}
 
@@ -67,6 +68,7 @@ func (s *Supplier) GetBidRequest(ctx context.Context, r *http.Request) (exchange
 	req := ortb.BidRequest{}
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
+
 	if err := d.Decode(&req); err != nil {
 		return nil, err
 	}

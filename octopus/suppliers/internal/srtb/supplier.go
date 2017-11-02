@@ -8,7 +8,7 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/srtb"
-	srtb2 "clickyab.com/exchange/octopus/srtb"
+	simple "clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/assert"
 )
 
@@ -25,9 +25,9 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 		w.Write(r)
 		return http.Header{}
 	}
-	bids := make([]srtb2.Bid, 0)
+	bids := make([]simple.Bid, 0)
 	for _, i := range b.Bids() {
-		bids = append(bids, srtb2.Bid{
+		bids = append(bids, simple.Bid{
 			ID:       i.ID(),
 			Width:    i.AdWidth(),
 			Height:   i.AdHeight(),
@@ -36,7 +36,7 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 			AdMarkup: i.AdMarkup(),
 		})
 	}
-	r, err := json.Marshal(srtb2.BidResponse{
+	r, err := json.Marshal(simple.BidResponse{
 		ID:   b.ID(),
 		Bids: bids,
 	})
@@ -47,7 +47,7 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 
 // GetBidRequest transform request object to internal model
 func (s *Supplier) GetBidRequest(ctx context.Context, r *http.Request) (exchange.BidRequest, error) {
-	var r1 = srtb2.BidRequest{}
+	var r1 = simple.BidRequest{}
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 	if err := d.Decode(&r1); err != nil {

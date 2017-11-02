@@ -14,7 +14,7 @@ import (
 
 	"clickyab.com/exchange/octopus/demands/internal/base"
 	"clickyab.com/exchange/octopus/exchange/srtb"
-	s "clickyab.com/exchange/octopus/srtb"
+	simple "clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/xlog"
 )
 
@@ -39,7 +39,7 @@ func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup ex
 	p := t.Bytes()
 	xlog.Get(ctx).WithField("key", d.Name()).WithField("result", string(p)).Debug("Call done")
 
-	res := &s.BidResponse{}
+	res := &simple.BidResponse{}
 	err = json.Unmarshal(p, res)
 	if err != nil {
 		return nil, err
@@ -63,12 +63,12 @@ func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.
 
 // bidRequestToSRTB change bid-request to srtb
 // TODO : Split it to multiple simpler function
-func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *s.BidRequest {
-	imps := []s.Impression{}
+func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *simple.BidRequest {
+	imps := []simple.Impression{}
 	for i := range bq.Imp() {
-		imps = append(imps, s.Impression{
+		imps = append(imps, simple.Impression{
 			ID: bq.Imp()[i].ID(),
-			Banner: &s.Banner{
+			Banner: &simple.Banner{
 				ID:     bq.Imp()[i].Banner().ID(),
 				Height: bq.Imp()[i].Banner().Height(),
 				Width:  bq.Imp()[i].Banner().Width(),
@@ -82,10 +82,10 @@ func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *s.BidRequest
 			}(),
 		})
 	}
-	res := &s.BidRequest{
+	res := &simple.BidRequest{
 		Imp: imps,
 		ID:  bq.ID(),
-		Device: &s.Device{
+		Device: &simple.Device{
 			UA:       bq.Device().UserAgent(),
 			IP:       bq.Device().IP(),
 			ConnType: int(bq.Device().ConnType()),
@@ -95,7 +95,7 @@ func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *s.BidRequest
 			LAC:      bq.Device().LAC(),
 			MNC:      bq.Device().MNC(),
 			MCC:      bq.Device().MCC(),
-			Geo: s.Geo{
+			Geo: simple.Geo{
 				Country: exchange.Country{
 					Name:  bq.Device().Geo().Country().Name,
 					ISO:   bq.Device().Geo().Country().Name,
@@ -114,7 +114,7 @@ func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *s.BidRequest
 				ISP: exchange.ISP{},
 			},
 		},
-		User: &s.User{
+		User: &simple.User{
 			ID: bq.User().ID(),
 		},
 		BCat: bq.BlockedCategories(),
@@ -129,8 +129,8 @@ func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *s.BidRequest
 
 	switch n := bq.Inventory().(type) {
 	case exchange.Site:
-		res.Site = &s.Site{
-			Publisher: s.Publisher{
+		res.Site = &simple.Site{
+			Publisher: simple.Publisher{
 				ID:     n.ID(),
 				Domain: n.Domain(),
 				Cat: func() []string {
@@ -146,8 +146,8 @@ func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *s.BidRequest
 			Page: n.Page(),
 		}
 	case exchange.App:
-		res.App = &s.App{
-			Publisher: s.Publisher{
+		res.App = &simple.App{
+			Publisher: simple.Publisher{
 				ID:     n.ID(),
 				Domain: n.Domain(),
 				Cat: func() []string {
