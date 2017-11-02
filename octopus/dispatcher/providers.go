@@ -1,7 +1,8 @@
-package core
+package dispatcher
 
 import (
 	"context"
+	"errors"
 	"math/rand"
 	"sync"
 	"sync/atomic"
@@ -10,8 +11,6 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/assert"
 	"github.com/sirupsen/logrus"
-
-	"errors"
 
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
@@ -78,7 +77,7 @@ func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchan
 	}
 }
 
-// Register is used to handle new layer in system
+// Register add a new demand to system. the timeout is the maximum timeout for this demand.
 func Register(provider exchange.Demand, timeout time.Duration) {
 	lock.Lock()
 	defer lock.Unlock()
@@ -97,7 +96,7 @@ func Register(provider exchange.Demand, timeout time.Duration) {
 	logrus.WithField("type", "register_demand").Debugf("demand with name %s is registered", name)
 }
 
-// ResetProviders remove all providers
+// ResetProviders remove all providers, for reload it again
 func ResetProviders() {
 	lock.Lock()
 	defer lock.Unlock()
@@ -105,7 +104,10 @@ func ResetProviders() {
 	allProviders = make(map[string]providerData)
 }
 
-// Call is for getting the current ads for this imp
+// Call is the main function. calling this create a sequence of calls and all demands are called
+// one by one. there is a maximum timeout, but if you need a certain cancellation method, use the
+// context for that.
+// since the result is from multiple demands, the result is an array
 func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	rCtx, cnl := context.WithTimeout(ctx, maximumTimeout)
 	defer cnl()
@@ -116,17 +118,16 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	var allRes = make(chan exchange.BidResponse, l)
 	lock.RLock()
 	for i := range allProviders {
-		go func(inner string) {
+		go func(inner providerData) {
 			defer wg.Done()
-			if !demandIsAllowed(req, allProviders[inner]) {
+			if !demandIsAllowed(req, inner) {
 				return
 			}
-			p := allProviders[inner]
-			res := p.watch(rCtx, req)
+			res := inner.watch(rCtx, req)
 			if res != nil {
 				allRes <- res
 			}
-		}(i)
+		}(allProviders[i])
 	}
 	lock.RUnlock()
 
@@ -166,6 +167,9 @@ func isExcludedDemands(bq exchange.BidRequest, data providerData) bool {
 }
 
 func isNotSameMode(bq exchange.BidRequest, data providerData) bool {
+	// TODO : change test mode to integer and change it to group functionality
+	// if we use number we can create multiple separate network and its a cool
+	// functionality, but not yet.
 	return bq.Test() != data.provider.TestMode()
 }
 

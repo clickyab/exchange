@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"clickyab.com/exchange/octopus/core"
+	"clickyab.com/exchange/octopus/dispatcher"
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"clickyab.com/exchange/octopus/rtb"
@@ -86,7 +86,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	broker.Publish(jImp)
 	nCtx, cnl := context.WithCancel(ctx)
 	defer cnl()
-	bidResponses := core.Call(nCtx, bq)
+	bidResponses := dispatcher.Call(nCtx, bq)
 	log(nCtx, bq).WithField("count", len(bidResponses)).Debug("bidResponses is passed the system from exchange calls")
 	res := rtb.SelectCPM(nCtx, bq, bidResponses)
 	log(nCtx, bq).WithField("count", len(res.Bids())).Debug("bidResponses is passed the system select")

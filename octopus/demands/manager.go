@@ -6,12 +6,12 @@ import (
 	"sync"
 	"syscall"
 
-	"clickyab.com/exchange/octopus/core"
 	"github.com/clickyab/services/mysql"
 
 	"clickyab.com/exchange/octopus/demands/internal/base"
 	"clickyab.com/exchange/octopus/demands/internal/ortb"
 	"clickyab.com/exchange/octopus/demands/internal/srtb"
+	"clickyab.com/exchange/octopus/dispatcher"
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/sirupsen/logrus"
 )
@@ -25,13 +25,13 @@ func (dm *demandManager) loadDemands() {
 	dm.lock.Lock()
 	defer dm.lock.Unlock()
 	dm.activeDemands = base.NewManager().ActiveDemands()
-	core.ResetProviders()
+	dispatcher.ResetProviders()
 	for _, demand := range dm.activeDemands {
 		switch demand.Type() {
 		case exchange.DemandTypeSrtb:
-			core.Register(&srtb.Demand{DemandBase: demand}, demand.GetTimeout())
+			dispatcher.Register(&srtb.Demand{DemandBase: demand}, demand.GetTimeout())
 		case exchange.DemandTypeOrtb:
-			core.Register(&ortb.Demand{DemandBase: demand}, demand.GetTimeout())
+			dispatcher.Register(&ortb.Demand{DemandBase: demand}, demand.GetTimeout())
 		default:
 			logrus.Panicf("Not supported demand type : %s", demand.Type)
 		}

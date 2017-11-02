@@ -1,4 +1,4 @@
-package core
+package dispatcher
 
 import (
 	"time"
@@ -7,6 +7,8 @@ import (
 	"github.com/clickyab/services/config"
 )
 
+// I do not use the Register mode since I need to handle the zero and very large value.
+// do not like the idea, but its ok for now.
 var maximumTimeout time.Duration
 
 type cfgInitializer struct {
