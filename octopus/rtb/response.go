@@ -84,5 +84,5 @@ func (r rsp) Supplier() exchange.Supplier {
 }
 
 func (r rsp) LayerType() string {
-	return "ortb"
+	return exchange.SupplierMixed
 }

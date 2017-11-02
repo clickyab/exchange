@@ -11,6 +11,8 @@ const (
 	SupplierORTB = "ortb"
 	// SupplierSRTB is type of this layer
 	SupplierSRTB = "srtb"
+	// SupplierMixed is type for mixed layer
+	SupplierMixed = "mixed"
 )
 
 // SupplierBase base supplier interface
