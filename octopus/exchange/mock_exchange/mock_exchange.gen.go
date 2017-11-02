@@ -5,14 +5,13 @@
 package mock_exchange
 
 import (
+	exchange "clickyab.com/exchange/octopus/exchange"
 	context "context"
+	gomock "github.com/golang/mock/gomock"
 	io "io"
 	http "net/http"
 	reflect "reflect"
 	time "time"
-
-	exchange "clickyab.com/exchange/octopus/exchange"
-	gomock "github.com/golang/mock/gomock"
 )
 
 // MockImpression is a mock of Impression interface
@@ -218,10 +217,11 @@ func (mr *MockDemandMockRecorder) ExcludedSuppliers() *gomock.Call {
 }
 
 // GetBidResponse mocks base method
-func (m *MockDemand) GetBidResponse(arg0 context.Context, arg1 *http.Response, arg2 exchange.Supplier) exchange.BidResponse {
+func (m *MockDemand) GetBidResponse(arg0 context.Context, arg1 *http.Response, arg2 exchange.Supplier) (exchange.BidResponse, error) {
 	ret := m.ctrl.Call(m, "GetBidResponse", arg0, arg1, arg2)
 	ret0, _ := ret[0].(exchange.BidResponse)
-	return ret0
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetBidResponse indicates an expected call of GetBidResponse
@@ -569,10 +569,11 @@ func (mr *MockSupplierMockRecorder) FloorCPM() *gomock.Call {
 }
 
 // GetBidRequest mocks base method
-func (m *MockSupplier) GetBidRequest(arg0 context.Context, arg1 *http.Request) exchange.BidRequest {
+func (m *MockSupplier) GetBidRequest(arg0 context.Context, arg1 *http.Request) (exchange.BidRequest, error) {
 	ret := m.ctrl.Call(m, "GetBidRequest", arg0, arg1)
 	ret0, _ := ret[0].(exchange.BidRequest)
-	return ret0
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // GetBidRequest indicates an expected call of GetBidRequest
