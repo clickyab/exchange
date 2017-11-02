@@ -30,33 +30,29 @@ func (d *Demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 
 // GetBidResponse try to get bidresponse from response
 func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchange.Supplier) (exchange.BidResponse, error) {
-	l := &bytes.Buffer{}
-	k := &bytes.Buffer{}
-
-	t := io.MultiWriter(l, k)
+	t := &bytes.Buffer{}
 	_, err := io.Copy(t, r.Body)
 	assert.Nil(err)
 
 	defer r.Body.Close()
 
-	p, err := l.ReadByte()
-	assert.Nil(err)
-	xlog.Get(ctx).WithField("key", d.Name()).WithField("result", string(p)).Debug("Call done")
-	de := json.NewDecoder(k)
+	p := t.Bytes()
+	xlog.GetWithField(ctx, "key", d.Name()).WithField("result", string(p)).Debug("Call done")
 
-	res := ortb.NewBidResponse(d, s, &openrtb.BidResponse{})
-	err = de.Decode(&res)
+	res := &openrtb.BidResponse{}
+	err = json.Unmarshal(p, res)
 	if err != nil {
 		return nil, err
 	}
-	return res, nil
+	return ortb.NewBidResponse(d, s, res), nil
 }
 
 // RenderBidRequest cast bid request to ortb
 func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
-	if bq.LayerType() == "ortb" {
+	if bq.LayerType() == exchange.SupplierORTB {
 		err := json.NewEncoder(w).Encode(bq)
 		assert.Nil(err)
+		// TODO : Add open-rtb headers
 		return http.Header{}
 	}
 
@@ -66,20 +62,22 @@ func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.
 		BAdv: bq.BlockedAdvertiserDomain(),
 	}
 
-	if v, ok := bq.Inventory().(exchange.App); ok {
+	switch v := bq.Inventory().(type) {
+	case exchange.App:
 		o.App = app(v)
-	} else if v, ok := bq.Inventory().(exchange.Site); ok {
+	case exchange.Site:
 		o.Site = site(v)
-	} else {
-		panic("[BUG] invalid inventory")
+	default:
+		xlog.Get(ctx).Panic("[BUG] invalid inventory")
 	}
 
-	xx := json.NewEncoder(w)
-	err := xx.Encode(o)
+	err := json.NewEncoder(w).Encode(o)
 	assert.Nil(err)
+	// TODO : Add open rtb headers
 	return http.Header{}
 
 }
+
 func site(s exchange.Site) *openrtb.Site {
 	return &openrtb.Site{
 		Inventory: inventory(s),
@@ -87,6 +85,7 @@ func site(s exchange.Site) *openrtb.Site {
 		Ref:       s.Ref(),
 	}
 }
+
 func inventory(n exchange.Inventory) openrtb.Inventory {
 	return openrtb.Inventory{
 		ID: n.ID(),
@@ -102,6 +101,7 @@ func inventory(n exchange.Inventory) openrtb.Inventory {
 		Publisher: publisher(n.Publisher()),
 	}
 }
+
 func publisher(p exchange.Publisher) *openrtb.Publisher {
 	return &openrtb.Publisher{
 		Domain: p.Domain(),
@@ -146,9 +146,11 @@ func impression(m []exchange.Impression) []openrtb.Impression {
 	return ms
 
 }
+
 func native(n exchange.Native) *openrtb.Native {
 	panic("implement me")
 }
+
 func video(b exchange.Video) *openrtb.Video {
 	return &openrtb.Video{
 		Mimes: b.Mimes(),
@@ -169,6 +171,7 @@ func video(b exchange.Video) *openrtb.Video {
 		}(),
 	}
 }
+
 func banner(b exchange.Banner) *openrtb.Banner {
 	return &openrtb.Banner{
 		ID: b.ID(),
