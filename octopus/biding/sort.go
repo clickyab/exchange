@@ -1,4 +1,4 @@
-package rtb
+package biding
 
 import (
 	"clickyab.com/exchange/octopus/exchange"

@@ -4,8 +4,9 @@ import "clickyab.com/exchange/octopus/exchange"
 
 // Device shows the clients device details
 type Device struct {
-	UA       string `json:"ua"`
-	IP       string `json:"ip"`
+	UA string `json:"ua"`
+	IP string `json:"ip"`
+	// TODO : Move Geo in higher level, one of the meaning of the simple is to be in one level only
 	Geo      Geo    `json:"geo,omitempty"`
 	ConnType int    `json:"connectiontype,omitempty"`
 	Carrier  string `json:"carrier,omitempty"`

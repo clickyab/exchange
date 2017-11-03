@@ -9,6 +9,7 @@ type BidRequest struct {
 	Device *Device      `json:"device"`
 	User   *User        `json:"user,omitempty"`
 	Test   int          `json:"test"`
-	TMax   int          `json:"tmax,omitempty"`
-	BCat   []string     `json:"bcat,omitempty"`
+	// TODO : Who thinks this is simple???
+	TMax int      `json:"tmax,omitempty"`
+	BCat []string `json:"bcat,omitempty"`
 }

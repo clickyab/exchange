@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"clickyab.com/exchange/octopus/biding"
 	"clickyab.com/exchange/octopus/dispatcher"
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
-	"clickyab.com/exchange/octopus/rtb"
 	"clickyab.com/exchange/octopus/suppliers"
 	"github.com/clickyab/services/broker"
 	"github.com/clickyab/services/xlog"
@@ -69,7 +69,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	bidResponses := dispatcher.Call(nCtx, bq)
 	log(nCtx, bq).WithField("count", len(bidResponses)).Debug("bidResponses is passed the system from exchange calls")
-	res := rtb.SelectCPM(nCtx, bq, bidResponses)
+	res := biding.SelectCPM(nCtx, bq, bidResponses)
 	log(nCtx, bq).WithField("count", len(res.Bids())).Debug("bidResponses is passed the system select")
 	storeKeys(bq, res)
 
