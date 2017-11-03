@@ -5,13 +5,14 @@
 package mock_exchange
 
 import (
-	exchange "clickyab.com/exchange/octopus/exchange"
 	context "context"
-	gomock "github.com/golang/mock/gomock"
 	io "io"
 	http "net/http"
 	reflect "reflect"
 	time "time"
+
+	exchange "clickyab.com/exchange/octopus/exchange"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockImpression is a mock of Impression interface
@@ -724,18 +725,6 @@ func (mr *MockBidResponseMockRecorder) ID() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ID", reflect.TypeOf((*MockBidResponse)(nil).ID))
 }
 
-// LayerType mocks base method
-func (m *MockBidResponse) LayerType() string {
-	ret := m.ctrl.Call(m, "LayerType")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// LayerType indicates an expected call of LayerType
-func (mr *MockBidResponseMockRecorder) LayerType() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LayerType", reflect.TypeOf((*MockBidResponse)(nil).LayerType))
-}
-
 // Supplier mocks base method
 func (m *MockBidResponse) Supplier() exchange.Supplier {
 	ret := m.ctrl.Call(m, "Supplier")
@@ -1151,18 +1140,6 @@ func (m *MockBidRequest) Inventory() exchange.Inventory {
 // Inventory indicates an expected call of Inventory
 func (mr *MockBidRequestMockRecorder) Inventory() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Inventory", reflect.TypeOf((*MockBidRequest)(nil).Inventory))
-}
-
-// LayerType mocks base method
-func (m *MockBidRequest) LayerType() string {
-	ret := m.ctrl.Call(m, "LayerType")
-	ret0, _ := ret[0].(string)
-	return ret0
-}
-
-// LayerType indicates an expected call of LayerType
-func (mr *MockBidRequestMockRecorder) LayerType() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LayerType", reflect.TypeOf((*MockBidRequest)(nil).LayerType))
 }
 
 // TMax mocks base method

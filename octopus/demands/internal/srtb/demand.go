@@ -50,12 +50,8 @@ func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup ex
 // RenderBidRequest cast bid request to ortb
 func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
 	j := json.NewEncoder(w)
-	var br interface{} = bq
-	if bq.LayerType() != exchange.SupplierSRTB {
-		br = bidRequestToSRTB(ctx, bq)
-	}
 	// render in rtb style
-	err := j.Encode(br)
+	err := j.Encode(bidRequestToSRTB(ctx, bq))
 	assert.Nil(err)
 	// TODO : simple rtb headers
 	return http.Header{}

@@ -31,10 +31,6 @@ func (b *BidRequest) CID() string {
 	panic("implement me")
 }
 
-func (b *BidRequest) LayerType() string {
-	return "ortb"
-}
-
 func (b *BidRequest) ID() string {
 	return b.IID
 }

@@ -3,13 +3,13 @@ package mocks
 import "clickyab.com/exchange/octopus/exchange"
 
 type Banner struct {
-	SID string
-	SWidth int
-	SHeight int
+	SID           string
+	SWidth        int
+	SHeight       int
 	SBlockedTypes []exchange.BannerType
-	SBlockedAttr []exchange.CreativeAttribute
-	SMimes []string
-	SAttributes map[string]interface{}
+	SBlockedAttr  []exchange.CreativeAttribute
+	SMimes        []string
+	SAttributes   map[string]interface{}
 }
 
 func (b *Banner) ID() string {
@@ -39,4 +39,3 @@ func (b *Banner) Mimes() []string {
 func (b *Banner) Attributes() map[string]interface{} {
 	return b.SAttributes
 }
-

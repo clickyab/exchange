@@ -160,8 +160,3 @@ func (b *bidRequest) Time() time.Time {
 func (b *bidRequest) Attributes() map[string]interface{} {
 	return make(map[string]interface{})
 }
-
-// LayerType return bidrequest layer (srtb/ortb)
-func (b *bidRequest) LayerType() string {
-	return exchange.SupplierSRTB
-}

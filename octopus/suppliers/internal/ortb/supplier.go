@@ -20,14 +20,6 @@ type Supplier struct {
 
 // RenderBidResponse for rendering open-rtb
 func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
-	if b.LayerType() == exchange.SupplierORTB {
-		r, err := json.Marshal(b)
-		assert.Nil(err)
-		w.Write(r)
-		// TODO : open rtb header
-		return http.Header{}
-	}
-
 	bids := func() []openrtb.SeatBid {
 		x := make([]openrtb.SeatBid, 0)
 		for _, b := range b.Bids() {

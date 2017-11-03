@@ -3,7 +3,6 @@ package mocks
 import "clickyab.com/exchange/octopus/exchange"
 
 type Video struct {
-
 }
 
 func (*Video) Width() int {

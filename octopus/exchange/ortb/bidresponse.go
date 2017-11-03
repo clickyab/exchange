@@ -72,10 +72,6 @@ func (b *bidResponse) Supplier() exchange.Supplier {
 	return b.supplier
 }
 
-func (b *bidResponse) LayerType() string {
-	return "ortb"
-}
-
 type bid struct {
 	inner  *openrtb.Bid
 	demand exchange.Demand

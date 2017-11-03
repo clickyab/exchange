@@ -55,8 +55,6 @@ type BidRequest interface {
 
 	// Attributes is all extra data from input request
 	Attributes() map[string]interface{}
-	// LayerType return type of request (srtb, ortb)
-	LayerType() string
 	// CID unique identifier for every request
 	CID() string
 }
