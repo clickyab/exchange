@@ -5,46 +5,46 @@ import (
 	"github.com/bsm/openrtb"
 )
 
-// App ortb structure
-type App struct {
+// app ortb structure
+type app struct {
 	inner *openrtb.App
 	sup   exchange.Supplier
 	pub   exchange.Publisher
 }
 
 // FloorCPM return ortb FloorCPM
-func (n *App) FloorCPM() int64 {
+func (n *app) FloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &Publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher}
 	}
 	return n.sup.FloorCPM()
 }
 
 // SoftFloorCPM return ortb SoftFloorCPM
-func (n *App) SoftFloorCPM() int64 {
+func (n *app) SoftFloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &Publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher}
 	}
 	return n.sup.SoftFloorCPM()
 }
 
 // ID return ortb ID
-func (n *App) ID() string {
+func (n *app) ID() string {
 	return n.inner.ID
 }
 
 // Name return ortb Name
-func (n *App) Name() string {
+func (n *app) Name() string {
 	return n.inner.Name
 }
 
 // Domain return ortb Domain
-func (n *App) Domain() string {
+func (n *app) Domain() string {
 	return n.inner.Domain
 }
 
 // Cat return ortb Cat
-func (n *App) Cat() []exchange.Category {
+func (n *app) Cat() []exchange.Category {
 	r := make([]exchange.Category, 0)
 	for _, v := range n.inner.Cat {
 		r = append(r, exchange.Category(v))
@@ -52,16 +52,16 @@ func (n *App) Cat() []exchange.Category {
 	return r
 }
 
-// Publisher return ortb Publisher
-func (n *App) Publisher() exchange.Publisher {
+// publisher return ortb publisher
+func (n *app) Publisher() exchange.Publisher {
 	if n.pub == nil {
-		n.pub = &Publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher}
 	}
 	return n.pub
 }
 
 // Attributes return ortb Attributes
-func (n *App) Attributes() map[string]interface{} {
+func (n *app) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"SectionCat":    n.inner.SectionCat,
 		"PageCat":       n.inner.PageCat,
@@ -76,55 +76,55 @@ func (n *App) Attributes() map[string]interface{} {
 }
 
 // Supplier return ortb Supplier
-func (n *App) Supplier() exchange.Supplier {
+func (n *app) Supplier() exchange.Supplier {
 	return n.sup
 }
 
 // Bundle return ortb Bundle
-func (n *App) Bundle() string {
+func (n *app) Bundle() string {
 	return n.inner.Bundle
 }
 
-// Site ortb site
-type Site struct {
+// site ortb site
+type site struct {
 	inner *openrtb.Site
 	sup   exchange.Supplier
 	pub   exchange.Publisher
 }
 
 // FloorCPM return ortb FloorCPM
-func (n *Site) FloorCPM() int64 {
+func (n *site) FloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &Publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher}
 	}
 	return n.sup.FloorCPM()
 }
 
 // SoftFloorCPM return ortb SoftFloorCPM
-func (n *Site) SoftFloorCPM() int64 {
+func (n *site) SoftFloorCPM() int64 {
 	if n.pub == nil {
-		n.pub = &Publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher}
 	}
 	return n.sup.SoftFloorCPM()
 }
 
 // ID return ortb ID
-func (n *Site) ID() string {
+func (n *site) ID() string {
 	return n.inner.ID
 }
 
 // Name return ortb Name
-func (n *Site) Name() string {
+func (n *site) Name() string {
 	return n.inner.Name
 }
 
 // Domain return ortb Domain
-func (n *Site) Domain() string {
+func (n *site) Domain() string {
 	return n.inner.Domain
 }
 
 // Cat return ortb Cat
-func (n *Site) Cat() []exchange.Category {
+func (n *site) Cat() []exchange.Category {
 	r := make([]exchange.Category, 0)
 	for _, v := range n.inner.Cat {
 		r = append(r, exchange.Category(v))
@@ -132,16 +132,16 @@ func (n *Site) Cat() []exchange.Category {
 	return r
 }
 
-// Publisher return ortb Publisher
-func (n *Site) Publisher() exchange.Publisher {
+// publisher return ortb publisher
+func (n *site) Publisher() exchange.Publisher {
 	if n.pub == nil {
-		n.pub = &Publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher}
 	}
 	return n.pub
 }
 
 // Attributes return ortb Attributes
-func (n *Site) Attributes() map[string]interface{} {
+func (n *site) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Cat":           n.inner.Cat,
 		"SectionCat":    n.inner.SectionCat,
@@ -156,16 +156,16 @@ func (n *Site) Attributes() map[string]interface{} {
 }
 
 // Supplier return ortb Supplier
-func (n *Site) Supplier() exchange.Supplier {
+func (n *site) Supplier() exchange.Supplier {
 	return n.sup
 }
 
 // Page return ortb Page
-func (n *Site) Page() string {
+func (n *site) Page() string {
 	return n.inner.Page
 }
 
 // Ref return ortb Ref
-func (n *Site) Ref() string {
+func (n *site) Ref() string {
 	return n.inner.Ref
 }

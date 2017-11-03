@@ -8,13 +8,11 @@ import (
 )
 
 // NewBidResponse new bid response
-func NewBidResponse(d exchange.Demand, s exchange.Supplier, o *openrtb.BidResponse) exchange.BidResponse {
+func NewBidResponse(d exchange.Demand, s exchange.Supplier) exchange.BidResponse {
 	return &bidResponse{
-		inner:    o,
 		demand:   d,
 		supplier: s,
 	}
-
 }
 
 type bidResponse struct {

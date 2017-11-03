@@ -19,18 +19,6 @@ type bidRequest struct {
 	cid   string
 }
 
-// NewBidRequest generate internal bid-request from srtb
-func NewBidRequest(s exchange.Supplier, rq *srtb.BidRequest) exchange.BidRequest {
-	geo := extractGeoFromIP(rq.Device.IP)
-	rq.Device.Geo = srtb.Geo{
-		ISP:     geo.ISP(),
-		Region:  geo.Region(),
-		Country: geo.Country(),
-		LatLon:  geo.LatLon(),
-	}
-	return &bidRequest{sup: s, inner: rq, time: time.Now()}
-}
-
 // CID return srtb CID
 func (b *bidRequest) CID() string {
 	if b.cid == "" {

@@ -2,33 +2,33 @@ package ortb
 
 import "github.com/bsm/openrtb"
 
-// Publisher ortb
-type Publisher struct {
+// publisher ortb
+type publisher struct {
 	inner *openrtb.Publisher
 }
 
 // ID return ortb ID
-func (p *Publisher) ID() string {
+func (p *publisher) ID() string {
 	return p.inner.ID
 }
 
 // Name return ortb Name
-func (p *Publisher) Name() string {
+func (p *publisher) Name() string {
 	return p.inner.Name
 }
 
 // Cat return ortb Cat
-func (p *Publisher) Cat() []string {
+func (p *publisher) Cat() []string {
 	return p.inner.Cat
 }
 
 // Domain return ortb Domain
-func (p *Publisher) Domain() string {
+func (p *publisher) Domain() string {
 	return p.inner.Domain
 }
 
 // Attributes return ortb Attributes
-func (p *Publisher) Attributes() map[string]interface{} {
+func (p *publisher) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Ext": p.inner.Ext,
 	}

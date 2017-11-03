@@ -57,13 +57,6 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 
 // GetBidRequest transform request object to internal model
 func (s *Supplier) GetBidRequest(ctx context.Context, r *http.Request) (exchange.BidRequest, error) {
-	req := ortb.BidRequest{}
-	d := json.NewDecoder(r.Body)
-	defer r.Body.Close()
 
-	if err := d.Decode(&req); err != nil {
-		return nil, err
-	}
-	res := ortb.NewBidRequest(s, &req)
-	return res, nil
+	return ortb.NewOpenRTBFromRequest(s, r)
 }

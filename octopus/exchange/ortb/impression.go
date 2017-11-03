@@ -6,15 +6,15 @@ import (
 	"github.com/clickyab/services/random"
 )
 
-// Impression ortb imp
-type Impression struct {
+// impression ortb imp
+type impression struct {
 	inner  *openrtb.Impression
 	banner exchange.Banner
 	cid    string
 }
 
 // CID return ortb CID
-func (m *Impression) CID() string {
+func (m *impression) CID() string {
 	if m.cid == "" {
 		m.cid = <-random.ID
 	}
@@ -22,17 +22,17 @@ func (m *Impression) CID() string {
 }
 
 // ID return ortb ID
-func (m *Impression) ID() string {
+func (m *impression) ID() string {
 	return m.inner.ID
 }
 
 // BidFloor return ortb BidFloor
-func (m *Impression) BidFloor() float64 {
+func (m *impression) BidFloor() float64 {
 	return m.inner.BidFloor
 }
 
 // Banner return ortb Banner
-func (m *Impression) Banner() exchange.Banner {
+func (m *impression) Banner() exchange.Banner {
 	if m.Type() != exchange.AdTypeBanner {
 		return nil
 	}
@@ -43,17 +43,17 @@ func (m *Impression) Banner() exchange.Banner {
 }
 
 // Video return ortb Video
-func (m *Impression) Video() exchange.Video {
+func (m *impression) Video() exchange.Video {
 	panic("implement video")
 }
 
 // Native return ortb Native
-func (m *Impression) Native() exchange.Native {
+func (m *impression) Native() exchange.Native {
 	panic("implement native")
 }
 
 // Attributes return ortb Attributes
-func (m *Impression) Attributes() map[string]interface{} {
+func (m *impression) Attributes() map[string]interface{} {
 	return map[string]interface{}{
 		"Audio":             m.inner.Audio,
 		"BidFloorCurrency":  m.inner.BidFloorCurrency,
@@ -69,7 +69,7 @@ func (m *Impression) Attributes() map[string]interface{} {
 }
 
 // Type return ortb Type
-func (m *Impression) Type() exchange.ImpressionType {
+func (m *impression) Type() exchange.ImpressionType {
 	if m.inner.Banner != nil {
 		return exchange.AdTypeBanner
 	}
@@ -83,7 +83,7 @@ func (m *Impression) Type() exchange.ImpressionType {
 }
 
 // Secure return ortb Secure
-func (m *Impression) Secure() bool {
+func (m *impression) Secure() bool {
 	if m.inner.Secure == 1 {
 		return true
 	}
