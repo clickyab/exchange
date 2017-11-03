@@ -32,7 +32,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 	defer lock.Unlock()
 	set := kv.NewDistributedSet("EXC" + bq.Inventory().Supplier().Name() + bq.ID())
 	for _, m := range bq.Imp() {
-		reds := reduce(m.ID(), all)
+		reds := reduce(m, all, bq.Inventory().Supplier())
 		sorted := sortedBid(rmDuplicate(set, reds))
 		if len(sorted) == 0 {
 			continue
@@ -73,16 +73,17 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 	return res
 }
 
-func reduce(imp string, b []exchange.BidResponse) []exchange.Bid {
+func reduce(bq exchange.Impression, b []exchange.BidResponse, s exchange.Supplier) []exchange.Bid {
+	imp := bq.ID()
+	floor := int64(float64(s.Share()+100)*bq.BidFloor()) / 100
 	res := make([]exchange.Bid, 0)
 	for _, br := range b {
 		for _, bid := range br.Bids() {
-			if bid.ImpID() == imp {
+			if bid.ImpID() == imp && bid.Price() >= floor {
 				res = append(res, bid)
 				break
 			}
 		}
-
 	}
 	return res
 }
