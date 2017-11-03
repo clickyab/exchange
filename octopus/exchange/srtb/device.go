@@ -77,6 +77,7 @@ func (d *device) Attributes() map[string]interface{} {
 func extractGeoFromIP(ip string) exchange.Geo {
 	record := ip2location.GetAll(ip)
 	return &geo{
+		ip: ip,
 		isp: exchange.ISP{
 			Name:  record.Isp,
 			Valid: record.Isp != "",
