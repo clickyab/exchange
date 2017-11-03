@@ -19,12 +19,6 @@ type Supplier struct {
 
 // RenderBidResponse for rendering simple rtb
 func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
-	if b.LayerType() == exchange.SupplierSRTB {
-		r, err := json.Marshal(b)
-		assert.Nil(err)
-		w.Write(r)
-		return http.Header{}
-	}
 	bids := make([]simple.Bid, 0)
 	for _, i := range b.Bids() {
 		bids = append(bids, simple.Bid{

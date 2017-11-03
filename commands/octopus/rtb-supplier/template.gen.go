@@ -665,32 +665,32 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.css": commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCss,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.css.map": commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCssMap,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.min.css": commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCss,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.min.css.map": commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCssMap,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap-reboot.css": commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCss,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap-reboot.css.map": commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCssMap,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap-reboot.min.css": commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootMinCss,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.css":           commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCss,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.css.map":       commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCssMap,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.min.css":       commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCss,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap-grid.min.css.map":   commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCssMap,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap-reboot.css":         commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCss,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap-reboot.css.map":     commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCssMap,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap-reboot.min.css":     commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootMinCss,
 	"commands/octopus/rtb-supplier/static/template/css/bootstrap-reboot.min.css.map": commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootMinCssMap,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap.css": commandsOctopusRtbSupplierStaticTemplateCssBootstrapCss,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap.css.map": commandsOctopusRtbSupplierStaticTemplateCssBootstrapCssMap,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap.min.css": commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCss,
-	"commands/octopus/rtb-supplier/static/template/css/bootstrap.min.css.map": commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCssMap,
-	"commands/octopus/rtb-supplier/static/template/css/style.css": commandsOctopusRtbSupplierStaticTemplateCssStyleCss,
-	"commands/octopus/rtb-supplier/static/template/index.html": commandsOctopusRtbSupplierStaticTemplateIndexHtml,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.js": commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJs,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.js.map": commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJsMap,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.min.js": commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleMinJs,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.min.js.map": commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleMinJsMap,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.js": commandsOctopusRtbSupplierStaticTemplateJsBootstrapJs,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.js.map": commandsOctopusRtbSupplierStaticTemplateJsBootstrapJsMap,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.min.js": commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJs,
-	"commands/octopus/rtb-supplier/static/template/js/bootstrap.min.js.map": commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJsMap,
-	"commands/octopus/rtb-supplier/static/template/js/jquery-3.2.1.js": commandsOctopusRtbSupplierStaticTemplateJsJquery321Js,
-	"commands/octopus/rtb-supplier/static/template/js/jquery-serialize-object.js": commandsOctopusRtbSupplierStaticTemplateJsJquerySerializeObjectJs,
-	"commands/octopus/rtb-supplier/static/template/js/main.js": commandsOctopusRtbSupplierStaticTemplateJsMainJs,
-	"commands/octopus/rtb-supplier/static/template/js/popper-1.11.1.js": commandsOctopusRtbSupplierStaticTemplateJsPopper1111Js,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap.css":                commandsOctopusRtbSupplierStaticTemplateCssBootstrapCss,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap.css.map":            commandsOctopusRtbSupplierStaticTemplateCssBootstrapCssMap,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap.min.css":            commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCss,
+	"commands/octopus/rtb-supplier/static/template/css/bootstrap.min.css.map":        commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCssMap,
+	"commands/octopus/rtb-supplier/static/template/css/style.css":                    commandsOctopusRtbSupplierStaticTemplateCssStyleCss,
+	"commands/octopus/rtb-supplier/static/template/index.html":                       commandsOctopusRtbSupplierStaticTemplateIndexHtml,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.js":           commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJs,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.js.map":       commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJsMap,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.min.js":       commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleMinJs,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.bundle.min.js.map":   commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleMinJsMap,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.js":                  commandsOctopusRtbSupplierStaticTemplateJsBootstrapJs,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.js.map":              commandsOctopusRtbSupplierStaticTemplateJsBootstrapJsMap,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.min.js":              commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJs,
+	"commands/octopus/rtb-supplier/static/template/js/bootstrap.min.js.map":          commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJsMap,
+	"commands/octopus/rtb-supplier/static/template/js/jquery-3.2.1.js":               commandsOctopusRtbSupplierStaticTemplateJsJquery321Js,
+	"commands/octopus/rtb-supplier/static/template/js/jquery-serialize-object.js":    commandsOctopusRtbSupplierStaticTemplateJsJquerySerializeObjectJs,
+	"commands/octopus/rtb-supplier/static/template/js/main.js":                       commandsOctopusRtbSupplierStaticTemplateJsMainJs,
+	"commands/octopus/rtb-supplier/static/template/js/popper-1.11.1.js":              commandsOctopusRtbSupplierStaticTemplateJsPopper1111Js,
 }
 
 // AssetDir returns the file names below a certain
@@ -732,6 +732,7 @@ type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
 }
+
 var _bintree = &bintree{nil, map[string]*bintree{
 	"commands": &bintree{nil, map[string]*bintree{
 		"octopus": &bintree{nil, map[string]*bintree{
@@ -739,34 +740,34 @@ var _bintree = &bintree{nil, map[string]*bintree{
 				"static": &bintree{nil, map[string]*bintree{
 					"template": &bintree{nil, map[string]*bintree{
 						"css": &bintree{nil, map[string]*bintree{
-							"bootstrap-grid.css": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCss, map[string]*bintree{}},
-							"bootstrap-grid.css.map": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCssMap, map[string]*bintree{}},
-							"bootstrap-grid.min.css": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCss, map[string]*bintree{}},
-							"bootstrap-grid.min.css.map": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCssMap, map[string]*bintree{}},
-							"bootstrap-reboot.css": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCss, map[string]*bintree{}},
-							"bootstrap-reboot.css.map": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCssMap, map[string]*bintree{}},
-							"bootstrap-reboot.min.css": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootMinCss, map[string]*bintree{}},
+							"bootstrap-grid.css":           &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCss, map[string]*bintree{}},
+							"bootstrap-grid.css.map":       &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridCssMap, map[string]*bintree{}},
+							"bootstrap-grid.min.css":       &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCss, map[string]*bintree{}},
+							"bootstrap-grid.min.css.map":   &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapGridMinCssMap, map[string]*bintree{}},
+							"bootstrap-reboot.css":         &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCss, map[string]*bintree{}},
+							"bootstrap-reboot.css.map":     &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootCssMap, map[string]*bintree{}},
+							"bootstrap-reboot.min.css":     &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootMinCss, map[string]*bintree{}},
 							"bootstrap-reboot.min.css.map": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapRebootMinCssMap, map[string]*bintree{}},
-							"bootstrap.css": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapCss, map[string]*bintree{}},
-							"bootstrap.css.map": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapCssMap, map[string]*bintree{}},
-							"bootstrap.min.css": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCss, map[string]*bintree{}},
-							"bootstrap.min.css.map": &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCssMap, map[string]*bintree{}},
-							"style.css": &bintree{commandsOctopusRtbSupplierStaticTemplateCssStyleCss, map[string]*bintree{}},
+							"bootstrap.css":                &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapCss, map[string]*bintree{}},
+							"bootstrap.css.map":            &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapCssMap, map[string]*bintree{}},
+							"bootstrap.min.css":            &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCss, map[string]*bintree{}},
+							"bootstrap.min.css.map":        &bintree{commandsOctopusRtbSupplierStaticTemplateCssBootstrapMinCssMap, map[string]*bintree{}},
+							"style.css":                    &bintree{commandsOctopusRtbSupplierStaticTemplateCssStyleCss, map[string]*bintree{}},
 						}},
 						"index.html": &bintree{commandsOctopusRtbSupplierStaticTemplateIndexHtml, map[string]*bintree{}},
 						"js": &bintree{nil, map[string]*bintree{
-							"bootstrap.bundle.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJs, map[string]*bintree{}},
-							"bootstrap.bundle.js.map": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJsMap, map[string]*bintree{}},
-							"bootstrap.bundle.min.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleMinJs, map[string]*bintree{}},
+							"bootstrap.bundle.js":         &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJs, map[string]*bintree{}},
+							"bootstrap.bundle.js.map":     &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleJsMap, map[string]*bintree{}},
+							"bootstrap.bundle.min.js":     &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleMinJs, map[string]*bintree{}},
 							"bootstrap.bundle.min.js.map": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapBundleMinJsMap, map[string]*bintree{}},
-							"bootstrap.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapJs, map[string]*bintree{}},
-							"bootstrap.js.map": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapJsMap, map[string]*bintree{}},
-							"bootstrap.min.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJs, map[string]*bintree{}},
-							"bootstrap.min.js.map": &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJsMap, map[string]*bintree{}},
-							"jquery-3.2.1.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsJquery321Js, map[string]*bintree{}},
-							"jquery-serialize-object.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsJquerySerializeObjectJs, map[string]*bintree{}},
-							"main.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsMainJs, map[string]*bintree{}},
-							"popper-1.11.1.js": &bintree{commandsOctopusRtbSupplierStaticTemplateJsPopper1111Js, map[string]*bintree{}},
+							"bootstrap.js":                &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapJs, map[string]*bintree{}},
+							"bootstrap.js.map":            &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapJsMap, map[string]*bintree{}},
+							"bootstrap.min.js":            &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJs, map[string]*bintree{}},
+							"bootstrap.min.js.map":        &bintree{commandsOctopusRtbSupplierStaticTemplateJsBootstrapMinJsMap, map[string]*bintree{}},
+							"jquery-3.2.1.js":             &bintree{commandsOctopusRtbSupplierStaticTemplateJsJquery321Js, map[string]*bintree{}},
+							"jquery-serialize-object.js":  &bintree{commandsOctopusRtbSupplierStaticTemplateJsJquerySerializeObjectJs, map[string]*bintree{}},
+							"main.js":                     &bintree{commandsOctopusRtbSupplierStaticTemplateJsMainJs, map[string]*bintree{}},
+							"popper-1.11.1.js":            &bintree{commandsOctopusRtbSupplierStaticTemplateJsPopper1111Js, map[string]*bintree{}},
 						}},
 					}},
 				}},
@@ -821,4 +822,3 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
-

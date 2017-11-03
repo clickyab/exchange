@@ -48,10 +48,6 @@ func (b bidResponse) Supplier() exchange.Supplier {
 	return b.supplier
 }
 
-func (b bidResponse) LayerType() string {
-	return exchange.SupplierSRTB
-}
-
 func (b bidResponse) UnmarshalJSON(a []byte) error {
 	i := srtb.BidResponse{}
 	err := json.Unmarshal(a, &i)

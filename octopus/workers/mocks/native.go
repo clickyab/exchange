@@ -1,7 +1,6 @@
 package mocks
 
 type Native struct {
-
 }
 
 func (*Native) Request() []byte {

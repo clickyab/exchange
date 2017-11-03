@@ -85,6 +85,7 @@ func TestSelect(t *testing.T) {
 			sup.EXPECT().SoftFloorCPM().Return(u.SoftFloorCPM).AnyTimes()
 			sup.EXPECT().FloorCPM().Return(int64(u.FloorCPM)).AnyTimes()
 			sup.EXPECT().Name().Return("Hello").AnyTimes()
+			sup.EXPECT().Share().Return(0).AnyTimes()
 
 			inv.EXPECT().Supplier().Return(sup).AnyTimes()
 			rq.EXPECT().Inventory().Return(inv).AnyTimes()

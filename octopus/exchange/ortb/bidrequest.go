@@ -43,11 +43,6 @@ func (b *BidRequest) CID() string {
 	return b.cid
 }
 
-// LayerType (srtb/ortb)
-func (b *BidRequest) LayerType() string {
-	return exchange.SupplierORTB
-}
-
 // UnmarshalJSON json Unmarshaller
 func (b *BidRequest) UnmarshalJSON(d []byte) error {
 	i := openrtb.BidRequest{}

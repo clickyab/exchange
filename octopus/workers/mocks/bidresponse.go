@@ -14,10 +14,6 @@ type BidResponse struct {
 	ITime     time.Time
 }
 
-func (b BidResponse) LayerType() string {
-	return "ortb"
-}
-
 func (b BidResponse) Time() time.Time {
 	return b.ITime
 }
