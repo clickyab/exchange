@@ -9,7 +9,6 @@ import (
 	"github.com/sirupsen/logrus"
 	onion "gopkg.in/fzerorubigd/onion.v3"
 	"gopkg.in/fzerorubigd/onion.v3/extraenv"
-	"io/ioutil"
 )
 
 var (
@@ -77,7 +76,6 @@ func SetConfigParameter() {
 	} else {
 		logrus.SetFormatter(&logrus.TextFormatter{ForceColors: false, DisableColors: true})
 		logrus.SetLevel(logrus.WarnLevel)
-		logrus.SetOutput(ioutil.Discard) // Discard the stdout logging
 	}
 
 	numcpu := cfg.MaxCPUAvailable

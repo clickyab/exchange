@@ -11,4 +11,5 @@ type Bid struct {
 	Height   int      `json:"h"`
 	Cat      []string `json:"cat,omitempty"`
 	WinURL   string   `json:"win_url,omitempty"`
+	BillURL  string   `json:"bill_url,omitempty"`
 }
