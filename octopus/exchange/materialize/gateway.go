@@ -73,10 +73,10 @@ func ClickJob(source, supplier, demand, ip string) broker.Job {
 }
 
 // ShowJob return a broker job
-func ShowJob(trackID, demand, slotID, adID string, IP string, winner int64, t string, supplier string, publisher string, profit int64) broker.Job {
+func ShowJob(demand string, IP string, winner int64, t string, supplier string, publisher string, profit int64) broker.Job {
 	switch driver.String() {
 	case jsonDriver:
-		return jsonbackend.ShowJob(trackID, demand, slotID, adID, IP, winner, t, supplier, publisher, profit)
+		return jsonbackend.ShowJob(demand, IP, winner, t, supplier, publisher, profit)
 	case emptyDriver:
 		return job{
 			data:  []byte("show job"),
