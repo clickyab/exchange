@@ -8,8 +8,8 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/srtb"
-	simple "clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/assert"
+	simple "github.com/clickyab/simple-rtb"
 )
 
 // Supplier is srtb version of exchange-supplier

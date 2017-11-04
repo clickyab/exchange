@@ -1,6 +1,6 @@
 package srtb
 
-import "clickyab.com/exchange/octopus/srtb"
+import "github.com/clickyab/simple-rtb"
 
 type publisher struct {
 	inner *srtb.Publisher

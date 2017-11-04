@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/random"
+	"github.com/clickyab/simple-rtb"
 )
 
 type bidRequest struct {

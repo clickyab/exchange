@@ -7,9 +7,9 @@ import (
 
 	"math/rand"
 
-	"clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
+	"github.com/clickyab/simple-rtb"
 )
 
 // srtbHandler for handling exam (test) account
