@@ -17,11 +17,8 @@ import (
 
 // TODO : is this model is correct? remove this tod if it is.
 type model struct {
-	TrackID    string `json:"track_id"`
 	DemandName string `json:"demand_name"`
 	Price      int64  `json:"price"`
-	SlotID     string `json:"slot_id"`
-	AdID       string `json:"ad_id"`
 	Supplier   string `json:"supplier"`
 	Publisher  string `json:"publisher"`
 	Time       string `json:"time"`
