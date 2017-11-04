@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"net/http"
 
+	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
 	"github.com/clickyab/services/framework"
@@ -16,9 +17,15 @@ import (
 
 // Click is the route for click worker
 func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	hashParam := xmux.Param(ctx, "hash")
-	var hash []byte
-	_, err := base64.URLEncoding.WithPadding('.').Decode(hash, []byte(hashParam))
+
+	targetParam := r.URL.Query().Get("ref")
+	if targetParam == "" {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("invalid targetURL"))
+		return
+	}
+	var target []byte
+	_, err := base64.URLEncoding.WithPadding('.').Decode(target, []byte(targetParam))
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("invalid targetURL"))
@@ -26,10 +33,10 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := xmux.Param(ctx, "id")
-	store := kv.NewEavStore(id).AllKeys()
+	store := kv.NewEavStore(exchange.PixelPrefix + "_" + id).AllKeys()
 
 	if len(store) < 3 {
-		http.Redirect(w, r, string(hash), http.StatusFound)
+		http.Redirect(w, r, string(target), http.StatusFound)
 		xlog.GetWithField(ctx, "click url route", "expired click url")
 		return
 	}
@@ -41,5 +48,5 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	clickJob := materialize.ClickJob(source, publisher, demand, framework.RealIP(r))
 	safe.GoRoutine(func() { broker.Publish(clickJob) })
 
-	http.Redirect(w, r, string(hash), http.StatusFound)
+	http.Redirect(w, r, string(target), http.StatusFound)
 }

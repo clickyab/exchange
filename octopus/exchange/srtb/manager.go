@@ -20,7 +20,7 @@ func NewSimpleRTBFromBidRequest(in exchange.BidRequest) (exchange.BidRequest, er
 		return nil, err
 	}
 
-	return &bidRequest{inner: z, time: time.Now(), sup: in.Inventory().Supplier(), cid: in.CID()}, nil
+	return &bidRequest{inner: z, time: time.Now(), sup: in.Inventory().Supplier(), cid: in.CID(), url: in.URL()}, nil
 }
 
 // NewSimpleRTBFromRequest return make a bid-request from http request

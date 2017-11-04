@@ -14,8 +14,8 @@ type initRouter struct {
 
 func (initRouter) Routes(mux framework.Mux) {
 	mux.POST("/rest/get/:key", restful.GetAd)
-	mux.GET("/click/:id/:hash", restful.Click)
-	mux.GET("/pixel/:id", restful.Pixel)
+	mux.GET("/click/:id", restful.Click)
+	mux.GET("/show/:id/:type", restful.Show)
 
 	// The demand status routes
 	mux.GET("/demands/status/:name", demands.Status)

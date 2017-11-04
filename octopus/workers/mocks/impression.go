@@ -4,6 +4,8 @@ import (
 	"net"
 	"time"
 
+	"net/url"
+
 	"clickyab.com/exchange/octopus/exchange"
 )
 
@@ -25,6 +27,10 @@ type BidRequest struct {
 	ITime       time.Time
 	ITMax       time.Duration
 	IDevice     Device
+}
+
+func (b *BidRequest) URL() *url.URL {
+	panic("implement me")
 }
 
 func (b *BidRequest) CID() string {

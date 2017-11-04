@@ -54,10 +54,19 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 			tp = tb.Price()
 		}
 		set.Add(tb.AdID())
-		bids = append(bids, bid{
-			bid:   tb,
-			price: int64(exchange.DecShare(float64(tp), bq.Inventory().Supplier().Share())),
-		})
+
+		rep := replacer(ctx, bq, tb)
+		rb := bid{
+			markup:  rep.Replace(tb.AdMarkup()),
+			winurl:  rep.Replace(tb.WinURL()),
+			billurl: rep.Replace(tb.BillURL()),
+			bid:     tb,
+			price:   int64(exchange.DecShare(float64(tp), bq.Inventory().Supplier().Share())),
+		}
+		if !hasTracker(tb) {
+			rb.Demand().Bill(ctx, rb)
+		}
+		bids = append(bids, rb)
 	}
 	var res = rsp{
 		supplier:   bq.Inventory().Supplier(),
