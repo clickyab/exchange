@@ -82,3 +82,6 @@ func (d Demands) ExcludedSuppliers() []string {
 func (Demands) TestMode() bool {
 	panic("implement me")
 }
+func (d Demands) Bill(context.Context, exchange.Bid) {
+
+}

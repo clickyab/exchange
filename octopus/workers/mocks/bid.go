@@ -12,6 +12,7 @@ type Bid struct {
 	IAttr     map[string]interface{}
 	IDemand   Demands
 	IWinURL   string
+	IBillURL  string
 	ICat      []string
 	IDomains  []string
 }
@@ -63,4 +64,8 @@ func (b Bid) Attributes() map[string]interface{} {
 
 func (b Bid) Demand() exchange.Demand {
 	return b.IDemand
+}
+
+func (b Bid) BillURL() string {
+	return b.IBillURL
 }
