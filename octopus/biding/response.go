@@ -47,6 +47,10 @@ func (b bid) WinURL() string {
 	return b.bid.WinURL()
 }
 
+func (b bid) BillURL() string {
+	return b.bid.BillURL()
+}
+
 func (b bid) Categories() []string {
 	return b.bid.Categories()
 }

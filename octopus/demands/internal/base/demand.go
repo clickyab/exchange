@@ -6,8 +6,6 @@ import (
 	"context"
 	"net/http"
 
-	"fmt"
-
 	"net/url"
 
 	"clickyab.com/exchange/octopus/exchange"
@@ -85,7 +83,7 @@ func (d *Demand) Name() string {
 	return d.FName
 }
 
-//Win demand win action
+// Win demand win action
 func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
 	incCPM(d.Name(), b.Price())
 	safe.GoRoutine(func() {
@@ -94,10 +92,6 @@ func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
 			xlog.SetField(ctx, "bid win url is not valid", err)
 			return
 		}
-		tmp := u.Query()
-		tmp.Add("win", b.ID())
-		tmp.Add("cpm", fmt.Sprint(b.Price()))
-		u.RawQuery = tmp.Encode()
 		req, err := http.NewRequest("GET", u.String(), nil)
 		if err != nil {
 			xlog.SetField(ctx, "demand making win request failure", err)
@@ -111,6 +105,28 @@ func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
 		}
 	})
 
+}
+
+// Bill demand bill action
+func (d *Demand) Bill(ctx context.Context, b exchange.Bid) {
+	safe.GoRoutine(func() {
+		u, err := url.Parse(b.BillURL())
+		if err != nil {
+			xlog.SetField(ctx, "bid bill url is not valid", err)
+			return
+		}
+		req, err := http.NewRequest("GET", u.String(), nil)
+		if err != nil {
+			xlog.SetField(ctx, "demand making bill request failure", err)
+			return
+		}
+
+		_, err = d.Client().Do(req)
+		if err != nil {
+			xlog.SetField(ctx, "demand making bill request failure", err)
+			return
+		}
+	})
 }
 
 //Status demand status

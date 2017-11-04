@@ -50,6 +50,8 @@ type Bid interface {
 	AdDetail
 	// WinURL gives you the url to call if current bid won (NURL in openrtb)
 	WinURL() string
+	// BillURL gives you the url to call if current bid shown
+	BillURL() string
 	// Categories returns the category list of ad
 	Categories() []string
 	// Attributes returns the attribute about ad and bid
