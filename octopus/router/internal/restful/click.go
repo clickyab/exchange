@@ -2,59 +2,44 @@ package restful
 
 import (
 	"context"
+	"encoding/base64"
 	"net/http"
 
-	"encoding/base64"
-
-	"strings"
-
-	"clickyab.com/exchange/octopus/suppliers"
+	"clickyab.com/exchange/octopus/exchange/materialize"
+	"github.com/clickyab/services/broker"
+	"github.com/clickyab/services/framework"
 	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
-	"github.com/sirupsen/logrus"
 )
 
 // Click is the route for click worker
-// TODO : the click is entirely problematic. must re-write it
-// TODO : where to send the parameter to the fucking demand?
-// TODO : where to get the parameter from the fucking supplier?
 func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	supplier := xmux.Param(ctx, "supplier")
-	trackID := xmux.Param(ctx, "trackID")
-	impTrackID := xmux.Param(ctx, "impID")
-	targetURL := r.URL.Query().Get("return")
-
-	translated := make([]byte, len([]byte(targetURL))+1)
-	_, err := base64.URLEncoding.WithPadding('.').Decode(translated, []byte(targetURL))
+	hashParam := xmux.Param(ctx, "hash")
+	var hash []byte
+	_, err := base64.URLEncoding.WithPadding('.').Decode(hash, []byte(hashParam))
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("invalid targetURL"))
 		return
 	}
-	targetURL = string(translated)
-	sup, err := suppliers.GetSupplierByName(supplier)
-	if err != nil {
-		xlog.GetWithError(ctx, err).WithField("supplier", supplier).Debug("supplier not found")
-		http.Redirect(w, r, targetURL, http.StatusFound)
+
+	id := xmux.Param(ctx, "id")
+	store := kv.NewEavStore(id).AllKeys()
+
+	if len(store) < 3 {
+		http.Redirect(w, r, string(hash), http.StatusFound)
+		xlog.GetWithField(ctx, "click url route", "expired click url")
 		return
 	}
 
-	megaImpStore := kv.NewEavStore("SUP_CLICK_" + impTrackID + sup.Name() + trackID)
+	publisher := store["publisher"]
+	source := store["source"]
+	demand := store["demand"]
 
-	supURL := strings.TrimSpace(megaImpStore.SubKey("SUP_URL"))
-	supParam := strings.TrimSpace(megaImpStore.SubKey("SUP_PARAM"))
+	clickJob := materialize.ClickJob(source, publisher, demand, framework.RealIP(r))
+	safe.GoRoutine(func() { broker.Publish(clickJob) })
 
-	if supURL == "" || supParam == "" {
-		xlog.GetWithFields(ctx, logrus.Fields{
-			"supplier":  supplier,
-			"sup_url":   supURL,
-			"sup_param": supParam,
-		}).Debug("supplier url is invalid")
-		http.Redirect(w, r, targetURL, http.StatusFound)
-		return
-	}
-
-	xlog.GetWithField(ctx, "supplier", supplier).WithField("action", "redirect").Debug(targetURL)
-	http.Redirect(w, r, targetURL, http.StatusFound)
+	http.Redirect(w, r, string(hash), http.StatusFound)
 }

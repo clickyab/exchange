@@ -16,16 +16,10 @@ import (
 )
 
 type model struct {
-	Source struct {
-		Name     string `json:"name"`
-		Supplier struct {
-			Name string `json:"name"`
-		} `json:"supplier"`
-	} `json:"source"`
-	Time   time.Time `json:"time"`
-	Demand struct {
-		Name string `json:"name"`
-	} `json:"demand"`
+	Publisher string    `json:"source"`
+	Supplier  string    `json:"supplier"`
+	Time      time.Time `json:"time"`
+	Demand    string    `json:"demand"`
 }
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
@@ -75,9 +69,9 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				assert.Nil(err)
 
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:     obj.Source.Supplier.Name,
-					Source:       obj.Source.Name,
-					Demand:       obj.Demand.Name,
+					Supplier:     obj.Supplier,
+					Source:       obj.Publisher,
+					Demand:       obj.Demand,
 					Time:         models.FactTableID(obj.Time),
 					Click:        1,
 					Acknowledger: del,

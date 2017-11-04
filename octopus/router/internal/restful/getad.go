@@ -5,12 +5,20 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"crypto/sha1"
+	"fmt"
+
+	"time"
+
 	"clickyab.com/exchange/octopus/biding"
 	"clickyab.com/exchange/octopus/dispatcher"
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"clickyab.com/exchange/octopus/suppliers"
+	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/broker"
+	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
 	"github.com/sirupsen/logrus"
@@ -23,15 +31,32 @@ func log(ctx context.Context, imp exchange.BidRequest) *logrus.Entry {
 	})
 }
 
-func storeKeys(bq exchange.BidRequest, res exchange.BidResponse) {
-
+func storeKeys(ctx context.Context, bq exchange.BidRequest, res exchange.BidResponse) {
 	// Publish them into message broker
 	for _, val := range res.Bids() {
-		broker.Publish(materialize.WinnerJob(
-			bq,
-			val,
-		))
+		SetRedisKeys(ctx, bq, val)
+
+		job := materialize.WinnerJob(bq, val)
+		safe.GoRoutine(func() { broker.Publish(job) })
 	}
+
+}
+
+// SetRedisKeys sets redis key for unique bid and bid request
+func SetRedisKeys(ctx context.Context, br exchange.BidRequest, bid exchange.Bid) {
+	wholeData := fmt.Sprintf("%s%s", br.ID(), bid.AdID())
+	hash := sha1.New()
+	_, err := hash.Write([]byte(wholeData))
+	if err != nil {
+		xlog.GetWithError(ctx, err).Panicln()
+	}
+	data := hash.Sum(nil)
+
+	store := kv.NewEavStore(fmt.Sprintf("%x", data))
+	store.SetSubKey("supplier", br.Inventory().Supplier().Name()).
+		SetSubKey("demand", bid.Demand().Name()).
+		SetSubKey("publisher", br.Inventory().Name())
+	assert.Nil(store.Save(time.Hour * 72))
 }
 
 func doError(w http.ResponseWriter, err error) {
@@ -71,7 +96,7 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	log(nCtx, bq).WithField("count", len(bidResponses)).Debug("bidResponses is passed the system from exchange calls")
 	res := biding.SelectCPM(nCtx, bq, bidResponses)
 	log(nCtx, bq).WithField("count", len(res.Bids())).Debug("bidResponses is passed the system select")
-	storeKeys(bq, res)
+	storeKeys(ctx, bq, res)
 
 	bq.Inventory().Supplier().RenderBidResponse(nCtx, w, res)
 }
