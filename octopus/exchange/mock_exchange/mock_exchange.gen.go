@@ -168,6 +168,16 @@ func (m *MockDemand) EXPECT() *MockDemandMockRecorder {
 	return m.recorder
 }
 
+// Bill mocks base method
+func (m *MockDemand) Bill(arg0 context.Context, arg1 exchange.Bid) {
+	m.ctrl.Call(m, "Bill", arg0, arg1)
+}
+
+// Bill indicates an expected call of Bill
+func (mr *MockDemandMockRecorder) Bill(arg0, arg1 interface{}) *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Bill", reflect.TypeOf((*MockDemand)(nil).Bill), arg0, arg1)
+}
+
 // CallRate mocks base method
 func (m *MockDemand) CallRate() int {
 	ret := m.ctrl.Call(m, "CallRate")
@@ -829,6 +839,18 @@ func (m *MockBid) Attributes() map[string]interface{} {
 // Attributes indicates an expected call of Attributes
 func (mr *MockBidMockRecorder) Attributes() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Attributes", reflect.TypeOf((*MockBid)(nil).Attributes))
+}
+
+// BillURL mocks base method
+func (m *MockBid) BillURL() string {
+	ret := m.ctrl.Call(m, "BillURL")
+	ret0, _ := ret[0].(string)
+	return ret0
+}
+
+// BillURL indicates an expected call of BillURL
+func (mr *MockBidMockRecorder) BillURL() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BillURL", reflect.TypeOf((*MockBid)(nil).BillURL))
 }
 
 // Categories mocks base method

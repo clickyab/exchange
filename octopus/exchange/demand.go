@@ -85,6 +85,8 @@ type DemandBase interface {
 	// Win return the win response to the demand. it happen only if the request is the winner
 	// the 2nd arg is the id of ad, the 3rd is the winner cpm bid
 	Win(context.Context, Bid)
+	// Bill call the bill url
+	Bill(context.Context, Bid)
 	// Status is called for getting the statistics of this Demand
 	Status(context.Context, http.ResponseWriter, *http.Request)
 	// Handicap return the handicap for this demand. higher handicap means higher chance to

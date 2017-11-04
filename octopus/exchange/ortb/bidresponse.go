@@ -122,3 +122,7 @@ func (b *bid) Attributes() map[string]interface{} {
 func (b *bid) Demand() exchange.Demand {
 	return b.demand
 }
+
+func (b *bid) BillURL() string {
+	return b.inner.BURL
+}
