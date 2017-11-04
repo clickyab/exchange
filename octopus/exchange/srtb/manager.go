@@ -1,21 +1,26 @@
 package srtb
 
 import (
-	"context"
 	"encoding/json"
 	"time"
 
 	"net/http"
 
+	"errors"
+
 	"clickyab.com/exchange/octopus/exchange"
 	simple "clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/random"
-	"github.com/clickyab/services/xlog"
 )
 
 // NewSimpleRTBFromBidRequest generate a simple rtb instance from bid-request
-func NewSimpleRTBFromBidRequest(ctx context.Context, in exchange.BidRequest) exchange.BidRequest {
-	return &bidRequest{inner: bidRequestToSRTB(ctx, in), time: time.Now(), sup: in.Inventory().Supplier(), cid: in.CID()}
+func NewSimpleRTBFromBidRequest(in exchange.BidRequest) (exchange.BidRequest, error) {
+	z, err := bidRequestToSRTB(in)
+	if err != nil {
+		return nil, err
+	}
+
+	return &bidRequest{inner: z, time: time.Now(), sup: in.Inventory().Supplier(), cid: in.CID()}, nil
 }
 
 // NewSimpleRTBFromRequest return make a bid-request from http request
@@ -26,12 +31,15 @@ func NewSimpleRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.Bid
 	if err := d.Decode(r1); err != nil {
 		return nil, err
 	}
+	for i := range r1.inner.Imp {
+		r1.inner.Imp[i].BidFloor = exchange.IncShare(r1.inner.Imp[i].BidFloor, s.Share())
+	}
 	return r1, nil
 }
 
 // bidRequestToSRTB change bid-request to srtb
 // TODO : Split it to multiple simpler function
-func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *simple.BidRequest {
+func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
 	sh := float64(bq.Inventory().Supplier().Share() + 100)
 	imps := []simple.Impression{}
 	for i := range bq.Imp() {
@@ -132,8 +140,8 @@ func bidRequestToSRTB(ctx context.Context, bq exchange.BidRequest) *simple.BidRe
 		}
 
 	default:
-		xlog.Get(ctx).Panic("[BUG] not a valid inventory")
+		return nil, errors.New("[BUG] not a valid inventory")
 	}
 
-	return res
+	return res, nil
 }

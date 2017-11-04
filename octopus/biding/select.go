@@ -56,7 +56,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 		set.Add(tb.AdID())
 		bids = append(bids, bid{
 			bid:   tb,
-			price: tp,
+			price: int64(exchange.DecShare(float64(tp), bq.Inventory().Supplier().Share())),
 		})
 	}
 	var res = rsp{
@@ -75,11 +75,11 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 
 func reduce(bq exchange.Impression, b []exchange.BidResponse, s exchange.Supplier) []exchange.Bid {
 	imp := bq.ID()
-	floor := int64(float64(s.Share()+100)*bq.BidFloor()) / 100
+
 	res := make([]exchange.Bid, 0)
 	for _, br := range b {
 		for _, bid := range br.Bids() {
-			if bid.ImpID() == imp && bid.Price() >= floor {
+			if bid.ImpID() == imp && bid.Price() >= int64(bq.BidFloor()) {
 				res = append(res, bid)
 				break
 			}
