@@ -50,7 +50,6 @@ func (s *starter) worker() {
 				// Make sure the packet is rejected to prevent another requeue of an invalid
 				// job
 				assert.Nil(allAck[i].Reject(false))
-
 			}
 		}
 	}()

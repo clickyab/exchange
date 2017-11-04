@@ -49,7 +49,9 @@ func (d *Demand) GetBidResponse(ctx context.Context, resp *http.Response, sup ex
 func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
 	j := json.NewEncoder(w)
 	// render in rtb style
-	err := j.Encode(srtb.NewSimpleRTBFromBidRequest(ctx, bq))
+	r, err := srtb.NewSimpleRTBFromBidRequest(bq)
+	assert.Nil(err)
+	err = j.Encode(r)
 	assert.Nil(err)
 	// TODO : simple rtb headers
 	return http.Header{}

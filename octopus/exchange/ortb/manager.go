@@ -1,18 +1,19 @@
 package ortb
 
 import (
-	"context"
 	"encoding/json"
 	"net/http"
 	"time"
 
+	"errors"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
-	"github.com/clickyab/services/xlog"
+	"github.com/clickyab/services/random"
 )
 
 // NewOpenRTBFromBidRequest generate a open rtb instance from bid-request
-func NewOpenRTBFromBidRequest(ctx context.Context, in exchange.BidRequest) exchange.BidRequest {
+func NewOpenRTBFromBidRequest(in exchange.BidRequest) (exchange.BidRequest, error) {
 	o := &openrtb.BidRequest{
 		Imp:  newImpression(in.Imp(), in.Inventory().Supplier().Share()),
 		ID:   in.ID(),
@@ -25,19 +26,22 @@ func NewOpenRTBFromBidRequest(ctx context.Context, in exchange.BidRequest) excha
 	case exchange.Site:
 		o.Site = newSite(v)
 	default:
-		xlog.Get(ctx).Panic("[BUG] invalid inventory")
+		return nil, errors.New("[BUG] invalid inventory")
 	}
 
-	return &bidRequest{sup: in.Inventory().Supplier(), time: time.Now(), cid: in.CID(), inner: o}
+	return &bidRequest{sup: in.Inventory().Supplier(), time: time.Now(), cid: in.CID(), inner: o}, nil
 }
 
 // NewOpenRTBFromRequest generate internal bid-request from open-rtb
 func NewOpenRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.BidRequest, error) {
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
-	rq := &bidRequest{sup: s, time: time.Now()}
+	rq := &bidRequest{sup: s, time: time.Now(), cid: <-random.ID}
 	if err := d.Decode(rq); err != nil {
 		return nil, err
+	}
+	for i := range rq.inner.Imp {
+		rq.inner.Imp[i].BidFloor = exchange.IncShare(rq.inner.Imp[i].BidFloor, s.Share())
 	}
 	return rq, nil
 }

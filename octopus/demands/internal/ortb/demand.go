@@ -48,7 +48,8 @@ func (d *Demand) GetBidResponse(ctx context.Context, r *http.Response, s exchang
 
 // RenderBidRequest cast bid request to ortb
 func (d *Demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
-	o := ortb.NewOpenRTBFromBidRequest(ctx, bq)
+	o, e := ortb.NewOpenRTBFromBidRequest(bq)
+	assert.Nil(e)
 	err := json.NewEncoder(w).Encode(o)
 	assert.Nil(err)
 	// TODO : Add open rtb headers
