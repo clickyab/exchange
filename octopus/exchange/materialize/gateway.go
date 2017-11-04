@@ -55,6 +55,23 @@ func WinnerJob(bq exchange.BidRequest, bid exchange.Bid) broker.Job {
 	}
 }
 
+// ClickJob return a broker job
+func ClickJob(source, supplier, demand, ip string) broker.Job {
+	switch driver.String() {
+	case jsonDriver:
+		return jsonbackend.ClickJob(source, supplier, demand, ip)
+	case emptyDriver:
+		return job{
+			data:  []byte("winner job"),
+			key:   "key",
+			topic: "winner_job",
+		}
+	default:
+		logrus.Panicf("invalid driver %s", driver.String())
+		return nil
+	}
+}
+
 // ShowJob return a broker job
 func ShowJob(trackID, demand, slotID, adID string, IP string, winner int64, t string, supplier string, publisher string, profit int64) broker.Job {
 	switch driver.String() {
