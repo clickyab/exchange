@@ -43,7 +43,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 		var tp int64
 		lower := bq.Inventory().Supplier().SoftFloorCPM()
 		if lower > tb.Price() {
-			lower = bq.Inventory().Supplier().FloorCPM()
+			lower = int64(m.BidFloor())
 		}
 		if len(sorted) > 1 && sorted[1].Price() > lower {
 			lower = sorted[1].Price()
