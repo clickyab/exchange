@@ -69,7 +69,20 @@ MOUNT {{ .EnvDir }}:/tmp/env
 MOUNT {{ .Target }}:/tmp/build
 MOUNT {{ .Cache }}:/tmp/cache
 
+ENV TZ=Asia/Tehran
+RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
+
 RUN /bin/herokuish buildpack build && rm -rf /app/pkg && rm -rf /app/tmp
+EXPORT /app/bin /app
+
+FROM ubuntu:16.04
+IMPORT /app
+
+ENV TZ=Asia/Tehran
+RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
+
+RUN apt-get update && apt-get install -y ca-certificates && apt-get clean
+
 TAG registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
 PUSH registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
 EOF
