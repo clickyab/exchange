@@ -21,3 +21,4 @@ migcreate:
 
 migration: go-bindata
 	cd $(ROOT) && $(BIN)/go-bindata -nometadata -o ./commands/migration/migration.gen.go -nomemcopy=true -pkg=main ./db/...
+	$(BIN)/goimports -w ./commands/migration/migration.gen.go

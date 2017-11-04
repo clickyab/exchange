@@ -2,8 +2,8 @@ package srtb
 
 import (
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/ip2location"
+	"github.com/clickyab/simple-rtb"
 )
 
 type device struct {

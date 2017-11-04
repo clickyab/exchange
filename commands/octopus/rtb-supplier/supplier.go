@@ -1,23 +1,17 @@
 package main
 
 import (
-	"context"
-	"net/http"
-
-	"clickyab.com/exchange/octopus/srtb"
-
-	"strings"
-
-	"encoding/json"
-
 	"bytes"
-
-	"io/ioutil"
-
+	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"strings"
 
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/simple-rtb"
 	"github.com/rs/xmux"
 )
 

@@ -9,8 +9,8 @@ import (
 	"errors"
 
 	"clickyab.com/exchange/octopus/exchange"
-	simple "clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/random"
+	simple "github.com/clickyab/simple-rtb"
 )
 
 // NewSimpleRTBFromBidRequest generate a simple rtb instance from bid-request
@@ -73,22 +73,22 @@ func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
 			MNC:      bq.Device().MNC(),
 			MCC:      bq.Device().MCC(),
 			Geo: simple.Geo{
-				Country: exchange.Country{
+				Country: simple.Country{
 					Name:  bq.Device().Geo().Country().Name,
 					ISO:   bq.Device().Geo().Country().Name,
 					Valid: bq.Device().Geo().Country().Valid,
 				},
-				Region: exchange.Region{
+				Region: simple.Region{
 					Name:  bq.Device().Geo().Region().Name,
 					ISO:   bq.Device().Geo().Region().ISO,
 					Valid: bq.Device().Geo().Region().Valid,
 				},
-				LatLon: exchange.LatLon{
+				LatLon: simple.LatLon{
 					Lat:   bq.Device().Geo().LatLon().Lat,
 					Lon:   bq.Device().Geo().LatLon().Lon,
 					Valid: bq.Device().Geo().LatLon().Valid,
 				},
-				ISP: exchange.ISP{},
+				ISP: simple.ISP{},
 			},
 		},
 		User: &simple.User{

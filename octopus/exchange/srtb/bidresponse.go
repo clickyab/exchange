@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/srtb"
+	"github.com/clickyab/simple-rtb"
 )
 
 type bidResponse struct {

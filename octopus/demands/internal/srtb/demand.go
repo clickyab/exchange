@@ -12,8 +12,8 @@ import (
 
 	"clickyab.com/exchange/octopus/demands/internal/base"
 	"clickyab.com/exchange/octopus/exchange/srtb"
-	simple "clickyab.com/exchange/octopus/srtb"
 	"github.com/clickyab/services/xlog"
+	simple "github.com/clickyab/simple-rtb"
 )
 
 // Demand srtb demand structure
