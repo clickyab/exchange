@@ -111,13 +111,10 @@ func winnerToMap(bq exchange.BidRequest, bid exchange.Bid) map[string]interface{
 	}
 }
 
-func showToMap(trackID, demand, slotID, adID string, winner int64, supplier string, publisher string, profit int64) map[string]interface{} {
+func showToMap(demand string, winner int64, supplier string, publisher string, profit int64) map[string]interface{} {
 	return map[string]interface{}{
-		"track_id":    trackID,
 		"demand_name": demand,
 		"price":       winner,
-		"slot_id":     slotID,
-		"ad_id":       adID,
 		"supplier":    supplier,
 		"publisher":   publisher,
 		"profit":      profit,
