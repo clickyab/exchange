@@ -1,6 +1,7 @@
 package exchange
 
 import (
+	"net/url"
 	"time"
 )
 
@@ -57,4 +58,6 @@ type BidRequest interface {
 	Attributes() map[string]interface{}
 	// CID unique identifier for every request
 	CID() string
+	// URL return the current url (host)
+	URL() *url.URL
 }

@@ -6,6 +6,8 @@ import (
 
 	"errors"
 
+	"net/url"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/random"
@@ -18,6 +20,11 @@ type bidRequest struct {
 	sup   exchange.Supplier
 	time  time.Time
 	cid   string
+	url   *url.URL
+}
+
+func (b *bidRequest) URL() *url.URL {
+	return b.url
 }
 
 // CID clickyab track id

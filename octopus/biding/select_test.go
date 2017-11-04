@@ -16,6 +16,8 @@ import (
 
 	"context"
 
+	"net/url"
+
 	"github.com/clickyab/services/kv"
 	mock2 "github.com/clickyab/services/kv/mock"
 	"github.com/golang/mock/gomock"
@@ -65,6 +67,42 @@ type Advertise struct {
 	demand exchange.Demand
 }
 
+var mk = `<div>
+    <a href="${CLICK_URL}aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9qb2JzLzE1MzE2Ny9jb250aW51b3VzLWRlbGl2ZXJ5LWVuZ2luZWVyLW5ldGVudD9zbz1pJnBnPTEmb2Zmc2V0PS0xJnE9Z29sYW5nJmw9c3dlZGVuJnU9S20mZD0yMA=="></a>
+    <a href="${CLICK_URL:B64}"></a>
+    <script href="${PIXEL_URL_JS}"></script>
+    <img src="${PIXEL_URL_IMAGE}" alt="">
+    <script>
+        function check() {
+            var AUCTION_ID = "${AUCTION_ID}";
+            var AUCTION_BID_ID = "${AUCTION_BID_ID}";
+            var AUCTION_IMP_ID = "${AUCTION_IMP_ID}";
+            var AUCTION_SEAT_ID = "${AUCTION_SEAT_ID}";
+            var AUCTION_AD_ID = "${AUCTION_AD_ID}";
+            var AUCTION_PRICE = "${AUCTION_PRICE}";
+            var AUCTION_CURRENCY = "${AUCTION_CURRENCY}";
+            var AUCTION_MBR = "${AUCTION_MBR}";
+            var AUCTION_LOSS = "${AUCTION_LOSS}";
+// request to server
+
+
+            var PIXEL_URL_JS_b64 = "${PIXEL_URL_JS:B64}";
+            var PIXEL_URL_IMAGE_b64 = "${PIXEL_URL_IMAGE:B64}";
+            var AUCTION_ID_b64 = "${AUCTION_ID:B64}";
+            var AUCTION_BID_ID_b64 = "${AUCTION_BID_ID:B64}";
+            var AUCTION_IMP_ID_b64 = "${AUCTION_IMP_ID:B64}";
+            var AUCTION_SEAT_ID_b64 = "${AUCTION_SEAT_ID:B64}";
+            var AUCTION_AD_ID_b64 = "${AUCTION_AD_ID:B64}";
+            var AUCTION_PRICE_b64 = "${AUCTION_PRICE:B64}";
+            var AUCTION_CURRENCY_b64 = "${AUCTION_CURRENCY:B64}";
+            var AUCTION_MBR_b64 = "${AUCTION_MBR:B64}";
+            var AUCTION_LOSS_b64 = "${AUCTION_LOSS:B64}"
+        }
+    </script>
+</div>
+
+`
+
 func TestSelect(t *testing.T) {
 
 	kv.Register(nil, nil, mock2.NewMockDistributedLocker, mock2.NewMockDsetStore, nil, nil, nil)
@@ -74,8 +112,10 @@ func TestSelect(t *testing.T) {
 	b := mock.GetChannelBroker()
 	broker.SetActiveBroker(b)
 	for _, u := range cases() {
+
 		Convey("SelectCPM function test with case number "+strconv.Itoa(u.Case), t, func() {
 			rq := mock_exchange.NewMockBidRequest(ctrl)
+			rq.EXPECT().URL().Return(&url.URL{Host: "example.com"}).AnyTimes()
 			rq.EXPECT().Attributes().Return(map[string]interface{}{}).AnyTimes()
 			id := <-random.ID
 			rq.EXPECT().ID().Return(id).AnyTimes()
@@ -105,15 +145,20 @@ func TestSelect(t *testing.T) {
 			for _, a := range u.Demands {
 				d := mock_exchange.NewMockDemand(ctrl)
 				d.EXPECT().Handicap().Return(a.HandyCap).AnyTimes()
-
+				d.EXPECT().Bill(gomock.Any(), gomock.Any()).Do(func(ctx context.Context, bid exchange.Bid) {}).AnyTimes()
 				bi := mock_exchange.NewMockBid(ctrl)
 				bi.EXPECT().ImpID().Return(impID).AnyTimes()
 				bi.EXPECT().Price().Return(a.Price).AnyTimes()
+				bi.EXPECT().AdMarkup().Return(mk).AnyTimes()
+				bi.EXPECT().ID().Return(<-random.ID).AnyTimes()
 				bi.EXPECT().AdID().Return(<-random.ID).AnyTimes()
+				bi.EXPECT().BillURL().Return("").AnyTimes()
+				bi.EXPECT().WinURL().Return("").AnyTimes()
 
 				br := mock_exchange.NewMockBidResponse(ctrl)
 				br.EXPECT().Bids().Return([]exchange.Bid{bi}).AnyTimes()
 				bi.EXPECT().Demand().Return(d).AnyTimes()
+
 				bids = append(bids, br)
 			}
 

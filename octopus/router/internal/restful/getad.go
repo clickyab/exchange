@@ -4,10 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
-
-	"crypto/sha1"
-	"fmt"
-
 	"time"
 
 	"clickyab.com/exchange/octopus/biding"
@@ -34,29 +30,15 @@ func log(ctx context.Context, imp exchange.BidRequest) *logrus.Entry {
 func storeKeys(ctx context.Context, bq exchange.BidRequest, res exchange.BidResponse) {
 	// Publish them into message broker
 	for _, val := range res.Bids() {
-		SetRedisKeys(ctx, bq, val)
+		store := kv.NewEavStore(exchange.PixelPrefix + "_" + biding.GenRedisKey(ctx, bq, val))
+		store.SetSubKey("supplier", bq.Inventory().Supplier().Name()).
+			SetSubKey("publisher", bq.Inventory().Name()).
+			SetSubKey("demand", val.Demand().Name())
 
+		assert.Nil(store.Save(time.Hour * 72))
 		job := materialize.WinnerJob(bq, val)
 		safe.GoRoutine(func() { broker.Publish(job) })
 	}
-
-}
-
-// SetRedisKeys sets redis key for unique bid and bid request
-func SetRedisKeys(ctx context.Context, br exchange.BidRequest, bid exchange.Bid) {
-	wholeData := fmt.Sprintf("%s%s", br.ID(), bid.AdID())
-	hash := sha1.New()
-	_, err := hash.Write([]byte(wholeData))
-	if err != nil {
-		xlog.GetWithError(ctx, err).Panicln()
-	}
-	data := hash.Sum(nil)
-
-	store := kv.NewEavStore(fmt.Sprintf("%x", data))
-	store.SetSubKey("supplier", br.Inventory().Supplier().Name()).
-		SetSubKey("demand", bid.Demand().Name()).
-		SetSubKey("publisher", br.Inventory().Name())
-	assert.Nil(store.Save(time.Hour * 72))
 }
 
 func doError(w http.ResponseWriter, err error) {
@@ -71,6 +53,7 @@ func doError(w http.ResponseWriter, err error) {
 
 // GetAd is route to get the ad from a restful endpoint
 func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+
 	key := xmux.Param(ctx, "key")
 	sup, err := suppliers.GetSupplierByKey(key)
 	if err != nil {

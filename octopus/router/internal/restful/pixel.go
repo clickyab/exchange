@@ -9,6 +9,7 @@ import (
 
 	"errors"
 
+	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
 	"github.com/clickyab/services/framework"
@@ -20,14 +21,28 @@ import (
 
 var pixel = `iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII=`
 
-// Pixel route handles the show job system
-func Pixel(ctx context.Context, w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("content-type", "image/png")
-	w.Write([]byte(pixel))
+const (
+	showJS    = "show.js"
+	showPixel = "image.png"
+)
+
+// Show route handles the show job system
+func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+	t := xmux.Param(ctx, "type")
+	if t == showJS {
+		w.Header().Set("content-type", "text/javascript")
+		w.Write([]byte(""))
+	} else if t == showPixel {
+		w.Header().Set("content-type", "image/png")
+		w.Write([]byte(pixel))
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	safe.GoRoutine(func() {
 		id := xmux.Param(ctx, "id")
-		store := kv.NewEavStore(id).AllKeys()
+		store := kv.NewEavStore(exchange.PixelPrefix + "_" + id).AllKeys()
 		if len(store) < 5 {
 			xlog.GetWithError(ctx, errors.New("session expired for this id"))
 			return

@@ -6,6 +6,8 @@ import (
 
 	"encoding/json"
 
+	"net/url"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/simple-rtb"
@@ -17,6 +19,11 @@ type bidRequest struct {
 	sup   exchange.Supplier
 	time  time.Time
 	cid   string
+	url   *url.URL
+}
+
+func (b *bidRequest) URL() *url.URL {
+	return b.url
 }
 
 // CID return srtb CID

@@ -3,8 +3,11 @@ package biding
 import "clickyab.com/exchange/octopus/exchange"
 
 type bid struct {
-	bid   exchange.Bid
-	price int64
+	bid     exchange.Bid
+	price   int64
+	markup  string
+	winurl  string
+	billurl string
 }
 
 func (b bid) ImpID() string {
@@ -36,7 +39,7 @@ func (b bid) AdWidth() int {
 }
 
 func (b bid) AdMarkup() string {
-	return b.bid.AdMarkup()
+	return b.markup
 }
 
 func (b bid) AdDomains() []string {
@@ -44,11 +47,11 @@ func (b bid) AdDomains() []string {
 }
 
 func (b bid) WinURL() string {
-	return b.bid.WinURL()
+	return b.winurl
 }
 
 func (b bid) BillURL() string {
-	return b.bid.BillURL()
+	return b.billurl
 }
 
 func (b bid) Categories() []string {
