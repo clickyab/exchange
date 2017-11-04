@@ -26,7 +26,7 @@ func (m *Manager) Initialize() {
 		"ID",
 	)
 	m.AddTableWithName(
-		SupplierSource{},
+		ExchangeReport{},
 		"exchange_report",
 	).SetKeys(
 		true,
