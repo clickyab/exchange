@@ -40,7 +40,6 @@ func NewSimpleRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.Bid
 // bidRequestToSRTB change bid-request to srtb
 // TODO : Split it to multiple simpler function
 func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
-	sh := float64(bq.Inventory().Supplier().Share() + 100)
 	imps := []simple.Impression{}
 	for i := range bq.Imp() {
 		imps = append(imps, simple.Impression{
@@ -50,7 +49,12 @@ func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
 				Height: bq.Imp()[i].Banner().Height(),
 				Width:  bq.Imp()[i].Banner().Width(),
 			},
-			BidFloor: (sh + bq.Imp()[i].BidFloor()) / 100,
+			BidFloor: func() float64 {
+				if bq.Imp()[i].BidFloor() != 0 {
+					return exchange.IncShare(bq.Imp()[i].BidFloor(), bq.Inventory().Supplier().Share())
+				}
+				return exchange.IncShare(float64(bq.Inventory().Supplier().FloorCPM()), bq.Inventory().Supplier().Share())
+			}(),
 			Secure: func() int {
 				if bq.Imp()[i].Secure() {
 					return 1

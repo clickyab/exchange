@@ -15,7 +15,7 @@ import (
 // NewOpenRTBFromBidRequest generate a open rtb instance from bid-request
 func NewOpenRTBFromBidRequest(in exchange.BidRequest) (exchange.BidRequest, error) {
 	o := &openrtb.BidRequest{
-		Imp:  newImpression(in.Imp(), in.Inventory().Supplier().Share()),
+		Imp:  newImpression(in.Imp(), in.Inventory().Supplier()),
 		ID:   in.ID(),
 		BAdv: in.BlockedAdvertiserDomain(),
 	}
@@ -84,8 +84,7 @@ func newApp(a exchange.App) *openrtb.App {
 	}
 }
 
-func newImpression(m []exchange.Impression, share int) []openrtb.Impression {
-	sh := float64(share + 100)
+func newImpression(m []exchange.Impression, sup exchange.Supplier) []openrtb.Impression {
 	ms := make([]openrtb.Impression, 0)
 	for _, v := range m {
 		t := openrtb.Impression{
@@ -96,7 +95,12 @@ func newImpression(m []exchange.Impression, share int) []openrtb.Impression {
 				}
 				return openrtb.NumberOrString(0)
 			}(),
-			BidFloor:         (sh * v.BidFloor()) / 100,
+			BidFloor: func() float64 {
+				if v.BidFloor() != 0 {
+					return exchange.IncShare(v.BidFloor(), sup.Share())
+				}
+				return exchange.IncShare(float64(sup.FloorCPM()), sup.Share())
+			}(),
 			BidFloorCurrency: "IRR",
 		}
 		switch v.Type() {
