@@ -24,8 +24,7 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("invalid targetURL"))
 		return
 	}
-	var target []byte
-	_, err := base64.URLEncoding.WithPadding('.').Decode(target, []byte(targetParam))
+	target, err := base64.URLEncoding.WithPadding('.').DecodeString(targetParam)
 	if err != nil {
 		w.WriteHeader(http.StatusNotFound)
 		w.Write([]byte("invalid targetURL"))

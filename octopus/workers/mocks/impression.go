@@ -4,7 +4,7 @@ import (
 	"net"
 	"time"
 
-	"net/url"
+	"net/http"
 
 	"clickyab.com/exchange/octopus/exchange"
 )
@@ -29,7 +29,7 @@ type BidRequest struct {
 	IDevice     Device
 }
 
-func (b *BidRequest) URL() *url.URL {
+func (b *BidRequest) URL() *http.Request {
 	panic("implement me")
 }
 

@@ -8,6 +8,9 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var exchangeURL = config.GetStringDefault("supplier.exchange.url", "http://exchange.dev/api/rest/get")
+var prefix = "commands/octopus/rtb-supplier/static/template"
+
 func main() {
 	config.Initialize(commands.Organization, commands.AppName, commands.Prefix, commands.DefaultConfig())
 	defer initializer.Initialize()()

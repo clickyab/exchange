@@ -1,7 +1,7 @@
 package exchange
 
 import (
-	"net/url"
+	"net/http"
 	"time"
 )
 
@@ -59,5 +59,5 @@ type BidRequest interface {
 	// CID unique identifier for every request
 	CID() string
 	// URL return the current url (host)
-	URL() *url.URL
+	URL() *http.Request
 }

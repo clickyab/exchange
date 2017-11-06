@@ -5,15 +5,13 @@
 package mock_exchange
 
 import (
+	exchange "clickyab.com/exchange/octopus/exchange"
 	context "context"
+	gomock "github.com/golang/mock/gomock"
 	io "io"
 	http "net/http"
-	url "net/url"
 	reflect "reflect"
 	time "time"
-
-	exchange "clickyab.com/exchange/octopus/exchange"
-	gomock "github.com/golang/mock/gomock"
 )
 
 // MockImpression is a mock of Impression interface
@@ -1202,9 +1200,9 @@ func (mr *MockBidRequestMockRecorder) Time() *gomock.Call {
 }
 
 // URL mocks base method
-func (m *MockBidRequest) URL() *url.URL {
+func (m *MockBidRequest) URL() *http.Request {
 	ret := m.ctrl.Call(m, "URL")
-	ret0, _ := ret[0].(*url.URL)
+	ret0, _ := ret[0].(*http.Request)
 	return ret0
 }
 

@@ -37,9 +37,9 @@
                         <div class="form-group">
                             <label for="RTB-BannerSize">imp </label>
                             <select class="form-control BannerSize RTB-BannerSize" id="RTB-BannerSize">
+                                <option>300x250</option>
                                 <option>120x600</option>
                                 <option>160x600</option>
-                                <option>300x250</option>
                                 <option>336x280</option>
                                 <option>468x60</option>
                                 <option>728x90</option>
@@ -297,8 +297,12 @@
                         <input name="device[carrier]" type="text" id="device-CARRIER-RTB" value="MCI" class="form-control">
                     </div>
                     <div class="col-md-4">
-                        <label for="device-MCCMNC-RTB">device Mccmnc  </label>
-                        <input name="device[mccmnc]" type="text" id="device-MCCMNC-RTB" value="dash-seprate"  class="form-control">
+                        <label for="device-MCC-RTB">device Mcc</label>
+                        <input name="device[mcc]" type="text" id="device-MCC-RTB" value=""  class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="device-MNC-RTB">device Mnc</label>
+                        <input name="device[mnc]" type="text" id="device-MNC-RTB" value=""  class="form-control">
                     </div>
                     <div class="col-md-4">
                         <label for="device-CONNECTION-RTB">device Connection Type  </label>

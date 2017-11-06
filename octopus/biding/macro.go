@@ -58,21 +58,31 @@ func hasTracker(b exchange.Bid) bool {
 }
 
 func replacer(ctx context.Context, q exchange.BidRequest, b exchange.Bid) *strings.Replacer {
-
+	scheme := func() string {
+		for _, m := range q.Imp() {
+			if b.ImpID() == m.ID() {
+				if m.Secure() {
+					return "https"
+				}
+				return "http"
+			}
+		}
+		panic("[BUG]")
+	}()
 	key := GenRedisKey(ctx, q, b)
 	show := url.URL{
-		Scheme: "https",
-		Host:   q.URL().Host,
+		Scheme: scheme,
+		Host:   q.URL().URL.Host,
 		Path:   fmt.Sprintf(`api/show/%s/show.js`, key),
 	}
 	js := show.String()
 	show.Path = fmt.Sprintf(`api/show/%s/image.png`, key)
 	pixel := show.String()
-	b64 := base64.URLEncoding
+	b64 := base64.URLEncoding.WithPadding('.')
 	win := url.URL{
-		Scheme: "https",
+		Scheme: scheme,
 		Host:   q.URL().Host,
-		Path:   fmt.Sprintf("api/click/%s?ref=", key),
+		Path:   fmt.Sprintf("api/click/%s", key),
 	}
 	return strings.NewReplacer([]string{
 		clickURLHolder, win.String(),
