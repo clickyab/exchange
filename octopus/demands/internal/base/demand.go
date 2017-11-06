@@ -190,6 +190,7 @@ func (m *Manager) ActiveDemands() []exchange.DemandBase {
 	for i := range demands {
 		demands[i].client = &http.Client{
 			Transport: &http.Transport{
+
 				MaxIdleConnsPerHost: demands[i].IdleConnections,
 			},
 			Timeout: func() time.Duration {

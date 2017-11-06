@@ -8,13 +8,13 @@ debug-fakesupplier: all
 	PORT=6000 $(BIN)/dlv --listen=:5000 --headless=true --api-version=2 exec $(BIN)/supplier
 
 run-octopus: all
-	$(BIN)/octopus
+	PORT=8091 $(BIN)/octopus
 
 run-fakedemand: all
-	PORT=9898 $(BIN)/fakedemand
+	PORT=9898 $(BIN)/rtb-demand
 
 run-fakesupplier: all
-	$(BIN)/supplier
+	PORT=3500 $(BIN)/rtb-supplier
 
 install-debugger:
 	$(GO) get -v github.com/derekparker/delve/cmd/dlv

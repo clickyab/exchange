@@ -270,7 +270,6 @@ $(function () {
         if (jsonForm.wlang !== "") {
             jsonForm.wlang = (jsonForm.wlang).split(",");
         }
-        jsonForm.device.mccmnc = (jsonForm.device.mccmnc).split("-");
 
         jsonForm.device.geo.lat = parseInt(jsonForm.device.geo.lat) || "";
         jsonForm.device.geo.lon = parseInt(jsonForm.device.geo.lon) || "";
@@ -444,6 +443,7 @@ $(function () {
         });
 
         console.log(JSON.stringify(JSONOut));
+        RandomIdGen(".randomField");
 
     });
 

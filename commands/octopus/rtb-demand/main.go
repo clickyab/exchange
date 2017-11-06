@@ -10,6 +10,11 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	exchange = "exchange.dev"
+	host     = "demand.dev"
+)
+
 func main() {
 	config.Initialize(commands.Organization, commands.AppName, commands.Prefix, commands.DefaultConfig())
 	defer initializer.Initialize()()

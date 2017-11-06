@@ -12,9 +12,9 @@ func (initRouter) Routes(mux framework.Mux) {
 
 	// Exam paths
 	f := mux.RootMux()
-	f.GET("/fake/*static", s{})
-	f.POST("/fake/rtb", d{})
-	f.POST("/fake/srtb", e{})
+	f.GET("/fake/*static", assetHandler{})
+	f.POST("/fake/ortb", ortbHandler{})
+	f.POST("/fake/srtb", srtbHandler{})
 }
 
 func init() {

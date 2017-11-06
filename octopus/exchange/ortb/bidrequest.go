@@ -6,7 +6,7 @@ import (
 
 	"errors"
 
-	"net/url"
+	"net/http"
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/bsm/openrtb"
@@ -20,10 +20,10 @@ type bidRequest struct {
 	sup   exchange.Supplier
 	time  time.Time
 	cid   string
-	url   *url.URL
+	url   *http.Request
 }
 
-func (b *bidRequest) URL() *url.URL {
+func (b *bidRequest) URL() *http.Request {
 	return b.url
 }
 

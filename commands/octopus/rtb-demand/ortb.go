@@ -7,9 +7,12 @@ import (
 
 	"math/rand"
 
+	"fmt"
+
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
+	"github.com/sirupsen/logrus"
 )
 
 // ortbHandler for handling exam (test) account
@@ -32,19 +35,21 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rj, err := json.Marshal(createOrtbResponse(o))
+	rj, err := json.Marshal(createOrtbResponse(o, r))
 	assert.Nil(err)
+	logrus.Warn(rj)
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(rj)
 
 }
 
-func createOrtbResponse(o *openrtb.BidRequest) openrtb.BidResponse {
+func createOrtbResponse(o *openrtb.BidRequest, r *http.Request) openrtb.BidResponse {
+
 	seat := make([]openrtb.SeatBid, 0)
 	for _, v := range o.Imp {
 		if v.Banner != nil {
-			seat = append(seat, createOrtbBannerBide(o, &v))
+			seat = append(seat, createOrtbBannerBide(o, &v, r))
 		}
 	}
 	return openrtb.BidResponse{
@@ -68,7 +73,14 @@ var cats = []string{
 	"iab-art",
 }
 
-func createOrtbBannerBide(o *openrtb.BidRequest, m *openrtb.Impression) openrtb.SeatBid {
+func createOrtbBannerBide(o *openrtb.BidRequest, m *openrtb.Impression, r *http.Request) openrtb.SeatBid {
+	scheme := func() string {
+		if m.Secure == 1 {
+			return "https"
+		}
+		return "http"
+	}()
+
 	return openrtb.SeatBid{
 		Bid: []openrtb.Bid{
 			{
@@ -77,15 +89,16 @@ func createOrtbBannerBide(o *openrtb.BidRequest, m *openrtb.Impression) openrtb.
 				H:          m.Banner.H,
 				AdID:       <-random.ID,
 				Cat:        stringSlicer(cats),
-				Price:      float64(rand.Int63n(500)) + m.BidFloor,
+				Price:      float64(rand.Int63n(250)) + m.BidFloor,
 				ImpID:      m.ID,
 				ID:         <-random.ID,
 				Protocol:   0,
-				BURL:       "http://changeme/",
-				NURL:       "http://changeme/",
+				BURL:       fmt.Sprintf("%s://%s/api/burl/%s", scheme, host, m.ID),
+				NURL:       fmt.Sprintf("%s://%s/api/nurl/%s", scheme, host, m.ID),
 				CampaignID: openrtb.StringOrNumber(<-random.ID),
-				AdMarkup:   `<div>TEST DEMAND</div>`,
-				LURL:       "http://changeme/",
+				AdMarkup: fmt.Sprintf(`<iframe width="%d" height="%d" src="%s://%s/api/ad/0?ortb=1&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
+					m.Banner.W, m.Banner.H, scheme, host, m.Banner.W, m.Banner.H),
+				LURL: fmt.Sprintf("%s://%s/api/lurl/%s", scheme, host, m.ID),
 			},
 		},
 	}

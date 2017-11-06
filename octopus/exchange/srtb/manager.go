@@ -25,7 +25,7 @@ func NewSimpleRTBFromBidRequest(in exchange.BidRequest) (exchange.BidRequest, er
 
 // NewSimpleRTBFromRequest return make a bid-request from http request
 func NewSimpleRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.BidRequest, error) {
-	var r1 = &bidRequest{sup: s, time: time.Now(), cid: <-random.ID}
+	var r1 = &bidRequest{sup: s, time: time.Now(), cid: <-random.ID, url: r}
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 	if err := d.Decode(r1); err != nil {
