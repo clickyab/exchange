@@ -34,7 +34,7 @@ func Click(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	id := xmux.Param(ctx, "id")
 	store := kv.NewEavStore(exchange.PixelPrefix + "_" + id).AllKeys()
 
-	if len(store) < 3 {
+	if len(store) > 0 {
 		http.Redirect(w, r, string(target), http.StatusFound)
 		xlog.GetWithField(ctx, "click url route", "expired click url")
 		return

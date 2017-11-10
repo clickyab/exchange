@@ -16,7 +16,7 @@ import (
 
 	"context"
 
-	"net/url"
+	"net/http"
 
 	"github.com/clickyab/services/kv"
 	mock2 "github.com/clickyab/services/kv/mock"
@@ -114,8 +114,12 @@ func TestSelect(t *testing.T) {
 	for _, u := range cases() {
 
 		Convey("SelectCPM function test with case number "+strconv.Itoa(u.Case), t, func() {
+
+			hr := &http.Request{
+				Host: "test",
+			}
 			rq := mock_exchange.NewMockBidRequest(ctrl)
-			rq.EXPECT().URL().Return(&url.URL{Host: "example.com"}).AnyTimes()
+			rq.EXPECT().Request().Return(hr).AnyTimes()
 			rq.EXPECT().Attributes().Return(map[string]interface{}{}).AnyTimes()
 			id := <-random.ID
 			rq.EXPECT().ID().Return(id).AnyTimes()
@@ -133,9 +137,10 @@ func TestSelect(t *testing.T) {
 			imp := mock_exchange.NewMockImpression(ctrl)
 			impID := <-random.ID
 			imp.EXPECT().ID().Return(impID).AnyTimes()
+			imp.EXPECT().Secure().Return(false).AnyTimes()
 
 			imp.EXPECT().BidFloor().Return(u.FloorCPM).AnyTimes()
-			rq.EXPECT().Imp().Return([]exchange.Impression{imp})
+			rq.EXPECT().Imp().Return([]exchange.Impression{imp}).AnyTimes()
 
 			s := mock_exchange.NewMockSupplier(ctrl)
 			s.EXPECT().Name().Return("test").AnyTimes()

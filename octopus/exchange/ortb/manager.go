@@ -29,14 +29,14 @@ func NewOpenRTBFromBidRequest(in exchange.BidRequest) (exchange.BidRequest, erro
 		return nil, errors.New("[BUG] invalid inventory")
 	}
 
-	return &bidRequest{sup: in.Inventory().Supplier(), time: time.Now(), cid: in.CID(), inner: o, url: in.URL()}, nil
+	return &bidRequest{sup: in.Inventory().Supplier(), time: time.Now(), cid: in.CID(), inner: o, request: in.Request()}, nil
 }
 
 // NewOpenRTBFromRequest generate internal bid-request from open-rtb
 func NewOpenRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.BidRequest, error) {
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
-	rq := &bidRequest{sup: s, time: time.Now(), cid: <-random.ID, url: r}
+	rq := &bidRequest{sup: s, time: time.Now(), cid: <-random.ID, request: r}
 	if err := d.Decode(rq); err != nil {
 		return nil, err
 	}

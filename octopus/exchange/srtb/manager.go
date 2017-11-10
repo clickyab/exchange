@@ -20,12 +20,12 @@ func NewSimpleRTBFromBidRequest(in exchange.BidRequest) (exchange.BidRequest, er
 		return nil, err
 	}
 
-	return &bidRequest{inner: z, time: time.Now(), sup: in.Inventory().Supplier(), cid: in.CID(), url: in.URL()}, nil
+	return &bidRequest{inner: z, time: time.Now(), sup: in.Inventory().Supplier(), cid: in.CID(), request: in.Request()}, nil
 }
 
 // NewSimpleRTBFromRequest return make a bid-request from http request
 func NewSimpleRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.BidRequest, error) {
-	var r1 = &bidRequest{sup: s, time: time.Now(), cid: <-random.ID, url: r}
+	var r1 = &bidRequest{sup: s, time: time.Now(), cid: <-random.ID, request: r}
 	d := json.NewDecoder(r.Body)
 	defer r.Body.Close()
 	if err := d.Decode(r1); err != nil {

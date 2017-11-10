@@ -15,16 +15,16 @@ import (
 
 // bidRequest bid request structure
 type bidRequest struct {
-	inner *openrtb.BidRequest
-	imps  []exchange.Impression
-	sup   exchange.Supplier
-	time  time.Time
-	cid   string
-	url   *http.Request
+	inner   *openrtb.BidRequest
+	imps    []exchange.Impression
+	sup     exchange.Supplier
+	time    time.Time
+	cid     string
+	request *http.Request
 }
 
-func (b *bidRequest) URL() *http.Request {
-	return b.url
+func (b *bidRequest) Request() *http.Request {
+	return b.request
 }
 
 // CID clickyab track id

@@ -5,13 +5,14 @@
 package mock_exchange
 
 import (
-	exchange "clickyab.com/exchange/octopus/exchange"
 	context "context"
-	gomock "github.com/golang/mock/gomock"
 	io "io"
 	http "net/http"
 	reflect "reflect"
 	time "time"
+
+	exchange "clickyab.com/exchange/octopus/exchange"
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockImpression is a mock of Impression interface
@@ -1163,6 +1164,18 @@ func (mr *MockBidRequestMockRecorder) Inventory() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Inventory", reflect.TypeOf((*MockBidRequest)(nil).Inventory))
 }
 
+// Request mocks base method
+func (m *MockBidRequest) Request() *http.Request {
+	ret := m.ctrl.Call(m, "Request")
+	ret0, _ := ret[0].(*http.Request)
+	return ret0
+}
+
+// Request indicates an expected call of Request
+func (mr *MockBidRequestMockRecorder) Request() *gomock.Call {
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Request", reflect.TypeOf((*MockBidRequest)(nil).Request))
+}
+
 // TMax mocks base method
 func (m *MockBidRequest) TMax() time.Duration {
 	ret := m.ctrl.Call(m, "TMax")
@@ -1197,18 +1210,6 @@ func (m *MockBidRequest) Time() time.Time {
 // Time indicates an expected call of Time
 func (mr *MockBidRequestMockRecorder) Time() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Time", reflect.TypeOf((*MockBidRequest)(nil).Time))
-}
-
-// URL mocks base method
-func (m *MockBidRequest) URL() *http.Request {
-	ret := m.ctrl.Call(m, "URL")
-	ret0, _ := ret[0].(*http.Request)
-	return ret0
-}
-
-// URL indicates an expected call of URL
-func (mr *MockBidRequestMockRecorder) URL() *gomock.Call {
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "URL", reflect.TypeOf((*MockBidRequest)(nil).URL))
 }
 
 // User mocks base method

@@ -29,7 +29,7 @@ type BidRequest struct {
 	IDevice     Device
 }
 
-func (b *BidRequest) URL() *http.Request {
+func (b *BidRequest) Request() *http.Request {
 	panic("implement me")
 }
 

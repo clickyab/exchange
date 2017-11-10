@@ -14,16 +14,16 @@ import (
 )
 
 type bidRequest struct {
-	inner *srtb.BidRequest
-	imps  []exchange.Impression
-	sup   exchange.Supplier
-	time  time.Time
-	cid   string
-	url   *http.Request
+	inner   *srtb.BidRequest
+	imps    []exchange.Impression
+	sup     exchange.Supplier
+	time    time.Time
+	cid     string
+	request *http.Request
 }
 
-func (b *bidRequest) URL() *http.Request {
-	return b.url
+func (b *bidRequest) Request() *http.Request {
+	return b.request
 }
 
 // CID return srtb CID
