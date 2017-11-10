@@ -42,16 +42,10 @@ const (
 )
 
 func hasTracker(b exchange.Bid) bool {
-	if strings.Contains(b.AdMarkup(), jsHolder) {
-		return true
-	}
-	if strings.Contains(b.AdMarkup(), jsHolderB) {
-		return true
-	}
-	if strings.Contains(b.AdMarkup(), pixelHolder) {
-		return true
-	}
-	if strings.Contains(b.AdMarkup(), pixelHolderB) {
+	if strings.Contains(b.AdMarkup(), jsHolder) ||
+		strings.Contains(b.AdMarkup(), jsHolderB) ||
+		strings.Contains(b.AdMarkup(), pixelHolder) ||
+		strings.Contains(b.AdMarkup(), pixelHolderB) {
 		return true
 	}
 	return false
@@ -72,7 +66,7 @@ func replacer(ctx context.Context, q exchange.BidRequest, b exchange.Bid) *strin
 	key := GenRedisKey(ctx, q, b)
 	show := url.URL{
 		Scheme: scheme,
-		Host:   q.URL().URL.Host,
+		Host:   q.Request().Host,
 		Path:   fmt.Sprintf(`api/show/%s/show.js`, key),
 	}
 	js := show.String()
@@ -81,7 +75,7 @@ func replacer(ctx context.Context, q exchange.BidRequest, b exchange.Bid) *strin
 	b64 := base64.URLEncoding.WithPadding('.')
 	win := url.URL{
 		Scheme: scheme,
-		Host:   q.URL().Host,
+		Host:   q.Request().Host,
 		Path:   fmt.Sprintf("api/click/%s", key),
 	}
 	return strings.NewReplacer([]string{
