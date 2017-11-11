@@ -89,18 +89,18 @@ func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
 	safe.GoRoutine(func() {
 		u, err := url.Parse(b.WinURL())
 		if err != nil {
-			xlog.SetField(ctx, "bid win url is not valid", err)
+			xlog.GetWithError(ctx, err).Debug("bid win url is not valid")
 			return
 		}
 		req, err := http.NewRequest("GET", u.String(), nil)
 		if err != nil {
-			xlog.SetField(ctx, "demand making win request failure", err)
+			xlog.GetWithError(ctx, err).Debug("demand making win request failure")
 			return
 		}
 
 		_, err = d.Client().Do(req)
 		if err != nil {
-			xlog.SetField(ctx, "demand making win request failure", err)
+			xlog.GetWithError(ctx, err).Debug("demand making win request failure")
 			return
 		}
 	})
