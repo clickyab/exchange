@@ -1,14 +1,14 @@
 export ROOT=$(realpath $(dir $(firstword $(MAKEFILE_LIST))))
-include $(ROOT)/bin/build/variables.mk
+include $(ROOT)/scripts/variables.mk
 all: codegen
 	$(BUILD) ./...
-include $(ROOT)/bin/build/common.mk
-include $(ROOT)/bin/build/gb.mk
-include $(ROOT)/bin/build/linter.mk
-include $(ROOT)/bin/build/bindata.mk
-include $(ROOT)/bin/build/migration.mk
-include $(ROOT)/bin/build/codegen.mk
-include $(ROOT)/bin/build/services.mk
-include $(ROOT)/bin/build/cleanup.mk
-include $(ROOT)/bin/build/test.mk
-include $(ROOT)/bin/build/run.mk
+include $(ROOT)/scripts/common.mk
+include $(ROOT)/scripts/gb.mk
+include $(ROOT)/scripts/linter.mk
+include $(ROOT)/scripts/bindata.mk
+include $(ROOT)/scripts/migration.mk
+include $(ROOT)/scripts/codegen.mk
+include $(ROOT)/scripts/services.mk
+include $(ROOT)/scripts/cleanup.mk
+include $(ROOT)/scripts/test.mk
+include $(ROOT)/scripts/run.mk

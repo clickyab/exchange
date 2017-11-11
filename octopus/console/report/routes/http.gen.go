@@ -40,7 +40,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/demand/:from/:to", framework.Mix(c.demand, m0...))
+		group.GET("routes-Controller-demand", "/demand/:from/:to", framework.Mix(c.demand, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -62,7 +62,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/exchange/:from/:to", framework.Mix(c.exchange, m1...))
+		group.GET("routes-Controller-exchange", "/exchange/:from/:to", framework.Mix(c.exchange, m1...))
 		// End route with key 1
 
 		/* Route {
@@ -84,7 +84,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/supplier/:from/:to", framework.Mix(c.supplier, m2...))
+		group.GET("routes-Controller-supplier", "/supplier/:from/:to", framework.Mix(c.supplier, m2...))
 		// End route with key 2
 
 		initializer.DoInitialize(c)
