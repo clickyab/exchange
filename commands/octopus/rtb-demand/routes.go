@@ -10,11 +10,11 @@ type initRouter struct {
 
 func (initRouter) Routes(mux framework.Mux) {
 	// Exam paths
-	mux.POST("/get/ortb", ortbHandler)
-	mux.POST("/get/srtb", srtbHandler)
-	mux.GET("/click/:id", clickHandler)
+	mux.POST("ortb-demand-get", "/get/ortb", ortbHandler)
+	mux.POST("srtb-demand-get", "/get/srtb", srtbHandler)
+	mux.GET("rtb-demand-click", "/click/:id", clickHandler)
 	//mux.POST("/show/:id", showHandler)
-	mux.GET("/ad/:id", fragmentHandler)
+	mux.GET("rtb-demand-show", "/ad/:id", fragmentHandler)
 
 }
 

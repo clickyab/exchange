@@ -8,13 +8,12 @@ import (
 type initRouter struct {
 }
 
-func (initRouter) Routes(mux framework.Mux) {
+func (initRouter) Routes(f framework.Mux) {
 
 	// Exam paths
-	f := mux.RootMux()
-	f.GET("/fake/*static", assetHandler{})
-	f.POST("/fake/ortb", ortbHandler{})
-	f.POST("/fake/srtb", srtbHandler{})
+	f.GET("rtb-supplier-static", "/fake/*static", assetHandler{}.ServeHTTPC)
+	f.POST("rtb-supplier-ortb", "/fake/ortb", ortbHandler{}.ServeHTTPC)
+	f.POST("rtb-supplier-srtb", "/fake/srtb", srtbHandler{}.ServeHTTPC)
 }
 
 func init() {

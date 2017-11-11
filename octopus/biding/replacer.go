@@ -12,6 +12,8 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/framework/router"
+	"github.com/clickyab/services/xlog"
 )
 
 const (
@@ -61,22 +63,26 @@ func replacer(ctx context.Context, q exchange.BidRequest, b exchange.Bid) *strin
 				return "http"
 			}
 		}
-		panic("[BUG]")
+		xlog.Get(ctx).Panic("[BUG]")
+		return ""
 	}()
 	key := GenRedisKey(ctx, q, b)
+	pat, err := router.Path("pixel", map[string]string{"id": key, "type": "show.js"})
+	assert.Nil(err)
 	show := url.URL{
 		Scheme: scheme,
 		Host:   q.Request().Host,
-		Path:   fmt.Sprintf(`api/show/%s/show.js`, key),
+		Path:   pat,
 	}
 	js := show.String()
-	show.Path = fmt.Sprintf(`api/show/%s/image.png`, key)
+	show.Path, err = router.Path("pixel", map[string]string{"id": key, "type": "image.png"})
 	pixel := show.String()
 	b64 := base64.URLEncoding.WithPadding('.')
+	clk, err := router.Path("click", map[string]string{"id": key})
 	win := url.URL{
 		Scheme: scheme,
 		Host:   q.Request().Host,
-		Path:   fmt.Sprintf("api/click/%s", key),
+		Path:   clk,
 	}
 	return strings.NewReplacer([]string{
 		clickURLHolder, win.String(),

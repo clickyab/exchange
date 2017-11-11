@@ -39,7 +39,7 @@ func (c *Controller) Routes(r framework.Mux) {
 
 		// Make sure payload is the last middleware
 		m0 = append(m0, middleware.PayloadUnMarshallerGenerator(loginPayload{}))
-		group.POST("/login", framework.Mix(c.login, m0...))
+		group.POST("routes-Controller-login", "/login", framework.Mix(c.login, m0...))
 		// End route with key 0
 
 		/* Route {
@@ -61,7 +61,7 @@ func (c *Controller) Routes(r framework.Mux) {
 			authz.Authenticate,
 		}...)
 
-		group.GET("/logout", framework.Mix(c.logout, m1...))
+		group.GET("routes-Controller-logout", "/logout", framework.Mix(c.logout, m1...))
 		// End route with key 1
 
 		initializer.DoInitialize(c)
