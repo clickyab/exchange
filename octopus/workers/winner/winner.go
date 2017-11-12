@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"clickyab.com/exchange/octopus/exchange/materialize/jsonbackend"
 	"clickyab.com/exchange/octopus/models"
 	"clickyab.com/exchange/octopus/workers/internal/datamodels"
 	"github.com/clickyab/services/assert"
@@ -13,36 +14,6 @@ import (
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
 )
-
-type model struct {
-	Request struct {
-		ID        string    `json:"id"`
-		Time      time.Time `json:"time"`
-		Inventory struct {
-			FloorCPM     int64  `json:"floor_cpm"`
-			SoftFloorCPM int64  `json:"soft_floor_cpm"`
-			Name         string `json:"name"`
-			Supplier     struct {
-				FloorCPM     int64  `json:"floor_cpm"`
-				SoftFloorCPM int64  `json:"soft_floor_cpm"`
-				Name         string `json:"name"`
-				Share        int    `json:"share"`
-			} `json:"supplier"`
-			Domain string `json:"domain"`
-		} `json:"inventory"`
-	} `json:"request"`
-	Bid struct {
-		Height    int      `json:"height"`
-		Width     int      `json:"width"`
-		AdDomains []string `json:"ad_domains"`
-		WinnerCpm int64    `json:"winner_cpm"`
-		ID        string   `json:"id"`
-		ImpID     string   `json:"imp_id"`
-		Demand    struct {
-			Name string `json:"name"`
-		} `json:"demand"`
-	} `json:"bid"`
-}
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
 
@@ -86,16 +57,16 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 		for {
 			select {
 			case del = <-chn:
-				obj := model{}
+				obj := jsonbackend.WinnerWorker{}
 				err := del.Decode(&obj)
 				assert.Nil(err)
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:     obj.Request.Inventory.Supplier.Name,
-					Source:       obj.Request.Inventory.Domain,
-					Demand:       obj.Bid.Demand.Name,
-					Time:         models.FactTableID(obj.Request.Time),
+					Supplier:     obj.Supplier,
+					Source:       obj.Publisher,
+					Demand:       obj.Demand,
+					Time:         models.FactTableID(obj.Time),
 					AdOutCount:   1,
-					AdOutBid:     obj.Bid.WinnerCpm,
+					AdOutBid:     obj.WinnerCPM,
 					Acknowledger: del,
 					WorkerID:     s.workerID,
 				}

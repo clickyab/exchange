@@ -6,12 +6,22 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/broker"
 
+	"time"
+
 	"github.com/sirupsen/logrus"
 )
 
+type WinnerWorker struct {
+	Publisher string    `json:"source"`
+	Supplier  string    `json:"supplier"`
+	Demand    string    `json:"demand"`
+	Time      time.Time `json:"time"`
+	WinnerCPM int64     `json:"winner_cpm"`
+}
+
 type winner struct {
-	data map[string]interface{}
-	key  string
+	inner *WinnerWorker
+	key   string
 
 	src []byte
 }
@@ -19,7 +29,7 @@ type winner struct {
 // Encode encode
 func (w *winner) Encode() ([]byte, error) {
 	if w.src == nil {
-		w.src, _ = json.Marshal(w.data)
+		w.src, _ = json.Marshal(w.inner)
 	}
 
 	return w.src, nil
@@ -53,7 +63,17 @@ func (w *winner) Report() func(error) {
 // WinnerJob return a broker job
 func WinnerJob(bq exchange.BidRequest, bid exchange.Bid) broker.Job {
 	return &winner{
-		data: winnerToMap(bq, bid),
-		key:  bq.Device().IP(),
+		inner: fillWinJob(bq, bid),
+		key:   bq.Device().IP(),
+	}
+}
+
+func fillWinJob(bq exchange.BidRequest, bid exchange.Bid) *WinnerWorker {
+	return &WinnerWorker{
+		Publisher: bq.Inventory().Domain(),
+		Supplier:  bq.Inventory().Supplier().Name(),
+		Time:      bq.Time(),
+		Demand:    bid.Demand().Name(),
+		WinnerCPM: bid.Price(),
 	}
 }
