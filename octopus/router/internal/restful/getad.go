@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"strconv"
+
 	"clickyab.com/exchange/octopus/biding"
 	"clickyab.com/exchange/octopus/dispatcher"
 	"clickyab.com/exchange/octopus/exchange"
@@ -30,10 +32,13 @@ func log(ctx context.Context, imp exchange.BidRequest) *logrus.Entry {
 func storeKeys(ctx context.Context, bq exchange.BidRequest, res exchange.BidResponse) {
 	// Publish them into message broker
 	for _, val := range res.Bids() {
+		profit := exchange.ProfitShare(val.Price(), bq.Inventory().Supplier().Share())
 		store := kv.NewEavStore(exchange.PixelPrefix + "_" + biding.GenRedisKey(ctx, bq, val))
 		store.SetSubKey("supplier", bq.Inventory().Supplier().Name()).
 			SetSubKey("publisher", bq.Inventory().Name()).
-			SetSubKey("demand", val.Demand().Name())
+			SetSubKey("demand", val.Demand().Name()).
+			SetSubKey("winner", strconv.FormatInt(val.Price(), 10)).
+			SetSubKey("profit", strconv.FormatInt(profit, 10))
 
 		assert.Nil(store.Save(time.Hour * 72))
 		job := materialize.WinnerJob(bq, val)
