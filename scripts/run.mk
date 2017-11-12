@@ -16,6 +16,9 @@ run-fakedemand: all
 run-fakesupplier: all
 	PORT=3500 $(BIN)/rtb-supplier
 
+run-winworker: all
+	PORT=4444 $(BIN)/octopus-winner-worker
+
 install-debugger:
 	$(GO) get -v github.com/derekparker/delve/cmd/dlv
 	$(GO) install -v github.com/derekparker/delve/cmd/dlv
