@@ -69,8 +69,8 @@ func (b *bidRequest) ID() string {
 // Imp bidrequest imps
 func (b *bidRequest) Imp() []exchange.Impression {
 	if b.imps == nil {
-		for _, m := range b.inner.Imp {
-			b.imps = append(b.imps, &impression{inner: &m})
+		for i := range b.inner.Imp {
+			b.imps = append(b.imps, &impression{inner: &b.inner.Imp[i]})
 		}
 	}
 	return b.imps

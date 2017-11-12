@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"clickyab.com/exchange/octopus/exchange/materialize/jsonbackend"
 	"clickyab.com/exchange/octopus/models"
 	"clickyab.com/exchange/octopus/workers/internal/datamodels"
 	"github.com/clickyab/services/assert"
@@ -12,21 +13,7 @@ import (
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
-	"github.com/sirupsen/logrus"
 )
-
-type model struct {
-	Time      time.Time `json:"time"`
-	Inventory struct {
-		Name     string `json:"name"`
-		Domain   string `json:"domain"`
-		Supplier struct {
-			Name string `json:"name"`
-		} `json:"supplier"`
-	} `json:"inventory"`
-
-	Impressions []struct{} `json:"impression"`
-}
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
 
@@ -70,16 +57,15 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 		for {
 			select {
 			case del = <-chn:
-				obj := model{}
+				obj := jsonbackend.ImpressionWorker{}
 				err := del.Decode(&obj)
-				logrus.Warn(obj)
 				assert.Nil(err)
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Source:            obj.Inventory.Domain,
-					Supplier:          obj.Inventory.Supplier.Name,
+					Source:            obj.Publisher,
+					Supplier:          obj.Supplier,
 					Time:              models.FactTableID(obj.Time),
 					RequestInCount:    1,
-					ImpressionInCount: int64(len(obj.Impressions)),
+					ImpressionInCount: int64(len(obj.Imps)),
 					Acknowledger:      del,
 					WorkerID:          s.workerID,
 				}
