@@ -63,7 +63,7 @@ func createSrtbBannerBid(bq *srtb.BidRequest, m *srtb.Impression, r *http.Reques
 	}()
 
 	return srtb.Bid{
-		AdMarkup: fmt.Sprintf(`<iframe width="%d" sdfsdfs height="%d" src="%s://%s/api/ad/0?srtb=0&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
+		AdMarkup: fmt.Sprintf(`<iframe width="%d" height="%d" src="%s://%s/api/ad/0?srtb=0&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
 			m.Banner.Width, m.Banner.Height, scheme, host, m.Banner.Width, m.Banner.Height),
 		ID:     <-random.ID,
 		ImpID:  m.ID,

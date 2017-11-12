@@ -87,30 +87,30 @@ func newApp(a exchange.App) *openrtb.App {
 
 func newImpression(m []exchange.Impression, sup exchange.Supplier) []openrtb.Impression {
 	ms := make([]openrtb.Impression, 0)
-	for _, v := range m {
+	for x := range m {
 		t := openrtb.Impression{
-			ID: v.ID(),
+			ID: m[x].ID(),
 			Secure: func() openrtb.NumberOrString {
-				if v.Secure() {
+				if m[x].Secure() {
 					return openrtb.NumberOrString(1)
 				}
 				return openrtb.NumberOrString(0)
 			}(),
 			BidFloor: func() float64 {
-				if v.BidFloor() != 0 {
-					return exchange.IncShare(v.BidFloor(), sup.Share())
+				if m[x].BidFloor() != 0 {
+					return exchange.IncShare(m[x].BidFloor(), sup.Share())
 				}
 				return exchange.IncShare(float64(sup.FloorCPM()), sup.Share())
 			}(),
 			BidFloorCurrency: "IRR",
 		}
-		switch v.Type() {
+		switch m[x].Type() {
 		case exchange.AdTypeBanner:
-			t.Banner = newBanner(v.Banner())
+			t.Banner = newBanner(m[x].Banner())
 		case exchange.AdTypeVideo:
-			t.Video = newVideo(v.Video())
+			t.Video = newVideo(m[x].Video())
 		case exchange.AdTypeNative:
-			t.Native = newNative(v.Native())
+			t.Native = newNative(m[x].Native())
 
 		}
 

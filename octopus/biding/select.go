@@ -26,11 +26,16 @@ var (
 
 // SelectCPM is the simplest way to bid. sort the value, return the
 func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidResponse) exchange.BidResponse {
+	ref := bq.User().ID()
+	if ref == "" {
+		ref = bq.ID()
+	}
+
 	bids := make([]exchange.Bid, 0)
-	lock := kv.NewDistributedLock("LOCK"+bq.Inventory().Supplier().Name()+bq.ID(), pageLock.Duration())
+	lock := kv.NewDistributedLock("LOCK"+ref, pageLock.Duration())
 	lock.Lock()
 	defer lock.Unlock()
-	set := kv.NewDistributedSet("EXC" + bq.Inventory().Supplier().Name() + bq.ID())
+	set := kv.NewDistributedSet("EXC" + bq.Inventory().Supplier().Name() + ref)
 	for _, m := range bq.Imp() {
 		reds := reduce(m, all, bq.Inventory().Supplier())
 		sorted := sortedBid(rmDuplicate(set, reds))
@@ -82,13 +87,13 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 	return res
 }
 
-func reduce(bq exchange.Impression, b []exchange.BidResponse, s exchange.Supplier) []exchange.Bid {
-	imp := bq.ID()
-
+func reduce(m exchange.Impression, b []exchange.BidResponse, s exchange.Supplier) []exchange.Bid {
+	imp := m.ID()
 	res := make([]exchange.Bid, 0)
-	for _, br := range b {
-		for _, bid := range br.Bids() {
-			if bid.ImpID() == imp && bid.Price() >= int64(bq.BidFloor()) {
+	for x := range b {
+		for i := range b[x].Bids() {
+			bid := b[x].Bids()[i]
+			if bid.ImpID() == imp && float64(exchange.DecShare(bid.Price(), s.Share())) >= m.BidFloor() {
 				res = append(res, bid)
 				break
 			}

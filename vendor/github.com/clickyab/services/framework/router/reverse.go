@@ -16,7 +16,8 @@ var (
 	lock    = sync.RWMutex{}
 )
 
-func addRoute(name, path string) {
+// AddRoute should not be called (just for test temporary)
+func AddRoute(name, path string) {
 	lock.Lock()
 	defer lock.Unlock()
 

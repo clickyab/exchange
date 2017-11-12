@@ -48,19 +48,6 @@ func bidsToMap(bids []exchange.Bid) []map[string]interface{} {
 	return response
 }
 
-func winnerBidToMap(bid exchange.Bid) map[string]interface{} {
-	return map[string]interface{}{
-		"height":     bid.AdHeight(),
-		"id":         bid.ID(),
-		"ad_domains": bid.AdDomains(),
-		"url":        bid.WinURL(),
-		"width":      bid.AdWidth(),
-		"winner_cpm": bid.Price(),
-		"imp_id":     bid.ImpID(),
-		"demand":     demandToMap(bid.Demand()),
-	}
-}
-
 func inventoryToMap(inv exchange.Inventory) map[string]interface{} {
 	return map[string]interface{}{
 		"supplier":       supplierToMap(inv.Supplier()),
@@ -102,13 +89,6 @@ func impressionToMap(imps []exchange.Impression) []map[string]interface{} {
 	}
 
 	return resp
-}
-
-func winnerToMap(bq exchange.BidRequest, bid exchange.Bid) map[string]interface{} {
-	return map[string]interface{}{
-		"bid":     winnerBidToMap(bid),
-		"request": requestToMap(bq),
-	}
 }
 
 func showToMap(demand string, winner int64, supplier string, publisher string, profit int64) map[string]interface{} {

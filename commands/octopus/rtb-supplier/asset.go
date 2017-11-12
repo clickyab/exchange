@@ -32,7 +32,6 @@ func (assetHandler) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http
 		w.Write(b)
 		return
 	}
-	g = g[5:]
 
 	b, e := Asset(prefix + g)
 	if e != nil {

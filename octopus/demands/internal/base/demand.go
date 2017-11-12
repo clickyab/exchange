@@ -112,18 +112,18 @@ func (d *Demand) Bill(ctx context.Context, b exchange.Bid) {
 	safe.GoRoutine(func() {
 		u, err := url.Parse(b.BillURL())
 		if err != nil {
-			xlog.SetField(ctx, "bid bill url is not valid", err)
+			xlog.GetWithError(ctx, err).Debug("bid bill url is not valid")
 			return
 		}
 		req, err := http.NewRequest("GET", u.String(), nil)
 		if err != nil {
-			xlog.SetField(ctx, "demand making bill request failure", err)
+			xlog.GetWithError(ctx, err).Debug("demand making bill request failure")
 			return
 		}
 
 		_, err = d.Client().Do(req)
 		if err != nil {
-			xlog.SetField(ctx, "demand making bill request failure", err)
+			xlog.GetWithError(ctx, err).Debug("demand making bill request failure")
 			return
 		}
 	})

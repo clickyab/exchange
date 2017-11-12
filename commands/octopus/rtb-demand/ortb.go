@@ -12,7 +12,6 @@ import (
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
-	"github.com/sirupsen/logrus"
 )
 
 // ortbHandler for handling exam (test) account
@@ -37,7 +36,6 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 	rj, err := json.Marshal(createOrtbResponse(o, r))
 	assert.Nil(err)
-	logrus.Warn(rj)
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	w.Write(rj)

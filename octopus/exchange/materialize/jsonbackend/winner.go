@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// WinnerWorker is model for winner job
 type WinnerWorker struct {
 	Publisher string    `json:"source"`
 	Supplier  string    `json:"supplier"`
