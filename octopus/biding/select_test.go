@@ -18,6 +18,7 @@ import (
 
 	"net/http"
 
+	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/kv"
 	mock2 "github.com/clickyab/services/kv/mock"
 	"github.com/golang/mock/gomock"
@@ -104,6 +105,8 @@ var mk = `<div>
 `
 
 func TestSelect(t *testing.T) {
+	router.AddRoute("pixel", "/api/:id/:type")
+	router.AddRoute("click", "/api/:id")
 
 	kv.Register(nil, nil, mock2.NewMockDistributedLocker, mock2.NewMockDsetStore, nil, nil, nil)
 
@@ -114,7 +117,6 @@ func TestSelect(t *testing.T) {
 	for _, u := range cases() {
 
 		Convey("SelectCPM function test with case number "+strconv.Itoa(u.Case), t, func() {
-
 			hr := &http.Request{
 				Host: "test",
 			}
@@ -123,6 +125,9 @@ func TestSelect(t *testing.T) {
 			rq.EXPECT().Attributes().Return(map[string]interface{}{}).AnyTimes()
 			id := <-random.ID
 			rq.EXPECT().ID().Return(id).AnyTimes()
+			us := mock_exchange.NewMockUser(ctrl)
+			us.EXPECT().ID().Return(<-random.ID).AnyTimes()
+			rq.EXPECT().User().Return(us).AnyTimes()
 			inv := mock_exchange.NewMockInventory(ctrl)
 			sup := mock_exchange.NewMockSupplier(ctrl)
 

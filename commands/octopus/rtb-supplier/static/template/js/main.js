@@ -69,7 +69,6 @@ $(function () {
     // this element will update when you update your form in html
     // remove name to avoid conflict of new element with SerializeObject plugin
     function createFormORTB() {
-
         var createElement = $(".RTB-banner-input").clone();
         var inputElem = createElement.find("input");
 
@@ -77,7 +76,6 @@ $(function () {
     }
 
     function createFormREST() {
-
         var createElement = $(".REST-banner-input").clone();
         var inputElem = createElement.find("input");
 
@@ -88,7 +86,7 @@ $(function () {
     function RandomIdGen(elem) {
         var elem = $(elem);
         for (var i = 0; i < elem.length; i++) {
-                $(elem[i]).attr("value", (Math.ceil(Math.random() * 100000000000)));
+            $(elem[i]).attr("value", (Math.ceil(Math.random() * 100000000000)));
         }
     }
 
@@ -111,7 +109,6 @@ $(function () {
 
 
     function createJsonIMPORTB(elem) {
-
         obj = {};
         obj.id = $(elem).find("[data-impId]").val();
         obj.banner = {};
@@ -157,7 +154,6 @@ $(function () {
     }
 
     function createJsonIMPREST(elem) {
-
         obj = {};
         obj.id = $(elem).find("[data-impId]").val();
         obj.banner = {};
@@ -221,6 +217,12 @@ $(function () {
         }
     }
 
+    function showIframe(msg,elem){
+        for (var i =0 ; i< msg.bids.length ; i++){
+            var string = (decodeURI(msg.bids[i].adm));
+            ($($(elem)[i]).html(string));
+        }
+    }
 
     // append form action
     $(".RTB-banner-input-wrapper button").on("click", function (event) {
@@ -261,7 +263,6 @@ $(function () {
             jsonForm.imp[i].bidfloorcur = parseInt(jsonForm.imp[i].bidfloorcur) || "";
             clean(jsonForm.imp[i]);
             clean(jsonForm.imp[i].banner);
-
         }
 
         if (jsonForm.bcat !== "") {
@@ -270,22 +271,16 @@ $(function () {
         if (jsonForm.wlang !== "") {
             jsonForm.wlang = (jsonForm.wlang).split(",");
         }
-
         jsonForm.device.geo.lat = parseInt(jsonForm.device.geo.lat) || "";
         jsonForm.device.geo.lon = parseInt(jsonForm.device.geo.lon) || "";
         jsonForm.device.geo.type = parseInt(jsonForm.device.geo.type) || "";
         jsonForm.device.geo.accuracy = parseInt(jsonForm.device.geo.accuracy) || "";
-
-
         jsonForm.device.h = parseInt(jsonForm.device.h);
         jsonForm.device.w = parseInt(jsonForm.device.w);
         jsonForm.device.connectiontype = parseInt(jsonForm.device.connectiontype);
-
         jsonForm.tmax = parseInt(jsonForm.tmax);
         jsonForm.test = parseInt(jsonForm.test);
         jsonForm.at = parseInt(jsonForm.at);
-
-
         if (jsonForm.wseat !== "") {
             jsonForm.wseat = (jsonForm.wseat).split(",");
         }
@@ -301,7 +296,6 @@ $(function () {
         if (jsonForm.bapp !== "") {
             jsonForm.bapp = (jsonForm.bapp).split(",");
         }
-
         delete jsonForm.radioSite;
         if (site) {
             delete jsonForm.app;
@@ -319,7 +313,6 @@ $(function () {
             }
             clean((jsonForm.site.publisher));
             clean((jsonForm.site));
-
         }
         else {
             delete jsonForm.site;
@@ -362,45 +355,36 @@ $(function () {
             success: function (msg) {
                 jsonRes = msg;
                 $(".json-out-RTB").html( syntaxHighlight(JSON.stringify(jsonRes, undefined, 4)));
+                showIframe(jsonRes,".iframeORTB");
             }
         });
 
+
+        RandomIdGen(".randomField");
         console.log(JSON.stringify(JSONOut));
-
-
-
     });
-
-
     $(".REST-form").submit(function (event) {
         event.preventDefault();
         BannerSplitor(".REST-BannerSize");
         obj = getDynamicFormREST(".REST-form .REST-banner-input");
-
-
         var jsonForm = $(this).serializeObject();
         jsonForm.imp = obj;
         var impLength = obj.length;
         for (var i = 0; i < impLength; i++) {
-
             jsonForm.imp[i].banner.w = parseInt(jsonForm.imp[i].banner.w);
             jsonForm.imp[i].banner.h = parseInt(jsonForm.imp[i].banner.h);
             jsonForm.imp[i].bidfloor = parseInt(jsonForm.imp[i].bidfloor) || "";
             clean(jsonForm.imp[i]);
         }
-
-
         if (jsonForm.bcat !== "") {
             jsonForm.bcat = (jsonForm.bcat).split(",");
         }
         jsonForm.device.h = parseInt(jsonForm.device.h) || "";
         jsonForm.device.w = parseInt(jsonForm.device.w) || "";
         jsonForm.device.connectiontype = parseInt(jsonForm.device.connectiontype);
-
         jsonForm.tmax = parseInt(jsonForm.tmax) || "";
         jsonForm.test = parseInt(jsonForm.test) || "";
         jsonForm.at = parseInt(jsonForm.at) || "";
-
         delete jsonForm.radioSite;
         if (site) {
             delete jsonForm.app;
@@ -415,18 +399,16 @@ $(function () {
                 jsonForm.app.cat = (jsonForm.app.cat).split(",");
             }
             clean((jsonForm.app));
-
         }
         clean(jsonForm);
         clean((jsonForm.device));
-
         var JSONOut = {};
         JSONOut.request = jsonForm;
         JSONOut.meta = {};
         JSONOut.meta.key = $("#key-REST").val();
+
         var url = $(".REST-form").attr("action");
         var jsonRes;
-
 
         $.ajax({
             url: url,
@@ -438,12 +420,12 @@ $(function () {
             success: function (msg) {
                 jsonRes = msg;
                 $(".json-out-REST").html(syntaxHighlight(JSON.stringify(jsonRes, undefined, 4)));
-
             }
         });
 
-        console.log(JSON.stringify(JSONOut));
+        showIframe(jsonRes,".iframeSRTB");
         RandomIdGen(".randomField");
+        console.log(JSON.stringify(JSONOut));
 
     });
 
@@ -466,5 +448,4 @@ $(function () {
             return '<span class="' + cls + '">' + match + '</span>';
         });
     }
-
 });

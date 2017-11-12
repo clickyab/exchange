@@ -11,6 +11,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// ImpressionWorker is model for impression job
 type ImpressionWorker struct {
 	Publisher string    `json:"source"`
 	Supplier  string    `json:"supplier"`
