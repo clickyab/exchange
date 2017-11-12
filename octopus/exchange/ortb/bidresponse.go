@@ -47,9 +47,9 @@ func (b *bidResponse) ID() string {
 func (b *bidResponse) Bids() []exchange.Bid {
 	if b.bids == nil {
 		for _, v := range b.inner.SeatBid {
-			for _, x := range v.Bid {
+			for i := range v.Bid {
 				b.bids = append(b.bids, &bid{
-					inner:  &x,
+					inner:  &v.Bid[i],
 					demand: b.demand,
 				})
 			}

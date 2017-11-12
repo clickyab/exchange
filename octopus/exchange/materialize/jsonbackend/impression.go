@@ -6,20 +6,28 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/broker"
 
+	"time"
+
 	"github.com/sirupsen/logrus"
 )
 
-type impression struct {
-	data map[string]interface{}
-	key  string
+type ImpressionWorker struct {
+	Publisher string    `json:"source"`
+	Supplier  string    `json:"supplier"`
+	Imps      []string  `json:"imps"`
+	Time      time.Time `json:"time"`
+}
 
-	src []byte
+type impression struct {
+	inner *ImpressionWorker
+	key   string
+	src   []byte
 }
 
 // Encode encode
 func (i impression) Encode() ([]byte, error) {
 	if i.src == nil {
-		i.src, _ = json.Marshal(i.data)
+		i.src, _ = json.Marshal(i.inner)
 	}
 
 	return i.src, nil
@@ -54,7 +62,21 @@ func (i impression) Report() func(error) {
 // ImpressionJob return a broker job
 func ImpressionJob(req exchange.BidRequest) broker.Job {
 	return impression{
-		data: requestToMap(req),
-		key:  req.Device().IP(),
+		inner: fillImpJob(req),
+		key:   req.Device().IP(),
+	}
+}
+
+// try to fill imp prepare for job
+func fillImpJob(req exchange.BidRequest) *ImpressionWorker {
+	var impRes []string
+	for i := range req.Imp() {
+		impRes = append(impRes, req.Imp()[i].ID())
+	}
+	return &ImpressionWorker{
+		Time:      req.Time(),
+		Supplier:  req.Inventory().Supplier().Name(),
+		Publisher: req.Inventory().Domain(),
+		Imps:      impRes,
 	}
 }

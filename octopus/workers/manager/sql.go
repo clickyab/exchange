@@ -53,7 +53,7 @@ func hasDataSupplier(tm *datamodels.TableModel) (bool, string) {
 }
 
 const supDemSrcTable = `INSERT INTO sup_dem_src
-(supplier,demand,source,time_id,request_out_count,imp_out_count,ad_in_count,ad_out_count,ad_out_bid,deliver_count,deliver_bid,profit) VALUES
+(supplier,demand,source,time_id,request_out_count,imp_out_count,ad_in_count,ad_out_count,ad_out_bid,deliver_count,deliver_bid,profit,click) VALUES
 %s
 ON DUPLICATE KEY UPDATE
  request_out_count=request_out_count+VALUES(request_out_count),
@@ -67,7 +67,7 @@ ON DUPLICATE KEY UPDATE
  click=click+VALUES(click)
 `
 const supSrcTable = `INSERT INTO sup_src
-(supplier,source,time_id,request_in_count,imp_in_count,ad_out_count,deliver_count,deliver_bid,profit) VALUES
+(supplier,source,time_id,request_in_count,imp_in_count,ad_out_count,deliver_count,deliver_bid,profit,click) VALUES
 %s
 ON DUPLICATE KEY UPDATE
  request_in_count=request_in_count+VALUES(request_in_count),
