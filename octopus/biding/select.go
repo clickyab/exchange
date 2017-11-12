@@ -61,7 +61,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 			winurl:  rep.Replace(tb.WinURL()),
 			billurl: rep.Replace(tb.BillURL()),
 			bid:     tb,
-			price:   int64(exchange.DecShare(float64(tp), bq.Inventory().Supplier().Share())),
+			price:   exchange.DecShare(tp, bq.Inventory().Supplier().Share()),
 		}
 		if !hasTracker(tb) {
 			rb.Demand().Bill(ctx, rb)

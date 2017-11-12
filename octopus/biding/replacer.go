@@ -76,9 +76,12 @@ func replacer(ctx context.Context, q exchange.BidRequest, b exchange.Bid) *strin
 	}
 	js := show.String()
 	show.Path, err = router.Path("pixel", map[string]string{"id": key, "type": "image.png"})
+	assert.Nil(err)
+
 	pixel := show.String()
 	b64 := base64.URLEncoding.WithPadding('.')
 	clk, err := router.Path("click", map[string]string{"id": key})
+	assert.Nil(err)
 	win := url.URL{
 		Scheme: scheme,
 		Host:   q.Request().Host,
