@@ -8,6 +8,7 @@ import (
 
 	"net/url"
 
+	"clickyab.com/exchange/octopus/biding"
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
@@ -109,24 +110,7 @@ func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
 
 // Bill demand bill action
 func (d *Demand) Bill(ctx context.Context, b exchange.Bid) {
-	safe.GoRoutine(func() {
-		u, err := url.Parse(b.BillURL())
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("bid bill url is not valid")
-			return
-		}
-		req, err := http.NewRequest("GET", u.String(), nil)
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("demand making bill request failure")
-			return
-		}
-
-		_, err = d.Client().Do(req)
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("demand making bill request failure")
-			return
-		}
-	})
+	biding.DoBillGetRequest(ctx, d.client, b.BillURL())
 }
 
 //Status demand status

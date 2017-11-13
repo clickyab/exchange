@@ -5,10 +5,10 @@ import (
 	"net/http"
 
 	"strconv"
-	"time"
 
 	"errors"
 
+	"clickyab.com/exchange/octopus/biding"
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
@@ -43,7 +43,7 @@ func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	safe.GoRoutine(func() {
 		id := xmux.Param(ctx, "id")
 		store := kv.NewEavStore(exchange.PixelPrefix + "_" + id).AllKeys()
-		if len(store) < 5 {
+		if len(store) < 6 {
 			xlog.GetWithError(ctx, errors.New("session expired for this id"))
 			return
 		}
@@ -51,6 +51,8 @@ func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		demand := store["demand"]
 		supplier := store["supplier"]
 		publisher := store["publisher"]
+		rqTime := store["request_time"]
+		billURL := store["bill_url"]
 
 		profit := store["profit"]
 		profitInt, err := strconv.ParseInt(profit, 10, 0)
@@ -66,7 +68,10 @@ func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		showJob := materialize.ShowJob(demand, framework.RealIP(r), winnerInt, time.Now().String(), supplier, publisher, profitInt)
+		//call bill url
+		d := &http.Client{}
+		biding.DoBillGetRequest(ctx, d, billURL)
+		showJob := materialize.ShowJob(demand, framework.RealIP(r), winnerInt, rqTime, supplier, publisher, profitInt)
 		broker.Publish(showJob)
 	})
 }

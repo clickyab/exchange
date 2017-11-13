@@ -34,6 +34,10 @@ func newBidRequest(c *gomock.Controller, count int) exchange.BidRequest {
 	m.EXPECT().ID().Return(<-random.ID).AnyTimes()
 	inv := mock_entity.NewMockInventory(c)
 	inv.EXPECT().Name().Return("bang").AnyTimes()
+	inv.EXPECT().Domain().Return("sha").AnyTimes()
+	sup := mock_entity.NewMockSupplier(c)
+	sup.EXPECT().Name().Return("asl").AnyTimes()
+	inv.EXPECT().Supplier().Return(sup).AnyTimes()
 	m.EXPECT().WhiteList().Return([]string{}).AnyTimes()
 	m.EXPECT().Test().Return(false).AnyTimes()
 	m.EXPECT().Inventory().Return(inv).AnyTimes()
@@ -255,77 +259,13 @@ func TestProviders(t *testing.T) {
 
 			Convey("true if impression provider and provider are the same", func() {
 				p2 := mock_entity.NewMockInventory(ctrl)
-				p2.EXPECT().Name().Return("prv1")
+				p2.EXPECT().Domain().Return("ali").AnyTimes()
+				p2.EXPECT().Name().Return("prv1").AnyTimes()
 				m1 := mock_entity.NewMockBidRequest(ctrl)
-				m1.EXPECT().Inventory().Return(p2)
+				m1.EXPECT().Inventory().Return(p2).AnyTimes()
 				pd := providerData{name: "prv1"}
 				So(isSameProvider(m1, pd), ShouldBeTrue)
 			})
-
-			//Convey("false if impression provider and provider are NOT the same", func() {
-			//	p1 := mock_entity.NewMockInventory(ctrl)
-			//	p1.EXPECT().Name().Return("prv1")
-			//	m1 := mock_entity.NewMockBidRequest(ctrl)
-			//	m1.EXPECT().Inventory().Return(p1)
-			//	pd := providerData{name: "prv2"}
-			//	So(isSameProvider(m1, pd), ShouldBeFalse)
-			//})
 		})
-
-		//Convey("isNotwhitelistCountries function should return", func() {
-		//
-		//	Convey("false if impression country is not in provider white list ", func() {
-		//
-		//		pr := mock_entity.NewMockDemand(ctrl)
-		//		pr.EXPECT().WhiteListCountries().Return([]string{"UAE", "IRAN"}).AnyTimes()
-		//		pd := providerData{provider: pr}
-		//		m := mock_entity.NewMockImpression(ctrl)
-		//		l := mock_entity.NewMockLocation(ctrl)
-		//		l.EXPECT().Country().Return(exchange.Country{ISO: "IRAN"})
-		//		m.EXPECT().Location().Return(l)
-		//		So(notWhitelistCountries(m, pd), ShouldBeFalse)
-		//	})
-		//
-		//	Convey("true if impression country is in provider white list ", func() {
-		//
-		//		pr := mock_entity.NewMockDemand(ctrl)
-		//		pr.EXPECT().WhiteListCountries().Return([]string{"UAE", "IRAN"}).AnyTimes()
-		//		pd := providerData{provider: pr}
-		//		m := mock_entity.NewMockImpression(ctrl)
-		//		l := mock_entity.NewMockLocation(ctrl)
-		//		l.EXPECT().Country().Return(exchange.Country{ISO: "USA"})
-		//		m.EXPECT().Location().Return(l)
-		//		So(notWhitelistCountries(m, pd), ShouldBeTrue)
-		//	})
-		//})
-		//
-		//Convey("isExcludedDemands function should return", func() {
-		//
-		//	Convey("true if impression exclude provider (by name)", func() {
-		//		pub := mock_entity.NewMockPublisher(ctrl)
-		//		sup := mock_entity.NewMockSupplier(ctrl)
-		//		sup.EXPECT().ExcludedDemands().Return([]string{"PQ", "SAME", "PSD"})
-		//		pub.EXPECT().Supplier().Return(sup)
-		//		m := mock_entity.NewMockImpression(ctrl)
-		//		m.EXPECT().Source().Return(pub)
-		//
-		//		pd := providerData{name: "SAME"}
-		//		So(isExcludedDemands(m, pd), ShouldBeTrue)
-		//
-		//	})
-		//
-		//	Convey("false if impression exclude provider (by name)", func() {
-		//		pub := mock_entity.NewMockPublisher(ctrl)
-		//		sup := mock_entity.NewMockSupplier(ctrl)
-		//		sup.EXPECT().ExcludedDemands().Return([]string{"PQ", "EFG", "PSD"})
-		//		pub.EXPECT().Supplier().Return(sup)
-		//		m := mock_entity.NewMockImpression(ctrl)
-		//		m.EXPECT().Source().Return(pub)
-		//
-		//		pd := providerData{name: "UNIQUE"}
-		//
-		//		So(isExcludedDemands(m, pd), ShouldBeFalse)
-		//	})
-		//})
 	})
 }
