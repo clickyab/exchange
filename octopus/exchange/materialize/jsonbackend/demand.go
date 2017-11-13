@@ -6,46 +6,55 @@ import (
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/broker"
 
+	"time"
+
 	"github.com/sirupsen/logrus"
 )
 
-type demand struct {
-	resp exchange.BidResponse
-	rq   exchange.BidRequest
+// Demand demand struct
+type Demand struct {
+	Supplier   string    `json:"supplier"`
+	Source     string    `json:"source"`
+	Demand     string    `json:"demand"`
+	Time       time.Time `json:"time"`
+	TotalPrice int64     `json:"total_price"`
+	BidLen     int       `json:"bid_len"`
 
 	src []byte
 }
 
-// Encode encode
-func (d demand) Encode() ([]byte, error) {
-	if d.src == nil {
-		themap := make(map[string]interface{})
-		themap["response"] = responseToMap(d.resp)
-		themap["request"] = requestToMap(d.rq)
-		d.src, _ = json.Marshal(themap)
+// Encode encode the data
+func (d Demand) Encode() ([]byte, error) {
+	if len(d.src) == 0 {
+		var err error
+		d.src, err = json.Marshal(d)
+		if err != nil {
+			return nil, err
+		}
 	}
-
 	return d.src, nil
 }
 
-// Length return length
-func (d demand) Length() int {
-	x, _ := d.Encode()
-	return len(x)
+// Length get length
+func (d Demand) Length() int {
+	if len(d.src) == 0 {
+		d.Encode()
+	}
+	return len(d.src)
 }
 
 // Topic return topic
-func (d demand) Topic() string {
+func (Demand) Topic() string {
 	return "demand"
 }
 
 // Key return key
-func (d demand) Key() string {
-	return ""
+func (Demand) Key() string {
+	return "demand_aggregate"
 }
 
-// Report report
-func (d demand) Report() func(error) {
+// Report stuff
+func (Demand) Report() func(error) {
 	return func(err error) {
 		if err != nil {
 			logrus.Warn(err)
@@ -53,11 +62,19 @@ func (d demand) Report() func(error) {
 	}
 }
 
-// DemandJob returns a job for demand
+// DemandJob returns a job for Demand
 // TODO : add a duration to this. for better view this is important
-func DemandJob(rq exchange.BidRequest, resp exchange.BidResponse) broker.Job {
-	return &demand{
-		rq:   rq,
-		resp: resp,
+func DemandJob(rq exchange.BidRequest, resp exchange.BidResponse, demand string) broker.Job {
+	var total int64
+	for _, i := range resp.Bids() {
+		total += i.Price()
+	}
+	return &Demand{
+		Source:     rq.Inventory().Domain(),
+		Supplier:   rq.Inventory().Supplier().Name(),
+		Demand:     demand,
+		Time:       time.Now(),
+		BidLen:     len(resp.Bids()),
+		TotalPrice: total,
 	}
 }

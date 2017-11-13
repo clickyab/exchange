@@ -8,19 +8,30 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type show struct {
-	data map[string]interface{}
-	time string
-	key  string
+// ShowWorker struct handle encode
+type ShowWorker struct {
+	Supplier  string `json:"supplier"`
+	Publisher string `json:"publisher"`
+	Demand    string `json:"demand"`
+	Winner    int64  `json:"winner"`
+	Time      string `json:"time"`
+	Profit    int64  `json:"profit"`
+}
 
-	src []byte
+type show struct {
+	inner *ShowWorker
+	key   string
+	src   []byte
 }
 
 // Encode encode
 func (s *show) Encode() ([]byte, error) {
 	if s.src == nil {
-		s.data["time"] = s.time
-		s.src, _ = json.Marshal(s.data)
+		g, err := json.Marshal(s.inner)
+		if err != nil {
+			return nil, err
+		}
+		s.src = g
 	}
 
 	return s.src, nil
@@ -54,8 +65,18 @@ func (*show) Report() func(error) {
 // ShowJob return a broker job
 func ShowJob(demand string, IP string, winner int64, t string, supplier string, publisher string, profit int64) broker.Job {
 	return &show{
-		data: showToMap(demand, winner, supplier, publisher, profit),
-		time: t,
-		key:  IP,
+		inner: fillShowJob(demand, winner, t, supplier, publisher, profit),
+		key:   IP,
+	}
+}
+
+func fillShowJob(demand string, winner int64, t string, supplier string, publisher string, profit int64) *ShowWorker {
+	return &ShowWorker{
+		Publisher: publisher,
+		Time:      t,
+		Supplier:  supplier,
+		Profit:    profit,
+		Winner:    winner,
+		Demand:    demand,
 	}
 }

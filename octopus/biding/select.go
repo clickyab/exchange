@@ -6,9 +6,14 @@ import (
 
 	"context"
 
+	"net/http"
+	"net/url"
+
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/kv"
+	"github.com/clickyab/services/safe"
+	"github.com/clickyab/services/xlog"
 )
 
 var (
@@ -69,7 +74,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 			price:   exchange.DecShare(tp, bq.Inventory().Supplier().Share()),
 		}
 		if !hasTracker(tb) {
-			rb.Demand().Bill(ctx, rb)
+			DoBillGetRequest(ctx, rb.Demand().Client(), rb.billurl)
 		}
 		bids = append(bids, rb)
 	}
@@ -115,4 +120,25 @@ bigLoop:
 		res = append(res, ads[id])
 	}
 	return res
+}
+
+// DoBillGetRequest make request to given url
+func DoBillGetRequest(ctx context.Context, c *http.Client, hit string) {
+	safe.GoRoutine(func() {
+		u, err := url.Parse(hit)
+		if err != nil {
+			xlog.SetField(ctx, "bid bill url is not valid", err)
+			return
+		}
+		req, err := http.NewRequest("GET", u.String(), nil)
+		if err != nil {
+			xlog.SetField(ctx, "demand making bill request failure", err)
+			return
+		}
+		_, err = c.Do(req.WithContext(ctx))
+		if err != nil {
+			xlog.SetField(ctx, "demand making bill request failure", err)
+			return
+		}
+	})
 }

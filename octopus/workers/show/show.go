@@ -2,9 +2,9 @@ package show
 
 import (
 	"context"
-	"strconv"
 	"time"
 
+	"clickyab.com/exchange/octopus/exchange/materialize/jsonbackend"
 	"clickyab.com/exchange/octopus/models"
 	"clickyab.com/exchange/octopus/workers/internal/datamodels"
 	"github.com/clickyab/services/assert"
@@ -14,16 +14,6 @@ import (
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
 )
-
-// TODO : is this model is correct? remove this tod if it is.
-type model struct {
-	DemandName string `json:"demand_name"`
-	Price      int64  `json:"price"`
-	Supplier   string `json:"supplier"`
-	Publisher  string `json:"publisher"`
-	Time       string `json:"time"`
-	Profit     int    `json:"profit"`
-}
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
 
@@ -67,15 +57,15 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 		for {
 			select {
 			case del = <-chn:
-				obj := model{}
+				obj := jsonbackend.ShowWorker{}
 				err := del.Decode(&obj)
 				assert.Nil(err)
 
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
 					Supplier:     obj.Supplier,
 					Source:       obj.Publisher,
-					Demand:       obj.DemandName,
-					DeliverBid:   obj.Price,
+					Demand:       obj.Demand,
+					DeliverBid:   obj.Winner,
 					DeliverCount: 1,
 					Profit:       int64(obj.Profit),
 					// TODO : why this is different with other?? make it same.
@@ -94,10 +84,9 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 }
 
 func timestampToTime(s string) time.Time {
-
-	i, err := strconv.ParseInt(s, 10, 0)
+	res, err := time.Parse(time.RFC3339, s)
 	assert.Nil(err)
-	return time.Unix(i, 0)
+	return res
 
 }
 

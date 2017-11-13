@@ -14,6 +14,7 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange/materialize"
 	"github.com/clickyab/services/broker"
+	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
 )
 
@@ -46,16 +47,17 @@ func (p *providerData) Skip() bool {
 func (p *providerData) watch(ctx context.Context, bq exchange.BidRequest) exchange.BidResponse {
 	var data exchange.BidResponse
 	chn := make(chan exchange.BidResponse, 1)
-	defer func() {
+	defer safe.GoRoutine(func() {
 		//out := time.Since(in)
 		if data != nil && len(data.Bids()) != 0 {
 			jDem := materialize.DemandJob(
 				bq,
 				data,
+				p.name,
 			)
 			broker.Publish(jDem)
 		}
-	}()
+	})
 
 	log(ctx, bq).WithField("provider", p.provider.Name()).Debug("Watch IN for provider")
 	defer log(ctx, bq).WithField("provider", p.provider.Name()).Debug("Watch OUT for provider")
