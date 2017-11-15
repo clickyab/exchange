@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+set -x
 set -eo pipefail
 
 # This job is from jenkins. so kill it if it is a pull request
