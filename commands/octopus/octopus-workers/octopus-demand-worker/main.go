@@ -7,6 +7,7 @@ import (
 	_ "clickyab.com/exchange/octopus/workers/manager"
 	_ "github.com/clickyab/services/broker/selector"
 	"github.com/clickyab/services/config"
+	_ "github.com/clickyab/services/fluentd"
 	"github.com/clickyab/services/initializer"
 	_ "github.com/clickyab/services/kv/redis"
 	_ "github.com/clickyab/services/mysql/connection/mysql"

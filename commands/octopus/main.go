@@ -14,6 +14,7 @@ import (
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/shell"
 
+	_ "github.com/clickyab/services/fluentd"
 	_ "github.com/clickyab/services/mysql/connection/mysql"
 	"github.com/sirupsen/logrus"
 )
