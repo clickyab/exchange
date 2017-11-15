@@ -15,7 +15,7 @@ BRANCH=${CHANGE_TARGET:-${BRANCH}}
 CACHE_ROOT=${CACHE_ROOT:-/var/lib/jenkins/cache}
 
 [ -z ${CHANGE_AUTHOR} ] || exit_message "It's a PR, bail out" 0
-if [[ ( "${BRANCH}" != "master" ) && ( "${BRANCH}" != "deploy" ) ]]; then
+if [[ ( "${BRANCH}" != "master" ) && ( "${BRANCH}" != "dev" ) ]]; then
     exit_message "Its not on correct branch, bail out" 0
 fi
 [ -z ${APP} ] && exit_message "The APP is not defined." # WTF, the APP NAME is important
