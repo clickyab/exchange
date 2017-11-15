@@ -93,6 +93,10 @@ pushd ${TEMPORARY}
 rocker build --push -var Build=${BUILD} -var EnvDir=${VARS} -var Cache=${CACHE} -var Target=${TARGET} -var Version=${BRANCH}.${COMMITCOUNT} -var App=${APP}
 popd
 
+if [[ "${BRANCH}" == "dev" ]]; then
+    NAMESPACE=${APP}-staging
+fi
+
 echo "${VARS}" >> /tmp/kill-me
 echo "${TARGET}" >> /tmp/kill-me
 echo "${TEMPORARY}" >> /tmp/kill-me
@@ -101,6 +105,6 @@ echo "${BUILD_PACKS_DIR}" >> /tmp/kill-me
 
 for WRK_TYP in web winner impression demand show aggregator fakedemand click
 do
-    kubectl -n ${APP} set image deployment  ${APP}-${WRK_TYP} ${APP}-${BRANCH}=registry.clickyab.ae/clickyab/${APP}:${BRANCH}.${COMMITCOUNT} --record
+    kubectl -n ${NAMESPACE} set image deployment  ${APP}-${WRK_TYP} ${APP}-${BRANCH}=registry.clickyab.ae/clickyab/${APP}:${BRANCH}.${COMMITCOUNT} --record
 done
 
