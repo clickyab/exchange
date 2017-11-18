@@ -12,6 +12,7 @@ import (
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
+	"github.com/rs/xmux"
 )
 
 // ortbHandler for handling exam (test) account
@@ -34,7 +35,7 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rj, err := json.Marshal(createOrtbResponse(o, r))
+	rj, err := json.Marshal(createOrtbResponse(ctx, o, r))
 	assert.Nil(err)
 	w.Header().Set("content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
@@ -42,12 +43,12 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 
 }
 
-func createOrtbResponse(o *openrtb.BidRequest, r *http.Request) openrtb.BidResponse {
+func createOrtbResponse(ctx context.Context, o *openrtb.BidRequest, r *http.Request) openrtb.BidResponse {
 
 	seat := make([]openrtb.SeatBid, 0)
 	for _, v := range o.Imp {
 		if v.Banner != nil {
-			seat = append(seat, createOrtbBannerBide(o, &v, r))
+			seat = append(seat, createOrtbBannerBide(ctx, o, &v, r))
 		}
 	}
 	return openrtb.BidResponse{
@@ -71,7 +72,7 @@ var cats = []string{
 	"iab-art",
 }
 
-func createOrtbBannerBide(o *openrtb.BidRequest, m *openrtb.Impression, r *http.Request) openrtb.SeatBid {
+func createOrtbBannerBide(ctx context.Context, o *openrtb.BidRequest, m *openrtb.Impression, r *http.Request) openrtb.SeatBid {
 	scheme := func() string {
 		if m.Secure == 1 {
 			return "https"
@@ -89,7 +90,7 @@ func createOrtbBannerBide(o *openrtb.BidRequest, m *openrtb.Impression, r *http.
 				Cat:        stringSlicer(cats),
 				Price:      float64(rand.Int63n(250)) + m.BidFloor,
 				ImpID:      m.ID,
-				ID:         <-random.ID,
+				ID:         fmt.Sprintf("%s-%s-%s", xmux.Param(ctx, "name"), xmux.Param(ctx, "mode"), <-random.ID),
 				Protocol:   0,
 				BURL:       fmt.Sprintf("%s://%s/api/burl/%s", scheme, host, m.ID),
 				NURL:       fmt.Sprintf("%s://%s/api/nurl/%s", scheme, host, m.ID),
