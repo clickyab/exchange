@@ -15,22 +15,26 @@ type srtbHandler struct {
 }
 
 func (srtbHandler) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.Request) {
-	data, err := ioutil.ReadAll(r.Body)
-	assert.Nil(err)
+	var payload = &srtbBidRequest{}
+	dec := json.NewDecoder(r.Body)
 	defer r.Body.Close()
+	err := dec.Decode(payload)
 
-	var payload = srtbBidRequest{}
-	err = json.Unmarshal(data, &payload)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	buf := &bytes.Buffer{}
-	enc := json.NewEncoder(buf)
-	assert.Nil(enc.Encode(payload.Request))
-
-	req, err := http.NewRequest("POST", exchangeURL+"/"+payload.Meta.Key, bytes.NewBuffer(buf.Bytes()))
+	// send request to exchange
+	res, err := json.Marshal(payload.Request)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	g := &bytes.Buffer{}
+	_, err = g.Write(res)
+	assert.Nil(err)
+	req, err := http.NewRequest("POST", exchangeURL+"/"+payload.Meta.Key, g)
 	assert.Nil(err)
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
@@ -47,7 +51,9 @@ func (srtbHandler) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.
 	}
 	var result = &srtb.BidResponse{}
 	err = json.Unmarshal(data2, &result)
+
 	assert.Nil(err)
 	enc1 := json.NewEncoder(w)
 	enc1.Encode(result)
+	return
 }

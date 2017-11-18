@@ -8,13 +8,13 @@ debug-fakesupplier: all
 	PORT=6000 $(BIN)/dlv --listen=:5000 --headless=true --api-version=2 exec $(BIN)/supplier
 
 run-octopus: all
-	PORT=8091 $(BIN)/octopus
+	$(BIN)/octopus
 
 run-fakedemand: all
-	PORT=9898 $(BIN)/rtb-demand
+	$(BIN)/rtb-demand
 
 run-fakesupplier: all
-	PORT=3500 $(BIN)/rtb-supplier
+	$(BIN)/rtb-supplier
 
 run-winworker: all
 	PORT=4444 $(BIN)/octopus-winner-worker
