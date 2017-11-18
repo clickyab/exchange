@@ -36,6 +36,7 @@ func newBidRequest(c *gomock.Controller, count int) exchange.BidRequest {
 	inv.EXPECT().Name().Return("bang").AnyTimes()
 	inv.EXPECT().Domain().Return("sha").AnyTimes()
 	sup := mock_entity.NewMockSupplier(c)
+	sup.EXPECT().TestMode().Return(false).AnyTimes()
 	sup.EXPECT().Name().Return("asl").AnyTimes()
 	inv.EXPECT().Supplier().Return(sup).AnyTimes()
 	m.EXPECT().WhiteList().Return([]string{}).AnyTimes()

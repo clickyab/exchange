@@ -172,7 +172,12 @@ func isNotSameMode(bq exchange.BidRequest, data providerData) bool {
 	// TODO : change test mode to integer and change it to group functionality
 	// if we use number we can create multiple separate network and its a cool
 	// functionality, but not yet.
-	return bq.Test() != data.provider.TestMode()
+	return data.provider.TestMode() != func() bool {
+		if t := bq.Inventory().Supplier().TestMode(); t {
+			return t
+		}
+		return bq.Test()
+	}()
 }
 
 func contains(s []string, t string) bool {
