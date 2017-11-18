@@ -27,3 +27,4 @@ export WORK_DIR=$(ROOT)/tmp
 export UGLIFYJS=$(ROOT)/node_modules/.bin/uglifyjs
 export DATABASE_URL="mysql://$(DB_USER):$(DBPASS)@127.0.0.1:3306/$(DB_NAME)
 export EXC_SERVICES_AMQP_DSN=amqp://$(RUSER):$(RPASS)@127.0.0.1:5672/
+export EXC_SERVICES_FRAMEWORK_MOUNT_POINT=/rtbsup
