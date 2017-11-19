@@ -10,6 +10,7 @@ import (
 	"fmt"
 
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/simple-rtb"
 	"github.com/rs/xmux"
@@ -62,11 +63,12 @@ func createSrtbBannerBid(ctx context.Context, bq *srtb.BidRequest, m *srtb.Impre
 		}
 		return "http"
 	}()
-
+	adid := <-random.ID
+	p := router.MustPath("rtb-demand-show", map[string]string{"id": adid})
 	return srtb.Bid{
-		AdMarkup: fmt.Sprintf(`<iframe width="%d" height="%d" src="%s://%s/api/ad/0?srtb=0&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
-			m.Banner.Width, m.Banner.Height, scheme, host, m.Banner.Width, m.Banner.Height),
-		ID:     fmt.Sprintf("%s-%s-%s", xmux.Param(ctx, "name"), xmux.Param(ctx, "mode"), <-random.ID),
+		AdMarkup: fmt.Sprintf(`<iframe width="%d" height="%d" src="%s://%s%s?srtb=0&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
+			m.Banner.Width, m.Banner.Height, scheme, host, p, m.Banner.Width, m.Banner.Height),
+		ID:     fmt.Sprintf("%s-%s-%s", xmux.Param(ctx, "name"), xmux.Param(ctx, "mode"), adid),
 		ImpID:  m.ID,
 		Price:  int64(m.BidFloor) + rand.Int63n(250),
 		Width:  m.Banner.Width,

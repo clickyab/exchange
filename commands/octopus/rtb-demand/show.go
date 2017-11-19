@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strconv"
 
+	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/random"
 	"github.com/sirupsen/logrus"
 )
@@ -111,19 +111,18 @@ func adURL(r *http.Request) (string, error) {
 }
 
 func clickURL(r *http.Request) (string, error) {
-	aid, err := strconv.ParseInt(r.URL.Query().Get("aid"), 10, 64)
-	if err != nil || aid == 0 {
+	aid := r.URL.Query().Get("aid")
+	if aid == "" {
 		return "", errors.New("bad request")
 	}
 	crl, err := base64.URLEncoding.WithPadding('.').DecodeString(r.URL.Query().Get("crl"))
 	if err != nil {
 		return "", err
 	}
-
 	t := url.URL{
 		Host:   r.Host,
 		Scheme: r.URL.Scheme,
-		Path:   fmt.Sprintf("api/click/%d?cache=%s", aid, <-random.ID),
+		Path:   fmt.Sprintf("%s?cache=%s", router.MustPath("rtb-demand-click", map[string]string{"id": aid}), <-random.ID),
 	}
 	exchangeClick, err := url.Parse(string(crl))
 	exchangeClick.Scheme = r.URL.Scheme

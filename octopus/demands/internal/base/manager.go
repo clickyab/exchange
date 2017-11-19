@@ -49,6 +49,7 @@ func Provide(ctx context.Context, dem exchange.Demand, bq exchange.BidRequest, c
 	xlog.GetWithField(ctx, "key", dem.Name()).Debug("calling demand")
 	resp, err := dem.Client().Do(req.WithContext(ctx))
 	if err != nil {
+		xlog.GetWithError(ctx, err).Debug()
 		return
 	}
 	if resp.StatusCode != http.StatusOK {
@@ -59,6 +60,7 @@ func Provide(ctx context.Context, dem exchange.Demand, bq exchange.BidRequest, c
 	}
 	result, err := dem.GetBidResponse(ctx, resp, bq.Inventory().Supplier())
 	if err != nil {
+		xlog.GetWithError(ctx, err).Debug()
 		return
 	}
 	ch <- result

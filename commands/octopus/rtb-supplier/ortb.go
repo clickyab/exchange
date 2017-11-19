@@ -31,7 +31,7 @@ func (ortbHandler) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.
 	g := &bytes.Buffer{}
 	_, err = g.Write(res)
 	assert.Nil(err)
-	req, err := http.NewRequest("POST", exchangeURL+"/"+i.Meta.Key, g)
+	req, err := http.NewRequest("POST", exchangeURL.String()+"/"+i.Meta.Key, g)
 	assert.Nil(err)
 	client := &http.Client{}
 	resp, err := client.Do(req.WithContext(c))
