@@ -44,24 +44,23 @@ func incCPM(name string, cpm int64) {
 	dp := getDailyPattern()
 	hp := getHourlyPattern()
 	ip := getMinutlyPattern()
-	t := kv.NewAEAVStore(mp + name)
+	t := kv.NewAEAVStore(mp+name, month)
 	t.IncSubKey("month", cpm)
 	t.IncSubKey("month_count", 1)
 	t.IncSubKey(dp, cpm)
 	t.IncSubKey(dp+"_count", cpm)
-	t.Save(month)
-	t = kv.NewAEAVStore(wp + name)
+	t = kv.NewAEAVStore(wp+name, week)
 	t.IncSubKey("week", cpm)
 	t.IncSubKey(dp, cpm)
-	t.Save(week)
-	t = kv.NewAEAVStore(dp + name)
+
+	t = kv.NewAEAVStore(dp+name, day)
 	t.IncSubKey("day", cpm)
 	t.IncSubKey(hp, cpm)
-	t.Save(day)
-	t = kv.NewAEAVStore(hp + name)
+
+	t = kv.NewAEAVStore(hp+name, hour)
 	t.IncSubKey("hour", cpm)
 	t.IncSubKey(ip, cpm)
-	t.Save(hour)
+
 }
 
 func realVal(all, count int64) int64 {
@@ -77,22 +76,22 @@ func getCPM(name string) (m, w, d, h, i int64) {
 	dp := getDailyPattern()
 	hp := getHourlyPattern()
 	ip := getMinutlyPattern()
-	t := kv.NewAEAVStore(mp + name)
+	t := kv.NewAEAVStore(mp+name, 0)
 	m = t.SubKey("month")
 	cc := t.SubKey("month_count")
 	m = realVal(m, cc)
 
-	t = kv.NewAEAVStore(wp + name)
+	t = kv.NewAEAVStore(wp+name, 0)
 	w = t.SubKey("week")
 	cc = t.SubKey("week_count")
 	w = realVal(w, cc)
 
-	t = kv.NewAEAVStore(dp + name)
+	t = kv.NewAEAVStore(dp+name, 0)
 	d = t.SubKey("day")
 	cc = t.SubKey("day_count")
 	d = realVal(d, cc)
 
-	t = kv.NewAEAVStore(hp + name)
+	t = kv.NewAEAVStore(hp+name, 0)
 	h = t.SubKey("hour")
 	cc = t.SubKey("hour_count")
 	h = realVal(h, cc)
