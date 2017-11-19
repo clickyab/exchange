@@ -9,11 +9,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var exchangeURL = config.RegisterString("supplier.exchange.url", "http://exchange.dev/api/rest/get", "gi")
+var exchangeURL = config.RegisterString("supplier.exchange.url", "http://exchange.dev/api/rest/get", "")
 var prefix = "commands/octopus/rtb-supplier/static/template"
 
 func main() {
+
 	config.Initialize(commands.Organization, commands.AppName, commands.Prefix, commands.DefaultConfig())
+	logrus.Warn(exchangeURL.String())
 	defer initializer.Initialize()()
 	sig := shell.WaitExitSignal()
 	logrus.Debugf("%s received, exiting...", sig.String())

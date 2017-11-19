@@ -84,12 +84,7 @@ var cats = []string{
 }
 
 func createOrtbBannerBide(ctx context.Context, o *openrtb.BidRequest, m *openrtb.Impression, r *http.Request) openrtb.SeatBid {
-	scheme := func() string {
-		if m.Secure == 1 {
-			return "https"
-		}
-		return "http"
-	}()
+	scheme := getScheme(int(m.Secure))
 	adid := <-random.ID
 	p := router.MustPath("rtb-demand-show", map[string]string{"id": adid})
 	return openrtb.SeatBid{
@@ -104,12 +99,12 @@ func createOrtbBannerBide(ctx context.Context, o *openrtb.BidRequest, m *openrtb
 				ImpID:      m.ID,
 				ID:         fmt.Sprintf("%s-%s-%s", xmux.Param(ctx, "name"), xmux.Param(ctx, "mode"), <-random.ID),
 				Protocol:   0,
-				BURL:       fmt.Sprintf("%s://%s%s", scheme, host, router.MustPath("rtb-demand-burl", map[string]string{"id": m.ID})),
-				NURL:       fmt.Sprintf("%s://%s%s", scheme, host, router.MustPath("rtb-demand-nurl", map[string]string{"id": m.ID})),
+				BURL:       fmt.Sprintf("%s://%s%s", scheme, r.Host, router.MustPath("rtb-demand-burl", map[string]string{"id": m.ID})),
+				NURL:       fmt.Sprintf("%s://%s%s", scheme, r.Host, router.MustPath("rtb-demand-nurl", map[string]string{"id": m.ID})),
 				CampaignID: openrtb.StringOrNumber(<-random.ID),
 				AdMarkup: fmt.Sprintf(`<iframe width="%d" height="%d" src="%s://%s%s?ortb=1&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
-					m.Banner.W, m.Banner.H, scheme, host, p, m.Banner.W, m.Banner.H),
-				LURL: fmt.Sprintf("%s://%s%s", scheme, host, router.MustPath("rtb-demand-lurl", map[string]string{"id": m.ID})),
+					m.Banner.W, m.Banner.H, scheme, r.Host, p, m.Banner.W, m.Banner.H),
+				LURL: fmt.Sprintf("%s://%s%s", scheme, r.Host, router.MustPath("rtb-demand-lurl", map[string]string{"id": m.ID})),
 			},
 		},
 	}
@@ -131,4 +126,11 @@ func slicer(m int) (s, e int32) {
 	}
 
 	return rand.Int31n(i), i
+}
+
+func getScheme(n int) string {
+	if n == 1 {
+		return "https"
+	}
+	return "http"
 }

@@ -8,9 +8,14 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/clickyab/services/config"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/random"
 	"github.com/sirupsen/logrus"
+)
+
+var (
+	exchange = config.RegisterString("demand.exchange.host", "exchange.dev", "")
 )
 
 var template = `<!doctype html>
@@ -148,7 +153,7 @@ func showURL(r *http.Request) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	res.Host = exchange
+	res.Host = exchange.String()
 
 	return res.String(), nil
 }
