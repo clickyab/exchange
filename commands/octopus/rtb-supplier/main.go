@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var exchangeURL = config.GetStringDefault("supplier.exchange.url", "http://exchange.dev/api/rest/get")
+var exchangeURL = config.RegisterString("supplier.exchange.url", "http://exchange.dev/api/rest/get", "gi")
 var prefix = "commands/octopus/rtb-supplier/static/template"
 
 func main() {

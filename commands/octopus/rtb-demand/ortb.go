@@ -11,6 +11,7 @@ import (
 
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
+	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/random"
 	"github.com/rs/xmux"
 )
@@ -79,25 +80,26 @@ func createOrtbBannerBide(ctx context.Context, o *openrtb.BidRequest, m *openrtb
 		}
 		return "http"
 	}()
-
+	adid := <-random.ID
+	p := router.MustPath("rtb-demand-show", map[string]string{"id": adid})
 	return openrtb.SeatBid{
 		Bid: []openrtb.Bid{
 			{
 				AdvDomain:  stringSlicer(advertisers),
 				W:          m.Banner.W,
 				H:          m.Banner.H,
-				AdID:       <-random.ID,
+				AdID:       adid,
 				Cat:        stringSlicer(cats),
 				Price:      float64(rand.Int63n(250)) + m.BidFloor,
 				ImpID:      m.ID,
 				ID:         fmt.Sprintf("%s-%s-%s", xmux.Param(ctx, "name"), xmux.Param(ctx, "mode"), <-random.ID),
 				Protocol:   0,
-				BURL:       fmt.Sprintf("%s://%s/api/burl/%s", scheme, host, m.ID),
-				NURL:       fmt.Sprintf("%s://%s/api/nurl/%s", scheme, host, m.ID),
+				BURL:       fmt.Sprintf("%s://%s%s", scheme, host, router.MustPath("rtb-demand-burl", map[string]string{"id": m.ID})),
+				NURL:       fmt.Sprintf("%s://%s%s", scheme, host, router.MustPath("rtb-demand-nurl", map[string]string{"id": m.ID})),
 				CampaignID: openrtb.StringOrNumber(<-random.ID),
-				AdMarkup: fmt.Sprintf(`<iframe width="%d" height="%d" src="%s://%s/api/ad/0?ortb=1&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
-					m.Banner.W, m.Banner.H, scheme, host, m.Banner.W, m.Banner.H),
-				LURL: fmt.Sprintf("%s://%s/api/lurl/%s", scheme, host, m.ID),
+				AdMarkup: fmt.Sprintf(`<iframe width="%d" height="%d" src="%s://%s%s?ortb=1&aid=${AUCTION_ID}&imp=${AUCTION_IMP_ID}&prc=${AUCTION_PRICE}&cur=${AUCTION_CURRENCY}&crl=${CLICK_URL:B64}&sho=${PIXEL_URL_JS:B64}&wi=%d&he=%d" frameborder="0"></iframe>`,
+					m.Banner.W, m.Banner.H, scheme, host, p, m.Banner.W, m.Banner.H),
+				LURL: fmt.Sprintf("%s://%s%s", scheme, host, router.MustPath("rtb-demand-lurl", map[string]string{"id": m.ID})),
 			},
 		},
 	}

@@ -34,7 +34,7 @@ func (srtbHandler) ServeHTTPC(c context.Context, w http.ResponseWriter, r *http.
 	g := &bytes.Buffer{}
 	_, err = g.Write(res)
 	assert.Nil(err)
-	req, err := http.NewRequest("POST", exchangeURL+"/"+payload.Meta.Key, g)
+	req, err := http.NewRequest("POST", exchangeURL.String()+"/"+payload.Meta.Key, g)
 	assert.Nil(err)
 	cli := &http.Client{}
 	resp, err := cli.Do(req)
