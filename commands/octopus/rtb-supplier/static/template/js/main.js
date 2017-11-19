@@ -211,17 +211,27 @@ $(function () {
         var propNames = Object.getOwnPropertyNames(obj);
         for (var i = 0; i < propNames.length; i++) {
             var propName = propNames[i];
-            if (obj[propName] === null  || obj[propName] === undefined || obj[propName] === "") {
+            if (obj[propName] === null || obj[propName] === undefined || obj[propName] === "") {
                 delete obj[propName];
             }
         }
     }
 
-    function showIframe(msg,elem){
-        for (var i =0 ; i< msg.bids.length ; i++){
+    function showIframeSrtb(msg, elem) {
+        for (var i = 0; i < msg.bids.length; i++) {
             var string = (decodeURI(msg.bids[i].adm));
             ($($(elem)[i]).html(string));
         }
+    }
+
+    function showIframeOrtb(msg, elem) {
+        msg.seatbid.forEach(function (x) {
+            for (var i = 0; i < x.bid.length; i++) {
+                var string = (decodeURI(x.bid[i].adm));
+                ($($(elem)[i]).html(string));
+            }
+        });
+
     }
 
     // append form action
@@ -354,11 +364,10 @@ $(function () {
             async: false,
             success: function (msg) {
                 jsonRes = msg;
-                $(".json-out-RTB").html( syntaxHighlight(JSON.stringify(jsonRes, undefined, 4)));
-                showIframe(jsonRes,".iframeORTB");
+                $(".json-out-RTB").html(syntaxHighlight(JSON.stringify(jsonRes, undefined, 4)));
+                showIframeOrtb(jsonRes, ".iframeORTB");
             }
         });
-
 
         RandomIdGen(".randomField");
         console.log(JSON.stringify(JSONOut));
@@ -420,10 +429,11 @@ $(function () {
             success: function (msg) {
                 jsonRes = msg;
                 $(".json-out-REST").html(syntaxHighlight(JSON.stringify(jsonRes, undefined, 4)));
+                showIframeSrtb(jsonRes, ".iframeSRTB");
             }
         });
+        $(".json-request-REST").html(syntaxHighlight(JSON.stringify(JSONOut, undefined, 4)));
 
-        showIframe(jsonRes,".iframeSRTB");
         RandomIdGen(".randomField");
         console.log(JSON.stringify(JSONOut));
 
