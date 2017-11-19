@@ -107,8 +107,14 @@ var mk = `<div>
 func TestSelect(t *testing.T) {
 	router.AddRoute("pixel", "/api/:id/:type")
 	router.AddRoute("click", "/api/:id")
-
-	kv.Register(nil, nil, mock2.NewMockDistributedLocker, mock2.NewMockDsetStore, nil, nil, nil)
+	kv.Register(nil,
+		nil,
+		mock2.NewMockDistributedLocker,
+		mock2.NewMockDsetStore,
+		nil,
+		nil,
+		nil,
+		nil)
 
 	ctrl := gomock.NewController(t)
 

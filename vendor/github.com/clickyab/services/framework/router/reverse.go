@@ -16,7 +16,9 @@ var (
 	lock    = sync.RWMutex{}
 )
 
-// AddRoute should not be called (just for test temporary)
+// AddRoute is an internal function that we need to export for tests in
+// other packages, // TODO : somehow un-export it
+// @deprecated
 func AddRoute(name, path string) {
 	lock.Lock()
 	defer lock.Unlock()
@@ -39,7 +41,7 @@ func Path(name string, params map[string]string, catch ...string) (string, error
 	}
 
 	parts := strings.Split(p, "/")
-	res := []string{}
+	var res []string
 	for i := range parts {
 		if parts[i] == "" {
 			continue
@@ -60,6 +62,12 @@ func Path(name string, params map[string]string, catch ...string) (string, error
 		res = append(res, mm)
 	}
 
-	return "/" + strings.Join(res, "/"), nil
+	return mountPoint.String() + "/" + strings.Join(res, "/"), nil
+}
 
+// MustPath return the path and panic on error
+func MustPath(name string, params map[string]string, catch ...string) string {
+	p, err := Path(name, params, catch...)
+	assert.Nil(err)
+	return p
 }
