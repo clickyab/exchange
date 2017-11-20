@@ -161,7 +161,7 @@ func TestSelect(t *testing.T) {
 			for _, a := range u.Demands {
 				d := mock_exchange.NewMockDemand(ctrl)
 				d.EXPECT().Handicap().Return(a.HandyCap).AnyTimes()
-				d.EXPECT().Bill(gomock.Any(), gomock.Any()).Do(func(ctx context.Context, bid exchange.Bid) {}).AnyTimes()
+				d.EXPECT().Bill(gomock.Any(), gomock.Any(), gomock.Any()).Do(func(context.Context, int64, string) {}).AnyTimes()
 				bi := mock_exchange.NewMockBid(ctrl)
 				bi.EXPECT().ImpID().Return(impID).AnyTimes()
 				bi.EXPECT().Price().Return(a.Price).AnyTimes()
