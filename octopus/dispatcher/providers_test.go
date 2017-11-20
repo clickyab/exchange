@@ -19,7 +19,7 @@ import (
 
 	"github.com/golang/mock/gomock"
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/fzerorubigd/onion.v2"
+	"gopkg.in/fzerorubigd/onion.v3"
 )
 
 func newBidRequest(c *gomock.Controller, count int) exchange.BidRequest {
