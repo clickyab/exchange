@@ -137,9 +137,6 @@ const (
 
 	// Empty is used to indicate that there is no field.
 	Empty
-
-	// Unsigned indicates the field's type is an unsigned integer.
-	Unsigned
 )
 
 // FieldIterator provides a low-allocation interface to iterate through a point's fields.
@@ -158,9 +155,6 @@ type FieldIterator interface {
 
 	// IntegerValue returns the integer value of the current field.
 	IntegerValue() (int64, error)
-
-	// UnsignedValue returns the unsigned value of the current field.
-	UnsignedValue() (uint64, error)
 
 	// BooleanValue returns the boolean value of the current field.
 	BooleanValue() (bool, error)
@@ -211,12 +205,6 @@ type point struct {
 	it fieldIterator
 }
 
-// type assertions
-var (
-	_ Point         = (*point)(nil)
-	_ FieldIterator = (*point)(nil)
-)
-
 const (
 	// the number of characters for the largest possible int64 (9223372036854775807)
 	maxInt64Digits = 19
@@ -249,7 +237,7 @@ func ParsePointsString(buf string) ([]Point, error) {
 //
 // NOTE: to minimize heap allocations, the returned Tags will refer to subslices of buf.
 // This can have the unintended effect preventing buf from being garbage collected.
-func ParseKey(buf []byte) (string, Tags) {
+func ParseKey(buf []byte) (string, Tags, error) {
 	// Ignore the error because scanMeasurement returns "missing fields" which we ignore
 	// when just parsing a key
 	state, i, _ := scanMeasurement(buf, 0)
@@ -258,9 +246,9 @@ func ParseKey(buf []byte) (string, Tags) {
 	if state == tagKeyState {
 		tags = parseTags(buf)
 		// scanMeasurement returns the location of the comma if there are tags, strip that off
-		return string(buf[:i-1]), tags
+		return string(buf[:i-1]), tags, nil
 	}
-	return string(buf[:i]), tags
+	return string(buf[:i]), tags, nil
 }
 
 func ParseTags(buf []byte) (Tags, error) {
@@ -354,19 +342,6 @@ func parsePoint(buf []byte, defaultTime time.Time, precision string) (Point, err
 	// at least one field is required
 	if len(fields) == 0 {
 		return nil, fmt.Errorf("missing fields")
-	}
-
-	var maxKeyErr error
-	walkFields(fields, func(k, v []byte) bool {
-		if sz := seriesKeySize(key, k); sz > MaxKeyLength {
-			maxKeyErr = fmt.Errorf("max key length exceeded: %v > %v", sz, MaxKeyLength)
-			return false
-		}
-		return true
-	})
-
-	if maxKeyErr != nil {
-		return nil, maxKeyErr
 	}
 
 	// scan the last block which is an optional integer timestamp
@@ -1284,20 +1259,11 @@ func pointKey(measurement string, tags Tags, fields Fields, t time.Time) ([]byte
 	}
 
 	key := MakeKey([]byte(measurement), tags)
-	for field := range fields {
-		sz := seriesKeySize(key, []byte(field))
-		if sz > MaxKeyLength {
-			return nil, fmt.Errorf("max key length exceeded: %v > %v", sz, MaxKeyLength)
-		}
+	if len(key) > MaxKeyLength {
+		return nil, fmt.Errorf("max key length exceeded: %v > %v", len(key), MaxKeyLength)
 	}
 
 	return key, nil
-}
-
-func seriesKeySize(key, field []byte) int {
-	// 4 is the length of the tsm1.fieldKeySeparator constant.  It's inlined here to avoid a circular
-	// dependency.
-	return len(key) + 4 + len(field)
 }
 
 // NewPointFromBytes returns a new Point from a marshalled Point.
@@ -1324,11 +1290,6 @@ func NewPointFromBytes(b []byte) (Point, error) {
 			}
 		case Integer:
 			_, err := iter.IntegerValue()
-			if err != nil {
-				return nil, fmt.Errorf("unable to unmarshal field %s: %s", string(iter.FieldKey()), err)
-			}
-		case Unsigned:
-			_, err := iter.UnsignedValue()
 			if err != nil {
 				return nil, fmt.Errorf("unable to unmarshal field %s: %s", string(iter.FieldKey()), err)
 			}
@@ -1457,27 +1418,6 @@ func walkTags(buf []byte, fn func(key, value []byte) bool) {
 		}
 
 		i++
-	}
-}
-
-// walkFields walks each field key and value via fn.  If fn returns false, the iteration
-// is stopped.  The values are the raw byte slices and not the converted types.
-func walkFields(buf []byte, fn func(key, value []byte) bool) {
-	var i int
-	var key, val []byte
-	for len(buf) > 0 {
-		i, key = scanTo(buf, 0, '=')
-		buf = buf[i+1:]
-		i, val = scanFieldValue(buf, 0)
-		buf = buf[i:]
-		if !fn(key, val) {
-			break
-		}
-
-		// slice off comma
-		if len(buf) > 0 {
-			buf = buf[1:]
-		}
 	}
 }
 
@@ -1695,12 +1635,6 @@ func (p *point) unmarshalBinary() (Fields, error) {
 				return nil, fmt.Errorf("unable to unmarshal field %s: %s", string(iter.FieldKey()), err)
 			}
 			fields[string(iter.FieldKey())] = v
-		case Unsigned:
-			v, err := iter.UnsignedValue()
-			if err != nil {
-				return nil, fmt.Errorf("unable to unmarshal field %s: %s", string(iter.FieldKey()), err)
-			}
-			fields[string(iter.FieldKey())] = v
 		case String:
 			fields[string(iter.FieldKey())] = iter.StringValue()
 		case Boolean:
@@ -1731,7 +1665,7 @@ func (p *point) UnixNano() int64 {
 // string representations are no longer than size. Points with a single field or
 // a point without a timestamp may exceed the requested size.
 func (p *point) Split(size int) []Point {
-	if p.time.IsZero() || p.StringSize() <= size {
+	if p.time.IsZero() || len(p.String()) <= size {
 		return []Point{p}
 	}
 
@@ -1824,30 +1758,6 @@ func NewTags(m map[string]string) Tags {
 	}
 	sort.Sort(a)
 	return a
-}
-
-// Keys returns the list of keys for a tag set.
-func (a Tags) Keys() []string {
-	if len(a) == 0 {
-		return nil
-	}
-	keys := make([]string, len(a))
-	for i, tag := range a {
-		keys[i] = string(tag.Key)
-	}
-	return keys
-}
-
-// Values returns the list of values for a tag set.
-func (a Tags) Values() []string {
-	if len(a) == 0 {
-		return nil
-	}
-	values := make([]string, len(a))
-	for i, tag := range a {
-		values[i] = string(tag.Value)
-	}
-	return values
 }
 
 // String returns the string representation of the tags.
@@ -2153,15 +2063,6 @@ func (p *point) IntegerValue() (int64, error) {
 	n, err := parseIntBytes(p.it.valueBuf, 10, 64)
 	if err != nil {
 		return 0, fmt.Errorf("unable to parse integer value %q: %v", p.it.valueBuf, err)
-	}
-	return n, nil
-}
-
-// UnsignedValue returns the unsigned value of the current field.
-func (p *point) UnsignedValue() (uint64, error) {
-	n, err := parseUintBytes(p.it.valueBuf, 10, 64)
-	if err != nil {
-		return 0, fmt.Errorf("unable to parse unsigned value %q: %v", p.it.valueBuf, err)
 	}
 	return n, nil
 }
