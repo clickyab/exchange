@@ -12,8 +12,10 @@ import (
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/framework/router"
 	"github.com/clickyab/services/random"
+	"github.com/clickyab/services/xlog"
 	"github.com/clickyab/simple-rtb"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 // srtbHandler for handling exam (test) account
@@ -28,29 +30,31 @@ func srtbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rj, err := json.Marshal(createSrtbResponse(ctx, o, r))
+	br := srtb.BidResponse{ID: o.ID}
+	br.Bids = createSrtbBid(ctx, o, r)
+	rj, err := json.Marshal(br)
 	assert.Nil(err)
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(rj)
 
+	xlog.GetWithFields(ctx, logrus.Fields{
+		"demand_name": xmux.Param(ctx, "name"),
+		"test_mode":   xmux.Param(ctx, "mode"),
+	}).Debug()
 }
 
-func createSrtbResponse(ctx context.Context, o *srtb.BidRequest, r *http.Request) srtb.BidResponse {
-
-	return srtb.BidResponse{
-		ID:   <-random.ID,
-		Bids: createSrtbBid(ctx, o, r),
-	}
-
-}
 func createSrtbBid(ctx context.Context, r *srtb.BidRequest, q *http.Request) []srtb.Bid {
 	bs := make([]srtb.Bid, 0)
+	data := map[string]interface{}{}
 	for i := range r.Imp {
 		if &r.Imp[i].Banner != nil {
-			bs = append(bs, createSrtbBannerBid(ctx, r, &r.Imp[i], q))
+			bid := createSrtbBannerBid(ctx, r, &r.Imp[i], q)
+			bs = append(bs, bid)
+			data[r.Imp[i].ID] = bid.Price
 		}
 	}
+	xlog.SetField(ctx, "amount_bid", data)
 
 	return bs
 }
