@@ -18,15 +18,11 @@ type Demands struct {
 	IExcludeSupplier []string
 }
 
-func (d Demands) Win(context.Context, exchange.Bid) {
+func (d Demands) Win(context.Context, int64, string) {
 	panic("implement me")
 }
 
 func (d Demands) Type() exchange.DemandType {
-	panic("implement me")
-}
-
-func (d Demands) Client() *http.Client {
 	panic("implement me")
 }
 
@@ -82,6 +78,6 @@ func (d Demands) ExcludedSuppliers() []string {
 func (Demands) TestMode() bool {
 	panic("implement me")
 }
-func (d Demands) Bill(context.Context, exchange.Bid) {
+func (d Demands) Bill(context.Context, int64, string) {
 
 }

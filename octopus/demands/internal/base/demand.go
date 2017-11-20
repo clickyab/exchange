@@ -1,24 +1,27 @@
 package base
 
 import (
+	"bytes"
+	"io"
+	"io/ioutil"
 	"time"
 
 	"context"
 	"net/http"
 
-	"net/url"
-
 	"clickyab.com/exchange/octopus/biding"
+	"clickyab.com/exchange/octopus/demands/internal/ortb"
+	"clickyab.com/exchange/octopus/demands/internal/srtb"
 	"clickyab.com/exchange/octopus/exchange"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/mysql"
-	"github.com/clickyab/services/safe"
 	"github.com/clickyab/services/xlog"
+	"github.com/sirupsen/logrus"
 )
 
-// Demand is a single structure to handle demand data from database.
+// demand is a single structure to handle demand data from database.
 // loaded on initialize and on signals
-type Demand struct {
+type demand struct {
 	ID                  int64                 `db:"id" json:"id"`
 	FName               string                `db:"name" json:"name"`
 	FType               exchange.DemandType   `db:"type" json:"type"`
@@ -41,13 +44,67 @@ type Demand struct {
 	client              *http.Client
 }
 
-// Client get client
-func (d *Demand) Client() *http.Client {
-	return d.client
+func (d *demand) GetBidResponse(ctx context.Context, r *http.Response, s exchange.Supplier) (exchange.BidResponse, error) {
+	switch d.Type() {
+	case exchange.DemandTypeSrtb:
+		return srtb.GetBidResponse(ctx, d, r, s)
+	case exchange.DemandTypeOrtb:
+		return ortb.GetBidResponse(ctx, d, r, s)
+	default:
+		logrus.Panicf("Not supported demand type : %s", d.Type())
+		return nil, nil
+	}
+}
+
+func (d *demand) RenderBidRequest(ctx context.Context, w io.Writer, bq exchange.BidRequest) http.Header {
+	switch d.Type() {
+	case exchange.DemandTypeSrtb:
+		return srtb.RenderBidRequest(ctx, d, w, bq)
+	case exchange.DemandTypeOrtb:
+		return ortb.RenderBidRequest(ctx, d, w, bq)
+	default:
+		logrus.Panicf("Not supported demand type : %s", d.Type())
+		return nil
+	}
+}
+
+func (d *demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan exchange.BidResponse) {
+	defer close(ch)
+	if !d.HasLimits() {
+		return
+	}
+	buf := &bytes.Buffer{}
+
+	header := d.RenderBidRequest(ctx, buf, bq)
+	req, err := http.NewRequest("POST", d.EndPoint(), bytes.NewBuffer(buf.Bytes()))
+	if err != nil {
+		xlog.GetWithField(ctx, "exchange to demand request rendering", err.Error()).Debug()
+		return
+	}
+
+	req.Header = header
+	xlog.GetWithField(ctx, "key", d.Name()).Debug("calling demand")
+	resp, err := d.client.Do(req.WithContext(ctx))
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug()
+		return
+	}
+	if resp.StatusCode != http.StatusOK {
+		body, _ := ioutil.ReadAll(resp.Body)
+		defer resp.Body.Close()
+		xlog.GetWithField(ctx, "status", resp.StatusCode).Debug(string(body))
+		return
+	}
+	result, err := d.GetBidResponse(ctx, resp, bq.Inventory().Supplier())
+	if err != nil {
+		xlog.GetWithError(ctx, err).Debug()
+		return
+	}
+	ch <- result
 }
 
 // HasLimits check demand limit
-func (d *Demand) HasLimits() bool {
+func (d *demand) HasLimits() bool {
 	if d.MinuteLimit == 0 &&
 		d.HourLimit == 0 &&
 		d.DayLimit == 0 &&
@@ -75,56 +132,38 @@ func (d *Demand) HasLimits() bool {
 }
 
 //EndPoint demand end point
-func (d *Demand) EndPoint() string {
+func (d *demand) EndPoint() string {
 	return d.GetURL
 }
 
 //Name demand name
-func (d *Demand) Name() string {
+func (d *demand) Name() string {
 	return d.FName
 }
 
 // Win demand win action
-func (d *Demand) Win(ctx context.Context, b exchange.Bid) {
-	incCPM(d.Name(), b.Price())
-	safe.GoRoutine(func() {
-		u, err := url.Parse(b.WinURL())
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("bid win url is not valid")
-			return
-		}
-		req, err := http.NewRequest("GET", u.String(), nil)
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("demand making win request failure")
-			return
-		}
-
-		_, err = d.Client().Do(req)
-		if err != nil {
-			xlog.GetWithError(ctx, err).Debug("demand making win request failure")
-			return
-		}
-	})
-
+func (d *demand) Win(ctx context.Context, price int64, url string) {
+	biding.DoBillGetRequest(ctx, d.client, url)
 }
 
 // Bill demand bill action
-func (d *Demand) Bill(ctx context.Context, b exchange.Bid) {
-	biding.DoBillGetRequest(ctx, d.client, b.BillURL())
+func (d *demand) Bill(ctx context.Context, price int64, url string) {
+	incCPM(d.Name(), price)
+	biding.DoBillGetRequest(ctx, d.client, url)
 }
 
 //Status demand status
-func (d *Demand) Status(context.Context, http.ResponseWriter, *http.Request) {
+func (d *demand) Status(context.Context, http.ResponseWriter, *http.Request) {
 	panic("implement me")
 }
 
 // Handicap demand handicap
-func (d *Demand) Handicap() int64 {
+func (d *demand) Handicap() int64 {
 	return d.FHandicap
 }
 
 // CallRate demand callrate
-func (d *Demand) CallRate() int {
+func (d *demand) CallRate() int {
 	if d.Rate > 1 {
 		d.Rate = 1
 	}
@@ -135,27 +174,27 @@ func (d *Demand) CallRate() int {
 }
 
 // WhiteListCountries  demand whiteListCountries
-func (d *Demand) WhiteListCountries() []string {
+func (d *demand) WhiteListCountries() []string {
 	return d.FWhiteListCountries
 }
 
 // ExcludedSuppliers demand excludedSuppliers
-func (d *Demand) ExcludedSuppliers() []string {
+func (d *demand) ExcludedSuppliers() []string {
 	return d.FExcludedSuppliers
 }
 
 // TestMode test mode
-func (d *Demand) TestMode() bool {
+func (d *demand) TestMode() bool {
 	return d.FTestMode
 }
 
 // Type demand type (srtb/ortb)
-func (d *Demand) Type() exchange.DemandType {
+func (d *demand) Type() exchange.DemandType {
 	return d.FType
 }
 
 // GetTimeout return the timeout for this demand
-func (d *Demand) GetTimeout() time.Duration {
+func (d *demand) GetTimeout() time.Duration {
 	if time.Duration(d.Timeout) < 100*time.Millisecond {
 		return 100 * time.Millisecond
 	}
@@ -166,9 +205,9 @@ func (d *Demand) GetTimeout() time.Duration {
 }
 
 // ActiveDemands list all active demands
-func (m *Manager) ActiveDemands() []exchange.DemandBase {
-	var res []exchange.DemandBase
-	var demands []Demand
+func (m *Manager) ActiveDemands() []exchange.Demand {
+	var res []exchange.Demand
+	var demands []demand
 	_, err := m.GetRDbMap().Select(&demands, "SELECT * FROM demands WHERE active <> 0")
 	assert.Nil(err)
 	for i := range demands {
