@@ -12,7 +12,9 @@ import (
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/random"
+	"github.com/clickyab/services/xlog"
 	"github.com/rs/xmux"
+	"github.com/sirupsen/logrus"
 )
 
 // ortbHandler for handling exam (test) account
@@ -41,16 +43,24 @@ func ortbHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(rj)
 
+	xlog.GetWithFields(ctx, logrus.Fields{
+		"demand_name": xmux.Param(ctx, "name"),
+		"test_mode":   xmux.Param(ctx, "mode"),
+	}).Debug()
 }
 
 func createOrtbResponse(ctx context.Context, o *openrtb.BidRequest, r *http.Request) openrtb.BidResponse {
 
 	seat := make([]openrtb.SeatBid, 0)
+	seatBids := map[string]interface{}{}
 	for _, v := range o.Imp {
 		if v.Banner != nil {
-			seat = append(seat, createOrtbBannerBide(ctx, o, &v, r))
+			seatBid := createOrtbBannerBide(ctx, o, &v, r)
+			seat = append(seat, seatBid)
+			seatBids[v.ID] = seatBid.Bid[0].Price
 		}
 	}
+	xlog.SetField(ctx, "amount_bid", seatBids)
 	return openrtb.BidResponse{
 		ID:       <-random.ID,
 		Currency: "IRR",
