@@ -18,7 +18,7 @@ type Demands struct {
 	IExcludeSupplier []string
 }
 
-func (d Demands) Win(context.Context, int64, string) {
+func (d Demands) Win(context.Context, float64, string) {
 	panic("implement me")
 }
 
@@ -78,6 +78,6 @@ func (d Demands) ExcludedSuppliers() []string {
 func (Demands) TestMode() bool {
 	panic("implement me")
 }
-func (d Demands) Bill(context.Context, int64, string) {
+func (d Demands) Bill(context.Context, float64, string) {
 
 }

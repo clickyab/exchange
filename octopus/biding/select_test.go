@@ -27,22 +27,15 @@ import (
 
 type situation struct {
 	Case         int
-	SoftFloorCPM int64
+	SoftFloorCPM float64
 	FloorCPM     float64
-	//MarginPercent int
-	//DSCPMFloor    int64
-	//DCPMFloor     int64
-	//UnderFloor    bool
 	Demands      []dem
-	WinnerDemand int64
-	//Profit3rdAd   float64
-	//ProfitSuplier float64
-	//description string
-	Expectation func(interface{}, ...interface{}) string
+	WinnerDemand float64
+	Expectation  func(interface{}, ...interface{}) string
 }
 
 type dem struct {
-	Price    int64
+	Price    float64
 	HandyCap int64
 }
 
@@ -138,7 +131,7 @@ func TestSelect(t *testing.T) {
 			sup := mock_exchange.NewMockSupplier(ctrl)
 
 			sup.EXPECT().SoftFloorCPM().Return(u.SoftFloorCPM).AnyTimes()
-			sup.EXPECT().FloorCPM().Return(int64(u.FloorCPM)).AnyTimes()
+			sup.EXPECT().FloorCPM().Return(u.FloorCPM).AnyTimes()
 			sup.EXPECT().Name().Return("Hello").AnyTimes()
 			sup.EXPECT().Share().Return(0).AnyTimes()
 
@@ -161,7 +154,7 @@ func TestSelect(t *testing.T) {
 			for _, a := range u.Demands {
 				d := mock_exchange.NewMockDemand(ctrl)
 				d.EXPECT().Handicap().Return(a.HandyCap).AnyTimes()
-				d.EXPECT().Bill(gomock.Any(), gomock.Any(), gomock.Any()).Do(func(context.Context, int64, string) {}).AnyTimes()
+				d.EXPECT().Bill(gomock.Any(), gomock.Any(), gomock.Any()).Do(func(context.Context, float64, string) {}).AnyTimes()
 				bi := mock_exchange.NewMockBid(ctrl)
 				bi.EXPECT().ImpID().Return(impID).AnyTimes()
 				bi.EXPECT().Price().Return(a.Price).AnyTimes()

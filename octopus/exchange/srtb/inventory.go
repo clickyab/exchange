@@ -42,11 +42,11 @@ func (s *site) Attributes() map[string]interface{} {
 	return make(map[string]interface{})
 }
 
-func (s *site) FloorCPM() int64 {
+func (s *site) FloorCPM() float64 {
 	return s.sup.FloorCPM()
 }
 
-func (s *site) SoftFloorCPM() int64 {
+func (s *site) SoftFloorCPM() float64 {
 	return s.sup.SoftFloorCPM()
 }
 
@@ -99,11 +99,11 @@ func (a *app) Attributes() map[string]interface{} {
 	return make(map[string]interface{})
 }
 
-func (a *app) FloorCPM() int64 {
+func (a *app) FloorCPM() float64 {
 	return a.sup.FloorCPM()
 }
 
-func (a *app) SoftFloorCPM() int64 {
+func (a *app) SoftFloorCPM() float64 {
 	return a.sup.SoftFloorCPM()
 }
 

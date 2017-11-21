@@ -3,7 +3,7 @@ package mocks
 import "clickyab.com/exchange/octopus/exchange"
 
 type Bid struct {
-	IPrice    int64
+	IPrice    float64
 	IID       string
 	IImpID    string
 	IAdID     string
@@ -25,7 +25,7 @@ func (b Bid) ImpID() string {
 	return b.IImpID
 }
 
-func (b Bid) Price() int64 {
+func (b Bid) Price() float64 {
 	return b.IPrice
 }
 

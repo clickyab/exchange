@@ -7,8 +7,8 @@ type Inventory struct {
 	IName, IDomain string
 	ISupplier      Supplier
 	IAttr          map[string]interface{}
-	IFloorCPM      int64
-	ISoftFloorCPM  int64
+	IFloorCPM      float64
+	ISoftFloorCPM  float64
 }
 
 func (i Inventory) ID() string {
@@ -35,11 +35,11 @@ func (i Inventory) Attributes() map[string]interface{} {
 	return i.IAttr
 }
 
-func (i Inventory) FloorCPM() int64 {
+func (i Inventory) FloorCPM() float64 {
 	return i.IFloorCPM
 }
 
-func (i Inventory) SoftFloorCPM() int64 {
+func (i Inventory) SoftFloorCPM() float64 {
 	return i.ISoftFloorCPM
 }
 

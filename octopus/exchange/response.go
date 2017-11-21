@@ -46,7 +46,8 @@ type Bid interface {
 	// ImpID is the id of impression
 	ImpID() string
 	// Price if the bid
-	Price() int64
+	Price() float64
+
 	AdDetail
 	// WinURL gives you the url to call if current bid won (NURL in openrtb)
 	WinURL() string

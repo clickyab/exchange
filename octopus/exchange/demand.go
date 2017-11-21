@@ -64,9 +64,9 @@ type Demand interface {
 	Name() string
 	// Win return the win response to the demand. it happen only if the request is the winner
 	// the 2nd arg is the id of ad, the 3rd is the winner cpm bid
-	Win(context.Context, int64, string)
+	Win(context.Context, float64, string)
 	// Bill call the bill url
-	Bill(context.Context, int64, string)
+	Bill(context.Context, float64, string)
 	// Status is called for getting the statistics of this Demand
 	Status(context.Context, http.ResponseWriter, *http.Request)
 	// Handicap return the handicap for this demand. higher handicap means higher chance to

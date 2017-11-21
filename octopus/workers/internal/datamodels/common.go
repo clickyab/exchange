@@ -24,16 +24,16 @@ type TableModel struct {
 	Demand   string // All
 	Time     int64  // All
 
-	RequestInCount    int64 //demand
-	RequestOutCount   int64 //demand
-	ImpressionInCount int64 //imp,demand
-	BidOutCount       int64 //demand
-	AdInCount         int64 //demand
-	AdOutCount        int64 //win
-	AdOutBid          int64 //win
-	DeliverCount      int64 //show
-	DeliverBid        int64 //show
-	Profit            int64 //show
+	RequestInCount    int64   //demand
+	RequestOutCount   int64   //demand
+	ImpressionInCount int64   //imp,demand
+	BidOutCount       int64   //demand
+	AdInCount         int64   //demand
+	AdOutCount        int64   //win
+	AdOutBid          float64 //win
+	DeliverCount      int64   //show
+	DeliverBid        float64 //show
+	Profit            float64 //show
 
 	Click int64
 
