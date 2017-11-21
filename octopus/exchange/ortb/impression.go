@@ -13,6 +13,10 @@ type impression struct {
 	cid    string
 }
 
+func (m *impression) Currency() string {
+	return m.inner.BidFloorCurrency
+}
+
 // CID return ortb CID
 func (m *impression) CID() string {
 	if m.cid == "" {

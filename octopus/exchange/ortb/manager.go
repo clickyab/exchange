@@ -40,6 +40,11 @@ func NewOpenRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.BidRe
 	if err := d.Decode(rq); err != nil {
 		return nil, err
 	}
+
+	/*if !suppliers.ValidateSupplierByCur(rq, s) {
+		return nil, errors.New("invalid impression currency")
+	}
+	*/
 	for i := range rq.inner.Imp {
 		rq.inner.Imp[i].BidFloor = exchange.IncShare(rq.inner.Imp[i].BidFloor, s.Share())
 	}

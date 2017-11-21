@@ -12,6 +12,10 @@ type impression struct {
 	cid    string
 }
 
+func (i *impression) Currency() string {
+	return i.inner.Currency
+}
+
 func (i *impression) CID() string {
 	if i.cid == "" {
 		i.cid = <-random.ID

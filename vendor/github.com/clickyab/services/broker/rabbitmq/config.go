@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	dsn        = config.RegisterString("services.amqp.dsn", "amqp://server:bita123@127.0.0.1:5672/cy", "amqp dsn")
+	dsn        = config.RegisterString("services.amqp.dsn", "amqp://exchange:bita123@127.0.0.1:5672/", "amqp dsn")
 	exchange   = config.RegisterString("services.amqp.exchange", "cy", "amqp exchange to publish into")
 	publisher  = config.RegisterInt("services.ampq.publisher", 30, "amqp publisher to publish into")
 	confirmLen = config.RegisterInt("services.amqp.confirm_len", 200, "amqp confirm channel len")

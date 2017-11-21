@@ -118,3 +118,12 @@ func (m *Manager) GetSuppliers() map[string]exchange.Supplier {
 
 	return ret
 }
+
+func ValidateSupplierByCur(br exchange.BidRequest, sup exchange.Supplier) bool {
+	for _, imp := range br.Imp() {
+		if imp.Currency() != sup.Currency() {
+			return false
+		}
+	}
+	return true
+}

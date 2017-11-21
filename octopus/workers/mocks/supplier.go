@@ -14,6 +14,11 @@ type Supplier struct {
 	SFloorCPM     int64
 	SSoftFloorCPM int64
 	SShare        int
+	SCurrency     string
+}
+
+func (s Supplier) Currency() string {
+	return s.SCurrency
 }
 
 func (s Supplier) RenderBidResponse(context.Context, io.Writer, exchange.BidResponse) http.Header {

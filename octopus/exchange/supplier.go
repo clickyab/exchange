@@ -30,6 +30,8 @@ type SupplierBase interface {
 	TestMode() bool
 	// Type return the supplier type currently only rest is supported
 	Type() string
+	// Currency returns the supplier currency type
+	Currency() string
 }
 
 // Supplier is the ad-network interface
