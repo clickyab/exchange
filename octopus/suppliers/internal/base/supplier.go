@@ -21,8 +21,8 @@ type supplier struct {
 	SName         string                `json:"name" db:"name"`
 	SType         string                `json:"type" db:"type"`
 	Key           string                `json:"-" db:"key"`
-	SFloorCPM     int64                 `json:"floor_cpm" db:"floor_cpm"`
-	SSoftFloorCPM int64                 `json:"soft_floor_cpm" db:"soft_floor_cpm"`
+	SFloorCPM     float64               `json:"floor_cpm" db:"floor_cpm"`
+	SSoftFloorCPM float64               `json:"soft_floor_cpm" db:"soft_floor_cpm"`
 	UnderFloor    int                   `json:"under_floor" db:"under_floor"`
 	Excluded      mysql.StringJSONArray `json:"excluded_demands" db:"excluded_demands"`
 	SShare        int                   `json:"-" db:"share"`
@@ -68,12 +68,12 @@ func (s supplier) Name() string {
 }
 
 // FloorCPM of this supplier
-func (s supplier) FloorCPM() int64 {
+func (s supplier) FloorCPM() float64 {
 	return s.SFloorCPM
 }
 
 // SoftFloorCPM of this supplier
-func (s supplier) SoftFloorCPM() int64 {
+func (s supplier) SoftFloorCPM() float64 {
 	return s.SSoftFloorCPM
 }
 

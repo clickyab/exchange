@@ -9,10 +9,10 @@ import (
 )
 
 func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
-	b := tm.RequestOutCount+tm.BidOutCount+tm.AdInCount+tm.AdOutCount+tm.AdOutBid+tm.DeliverCount+tm.DeliverBid+tm.Profit+tm.Click > 0
+	b := tm.RequestOutCount+tm.BidOutCount+tm.AdInCount+tm.AdOutCount+tm.DeliverCount+tm.Click > 0 && tm.DeliverBid+tm.Profit+tm.AdOutBid > 0
 	if b {
 		//(supplier,demand,source,time_id,request_out_count,imp_out_count,imp_in_count,win_count,win_bid,deliver_count,deliver_bid,profit,click)
-		return true, fmt.Sprintf(`("%s", "%s", "%s", %d, %d, %d, %d, %d, %d, %d,%d,%d,%d)`,
+		return true, fmt.Sprintf(`("%s", "%s", "%s", %d, %d, %d, %d, %d, %f, %d,%f,%f,%d)`,
 			tm.Supplier,
 			tm.Demand,
 			tm.Source,
@@ -32,10 +32,10 @@ func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
 }
 
 func hasDataSupplier(tm *datamodels.TableModel) (bool, string) {
-	b := tm.RequestInCount+tm.ImpressionInCount+tm.AdOutCount+tm.DeliverCount+tm.DeliverBid+tm.Profit+tm.Click > 0
+	b := tm.RequestOutCount+tm.BidOutCount+tm.AdInCount+tm.AdOutCount+tm.DeliverCount+tm.Click > 0 && tm.DeliverBid+tm.Profit+tm.AdOutBid > 0
 	if b {
 		// (supplier,source,time_id,request_in_count,imp_in_count,imp_out_count,deliver_count,deliver_bid,profit,click)
-		return true, fmt.Sprintf(`("%s","%s",%d,%d,%d,%d,%d,%d,%d,%d)`,
+		return true, fmt.Sprintf(`("%s","%s",%d,%d,%d,%d,%d,%f,%f,%d)`,
 			tm.Supplier,
 			tm.Source,
 			tm.Time,

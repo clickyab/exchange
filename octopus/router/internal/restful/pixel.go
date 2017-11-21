@@ -55,14 +55,14 @@ func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		billURL := store["bill_url"]
 
 		profit := store["profit"]
-		profitInt, err := strconv.ParseInt(profit, 10, 0)
+		profitFloat, err := strconv.ParseFloat(profit, 64)
 		if err != nil {
 			xlog.GetWithError(ctx, errors.New("non int value for profit was set")).Panicln()
 			return
 		}
 
 		winner := store["winner"]
-		winnerInt, err := strconv.ParseInt(winner, 10, 0)
+		winnerFloat, err := strconv.ParseFloat(winner, 64)
 		if err != nil {
 			xlog.GetWithError(ctx, errors.New("non int value for winner was set")).Panicln()
 			return
@@ -71,7 +71,7 @@ func Show(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 		//call bill url
 		d := &http.Client{}
 		biding.DoBillGetRequest(ctx, d, billURL)
-		showJob := materialize.ShowJob(demand, framework.RealIP(r), winnerInt, rqTime, supplier, publisher, profitInt)
+		showJob := materialize.ShowJob(demand, framework.RealIP(r), winnerFloat, rqTime, supplier, publisher, profitFloat)
 		broker.Publish(showJob)
 	})
 }

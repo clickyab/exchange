@@ -73,11 +73,11 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().CallRate().Return(100).AnyTimes()
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
-						var bmp = []exchange.Bid{}
+						var bmp []exchange.Bid
 						tmp := mock_entity.NewMockBidResponse(ctrl)
 						for _, s := range imp.Imp() {
 							bmpp := mock_entity.NewMockBid(ctrl)
-							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+							bmpp.EXPECT().Price().Return(200.0).AnyTimes()
 							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
 							bmp = append(bmp, bmpp)
 
@@ -104,11 +104,11 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
 						time.Sleep(150 * time.Millisecond)
-						var bmp = []exchange.Bid{}
+						var bmp []exchange.Bid
 						tmp := mock_entity.NewMockBidResponse(ctrl)
 						for _, s := range imp.Imp() {
 							bmpp := mock_entity.NewMockBid(ctrl)
-							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+							bmpp.EXPECT().Price().Return(200.0).AnyTimes()
 							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
 							bmp = append(bmp, bmpp)
 
@@ -135,11 +135,11 @@ func TestProviders(t *testing.T) {
 				d1.EXPECT().Provide(gomock.Any(), gomock.Any(), gomock.Any()).
 					Do(func(ctx context.Context, imp exchange.BidRequest, ch chan exchange.BidResponse) {
 						time.Sleep(100 * time.Millisecond)
-						var bmp = []exchange.Bid{}
+						var bmp []exchange.Bid
 						tmp := mock_entity.NewMockBidResponse(ctrl)
 						for _, s := range imp.Imp() {
 							bmpp := mock_entity.NewMockBid(ctrl)
-							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+							bmpp.EXPECT().Price().Return(200.0).AnyTimes()
 							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
 							bmp = append(bmp, bmpp)
 
@@ -162,7 +162,7 @@ func TestProviders(t *testing.T) {
 						tmp := mock_entity.NewMockBidResponse(ctrl)
 						for _, s := range imp.Imp() {
 							bmpp := mock_entity.NewMockBid(ctrl)
-							bmpp.EXPECT().Price().Return(int64(200)).AnyTimes()
+							bmpp.EXPECT().Price().Return(200.0).AnyTimes()
 							bmpp.EXPECT().ImpID().Return(s.ID()).AnyTimes()
 							bmp = append(bmp, bmpp)
 

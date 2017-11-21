@@ -83,8 +83,8 @@ func (b *bid) ImpID() string {
 	return b.inner.ImpID
 }
 
-func (b *bid) Price() int64 {
-	return int64(b.inner.Price)
+func (b *bid) Price() float64 {
+	return b.inner.Price
 }
 
 func (b *bid) AdID() string {

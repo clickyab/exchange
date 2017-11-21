@@ -17,7 +17,7 @@ type Demand struct {
 	Source     string    `json:"source"`
 	Demand     string    `json:"demand"`
 	Time       time.Time `json:"time"`
-	TotalPrice int64     `json:"total_price"`
+	TotalPrice float64   `json:"total_price"`
 	BidLen     int       `json:"bid_len"`
 
 	src []byte
@@ -65,7 +65,7 @@ func (Demand) Report() func(error) {
 // DemandJob returns a job for Demand
 // TODO : add a duration to this. for better view this is important
 func DemandJob(rq exchange.BidRequest, resp exchange.BidResponse, demand string) broker.Job {
-	var total int64
+	var total float64
 	for _, i := range resp.Bids() {
 		total += i.Price()
 	}

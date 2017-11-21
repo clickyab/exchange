@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"strconv"
+	"fmt"
 
 	"clickyab.com/exchange/octopus/biding"
 	"clickyab.com/exchange/octopus/dispatcher"
@@ -37,8 +37,8 @@ func storeKeys(ctx context.Context, bq exchange.BidRequest, res exchange.BidResp
 		store.SetSubKey("supplier", bq.Inventory().Supplier().Name()).
 			SetSubKey("publisher", bq.Inventory().Name()).
 			SetSubKey("demand", val.Demand().Name()).
-			SetSubKey("winner", strconv.FormatInt(val.Price(), 10)).
-			SetSubKey("profit", strconv.FormatInt(profit, 10)).
+			SetSubKey("winner", fmt.Sprint(val.Price())).
+			SetSubKey("profit", fmt.Sprint(profit)).
 			SetSubKey("request_time", bq.Time().String())
 
 		assert.Nil(store.Save(time.Hour * 72))

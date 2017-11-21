@@ -11,8 +11,8 @@ import (
 
 type Supplier struct {
 	SName         string
-	SFloorCPM     int64
-	SSoftFloorCPM int64
+	SFloorCPM     float64
+	SSoftFloorCPM float64
 	SShare        int
 	SCurrency     string
 }
@@ -33,11 +33,11 @@ func (s Supplier) Name() string {
 	return s.SName
 }
 
-func (s Supplier) FloorCPM() int64 {
+func (s Supplier) FloorCPM() float64 {
 	return s.SFloorCPM
 }
 
-func (s Supplier) SoftFloorCPM() int64 {
+func (s Supplier) SoftFloorCPM() float64 {
 	return s.SSoftFloorCPM
 }
 

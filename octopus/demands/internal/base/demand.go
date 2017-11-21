@@ -26,11 +26,11 @@ type demand struct {
 	FName               string                `db:"name" json:"name"`
 	FType               exchange.DemandType   `db:"type" json:"type"`
 	GetURL              string                `db:"get_url" json:"get_url"`
-	MinuteLimit         int64                 `db:"minute_limit" json:"minute_limit"`
-	HourLimit           int64                 `db:"hour_limit" json:"hour_limit"`
-	DayLimit            int64                 `db:"day_limit" json:"day_limit"`
-	WeekLimit           int64                 `db:"week_limit" json:"week_limit"`
-	MonthLimit          int64                 `db:"month_limit" json:"month_limit"`
+	MinuteLimit         float64               `db:"minute_limit" json:"minute_limit"`
+	HourLimit           float64               `db:"hour_limit" json:"hour_limit"`
+	DayLimit            float64               `db:"day_limit" json:"day_limit"`
+	WeekLimit           float64               `db:"week_limit" json:"week_limit"`
+	MonthLimit          float64               `db:"month_limit" json:"month_limit"`
 	IdleConnections     int                   `db:"idle_connection" json:"idle_connection"`
 	Timeout             int64                 `db:"timeout" json:"timeout"`
 	Active              int                   `db:"active" json:"active"`
@@ -142,12 +142,12 @@ func (d *demand) Name() string {
 }
 
 // Win demand win action
-func (d *demand) Win(ctx context.Context, price int64, url string) {
+func (d *demand) Win(ctx context.Context, price float64, url string) {
 	biding.DoBillGetRequest(ctx, d.client, url)
 }
 
 // Bill demand bill action
-func (d *demand) Bill(ctx context.Context, price int64, url string) {
+func (d *demand) Bill(ctx context.Context, price float64, url string) {
 	incCPM(d.Name(), price)
 	biding.DoBillGetRequest(ctx, d.client, url)
 }

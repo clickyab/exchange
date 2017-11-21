@@ -4,7 +4,7 @@ import "clickyab.com/exchange/octopus/exchange"
 
 type bid struct {
 	bid     exchange.Bid
-	price   int64
+	price   float64
 	markup  string
 	winurl  string
 	billurl string
@@ -22,7 +22,7 @@ func (b bid) ID() string {
 	return b.bid.ID()
 }
 
-func (b bid) Price() int64 {
+func (b bid) Price() float64 {
 	return b.price
 }
 

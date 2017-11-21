@@ -69,7 +69,7 @@ func createSrtbBannerBid(ctx context.Context, bq *srtb.BidRequest, m *srtb.Impre
 			m.Banner.Width, m.Banner.Height, scheme, r.Host, p, m.Banner.Width, m.Banner.Height),
 		ID:     fmt.Sprintf("%s-%s-%s", xmux.Param(ctx, "name"), xmux.Param(ctx, "mode"), adid),
 		ImpID:  m.ID,
-		Price:  int64(m.BidFloor) + rand.Int63n(250),
+		Price:  m.BidFloor + float64(rand.Int63n(250)),
 		Width:  m.Banner.Width,
 		Height: m.Banner.Height,
 	}

@@ -29,9 +29,10 @@ type Inventory interface {
 	// Non rtb parameters, use the ext field in open-rtb spec to pass this values
 
 	// FloorCPM is the floor cpm for publisher
-	FloorCPM() int64
+	FloorCPM() float64
 	// SoftFloorCPM is the soft version of floor cpm. if the publisher ahs it, then the system
 	// try to use this as floor, but if this is not available, the FloorCPM is used
-	SoftFloorCPM() int64
+	SoftFloorCPM() float64
+	// Supplier is for get this inventory supplier
 	Supplier() Supplier
 }

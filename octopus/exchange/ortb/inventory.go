@@ -13,7 +13,7 @@ type app struct {
 }
 
 // FloorCPM return ortb FloorCPM
-func (n *app) FloorCPM() int64 {
+func (n *app) FloorCPM() float64 {
 	if n.pub == nil {
 		n.pub = &publisher{inner: n.inner.Publisher}
 	}
@@ -21,7 +21,7 @@ func (n *app) FloorCPM() int64 {
 }
 
 // SoftFloorCPM return ortb SoftFloorCPM
-func (n *app) SoftFloorCPM() int64 {
+func (n *app) SoftFloorCPM() float64 {
 	if n.pub == nil {
 		n.pub = &publisher{inner: n.inner.Publisher}
 	}
@@ -93,7 +93,7 @@ type site struct {
 }
 
 // FloorCPM return ortb FloorCPM
-func (n *site) FloorCPM() int64 {
+func (n *site) FloorCPM() float64 {
 	if n.pub == nil {
 		n.pub = &publisher{inner: n.inner.Publisher}
 	}
@@ -101,7 +101,7 @@ func (n *site) FloorCPM() int64 {
 }
 
 // SoftFloorCPM return ortb SoftFloorCPM
-func (n *site) SoftFloorCPM() int64 {
+func (n *site) SoftFloorCPM() float64 {
 	if n.pub == nil {
 		n.pub = &publisher{inner: n.inner.Publisher}
 	}

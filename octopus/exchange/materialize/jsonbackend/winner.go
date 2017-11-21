@@ -17,7 +17,7 @@ type WinnerWorker struct {
 	Supplier  string    `json:"supplier"`
 	Demand    string    `json:"demand"`
 	Time      time.Time `json:"time"`
-	WinnerCPM int64     `json:"winner_cpm"`
+	WinnerCPM float64   `json:"winner_cpm"`
 }
 
 type winner struct {

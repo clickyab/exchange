@@ -67,7 +67,7 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 					Demand:       obj.Demand,
 					DeliverBid:   obj.Winner,
 					DeliverCount: 1,
-					Profit:       int64(obj.Profit),
+					Profit:       obj.Profit,
 					// TODO : why this is different with other?? make it same.
 					Time:         models.FactTableID(timestampToTime(obj.Time)),
 					Acknowledger: del,

@@ -11,8 +11,8 @@ func (sa sortedBid) Len() int {
 }
 
 func (sa sortedBid) Less(i, j int) bool {
-	cpi := sa[i].Price() * sa[i].Demand().Handicap()
-	cpj := sa[j].Price() * sa[j].Demand().Handicap()
+	cpi := sa[i].Price() * float64(sa[i].Demand().Handicap())
+	cpj := sa[j].Price() * float64(sa[j].Demand().Handicap())
 	return cpi > cpj
 }
 
