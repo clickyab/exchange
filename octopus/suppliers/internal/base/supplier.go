@@ -20,6 +20,11 @@ type Supplier struct {
 	UserID        int64                 `json:"user_id" db:"user_id"`
 	Test          bool                  `json:"test_mode" db:"test_mode"`
 	Click         string                `json:"click_mode" db:"click_mode"`
+	ICurrency     string                `json:"currency" db:"currency"`
+}
+
+func (s Supplier) Currency() string {
+	return s.ICurrency
 }
 
 // Name of this supplier

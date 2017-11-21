@@ -161,7 +161,7 @@
 		},
 		{
 			"ImportPath": "github.com/clickyab/simple-rtb",
-			"Rev": "257d3cd6798c4fa4f61041b2866ac89a883fa842"
+			"Rev": "be5d42d9cf3a5642eb075da91ae5942d9b247973"
 		},
 		{
 			"ImportPath": "github.com/codegangsta/inject",
@@ -170,7 +170,7 @@
 		},
 		{
 			"ImportPath": "github.com/codeskyblue/go-sh",
-			"Comment": "v0.1-47-gb097669",
+			"Comment": "0.2",
 			"Rev": "b097669b1569203c3ce05a6b8717d43140fdb3d5"
 		},
 		{
@@ -232,12 +232,12 @@
 		},
 		{
 			"ImportPath": "github.com/golang/mock/gomock",
-			"Comment": "v1.0.0",
-			"Rev": "13f360950a79f5864a972c786a10a50e44b69541"
+			"Comment": "v1.0.0-50-ga18247b",
+			"Rev": "a18247b9451da0d13e80f7c3e320f1b101d7ea1e"
 		},
 		{
 			"ImportPath": "github.com/gopherjs/gopherjs/js",
-			"Rev": "6997325cc76f13635f68ad9e1c38544966eb7de2"
+			"Rev": "b40cd48c38f9a18eb3db20d163bad78de12cf0b7"
 		},
 		{
 			"ImportPath": "github.com/goraz/humanize",
@@ -250,18 +250,18 @@
 		},
 		{
 			"ImportPath": "github.com/influxdata/influxdb/client/v2",
-			"Comment": "v1.2.2-560-g6608f97de",
-			"Rev": "6608f97de7ef6badf53a45dbedf4cf44744a1a01"
+			"Comment": "v1.3.0rc1-274-g2f4315ccd",
+			"Rev": "2f4315ccdf93caaccbebe48d68428c4a79090d6e"
 		},
 		{
 			"ImportPath": "github.com/influxdata/influxdb/models",
-			"Comment": "v1.2.2-560-g6608f97de",
-			"Rev": "6608f97de7ef6badf53a45dbedf4cf44744a1a01"
+			"Comment": "v1.3.0rc1-274-g2f4315ccd",
+			"Rev": "2f4315ccdf93caaccbebe48d68428c4a79090d6e"
 		},
 		{
 			"ImportPath": "github.com/influxdata/influxdb/pkg/escape",
-			"Comment": "v1.2.2-560-g6608f97de",
-			"Rev": "6608f97de7ef6badf53a45dbedf4cf44744a1a01"
+			"Comment": "v1.3.0rc1-274-g2f4315ccd",
+			"Rev": "2f4315ccdf93caaccbebe48d68428c4a79090d6e"
 		},
 		{
 			"ImportPath": "github.com/jinzhu/inflection",
@@ -269,7 +269,7 @@
 		},
 		{
 			"ImportPath": "github.com/jtolds/gls",
-			"Comment": "v4.2.0-2-g77f1821",
+			"Comment": "v4.2.1",
 			"Rev": "77f18212c9c7edc9bd6a33d383a7b545ce62f064"
 		},
 		{
@@ -315,37 +315,37 @@
 		},
 		{
 			"ImportPath": "github.com/smartystreets/assertions",
-			"Comment": "1.6.0-24-gf8459f9",
-			"Rev": "f8459f92181409546d2762c9e9c4bedc23c92d76"
+			"Comment": "1.7.0",
+			"Rev": "9c0ea8acbc1d8ad689f9e6fe0c1fa5838e0cabc2"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/assertions/internal/go-render/render",
-			"Comment": "1.6.0-24-gf8459f9",
-			"Rev": "f8459f92181409546d2762c9e9c4bedc23c92d76"
+			"Comment": "1.7.0",
+			"Rev": "9c0ea8acbc1d8ad689f9e6fe0c1fa5838e0cabc2"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/assertions/internal/oglematchers",
-			"Comment": "1.6.0-24-gf8459f9",
-			"Rev": "f8459f92181409546d2762c9e9c4bedc23c92d76"
+			"Comment": "1.7.0",
+			"Rev": "9c0ea8acbc1d8ad689f9e6fe0c1fa5838e0cabc2"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/goconvey/convey",
-			"Comment": "1.6.2-19-gaf8e7d5",
-			"Rev": "af8e7d560364b90f732a1d119d17b5506e50447d"
+			"Comment": "1.6.3-2-ge5b2b7c",
+			"Rev": "e5b2b7c9111590d019a696c7800593f666e1a7f4"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/goconvey/convey/gotest",
-			"Comment": "1.6.2-19-gaf8e7d5",
-			"Rev": "af8e7d560364b90f732a1d119d17b5506e50447d"
+			"Comment": "1.6.3-2-ge5b2b7c",
+			"Rev": "e5b2b7c9111590d019a696c7800593f666e1a7f4"
 		},
 		{
 			"ImportPath": "github.com/smartystreets/goconvey/convey/reporting",
-			"Comment": "1.6.2-19-gaf8e7d5",
-			"Rev": "af8e7d560364b90f732a1d119d17b5506e50447d"
+			"Comment": "1.6.3-2-ge5b2b7c",
+			"Rev": "e5b2b7c9111590d019a696c7800593f666e1a7f4"
 		},
 		{
 			"ImportPath": "github.com/streadway/amqp",
-			"Rev": "dfe15e36048539f4cda41f240b27a5ca25b9cd46"
+			"Rev": "2cbfe40c9341ad63ba23e53013b3ddc7989d801c"
 		},
 		{
 			"ImportPath": "github.com/tinylib/msgp/msgp",
@@ -365,20 +365,24 @@
 			"Rev": "81e90905daefcd6fd217b62423c0908922eadb30"
 		},
 		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "0744d001aa8470aaa53df28d32e5ceeb8af9bd70"
+		},
+		{
 			"ImportPath": "golang.org/x/sys/unix",
-			"Rev": "9aade4d3a3b7e6d876cd3823ad20ec45fc035402"
+			"Rev": "ab9e364efd8b52800ff7ee48a9ffba4e0ed78dfb"
 		},
 		{
 			"ImportPath": "golang.org/x/sys/windows",
-			"Rev": "9aade4d3a3b7e6d876cd3823ad20ec45fc035402"
+			"Rev": "ab9e364efd8b52800ff7ee48a9ffba4e0ed78dfb"
 		},
 		{
 			"ImportPath": "golang.org/x/tools/go/ast/astutil",
-			"Rev": "3b1faeda9afbcba128c2d794b38ffe7982141139"
+			"Rev": "2d19ab38faf14664c76088411c21bf4fafea960b"
 		},
 		{
 			"ImportPath": "golang.org/x/tools/imports",
-			"Rev": "3b1faeda9afbcba128c2d794b38ffe7982141139"
+			"Rev": "2d19ab38faf14664c76088411c21bf4fafea960b"
 		},
 		{
 			"ImportPath": "gopkg.in/fzerorubigd/onion.v3",

@@ -32,4 +32,6 @@ type Impression interface {
 	Secure() bool
 	// CID unique identifier for every request
 	CID() string
+	// Currency is the currency for an impression
+	Currency() string
 }
