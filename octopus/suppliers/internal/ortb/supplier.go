@@ -8,18 +8,12 @@ import (
 	"encoding/json"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/exchange/ortb"
 	"github.com/bsm/openrtb"
 	"github.com/clickyab/services/assert"
 )
 
-// Supplier is ortb version of exchange-supplier
-type Supplier struct {
-	exchange.SupplierBase
-}
-
 // RenderBidResponse for rendering open-rtb
-func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
+func RenderBidResponse(ctx context.Context, s exchange.Supplier, w io.Writer, b exchange.BidResponse) http.Header {
 	bids := func() []openrtb.SeatBid {
 		x := make([]openrtb.SeatBid, 0)
 		for _, b := range b.Bids() {
@@ -46,17 +40,11 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 	r, err := json.Marshal(openrtb.BidResponse{
 		NBR:      b.Excuse(),
 		ID:       b.ID(),
-		Currency: "IRR",
+		Currency: b.Supplier().Currency(),
 		SeatBid:  bids,
 	})
 
 	assert.Nil(err)
 	w.Write(r)
 	return http.Header{}
-}
-
-// GetBidRequest transform request object to internal model
-func (s *Supplier) GetBidRequest(ctx context.Context, r *http.Request) (exchange.BidRequest, error) {
-
-	return ortb.NewOpenRTBFromRequest(s, r)
 }

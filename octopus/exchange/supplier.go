@@ -13,8 +13,8 @@ const (
 	SupplierSRTB = "srtb"
 )
 
-// SupplierBase base supplier interface
-type SupplierBase interface {
+// Supplier base supplier interface
+type Supplier interface {
 	// Name of Supplier
 	Name() string
 	// CPMFloor is the floor for this network. the publisher must be greeter equal to this
@@ -32,23 +32,8 @@ type SupplierBase interface {
 	Type() string
 	// Currency returns the supplier currency type
 	Currency() string
-}
-
-// Supplier is the ad-network interface
-type Supplier interface {
-	SupplierBase
-	GetBidRequester
-	RenderBidResponser
-}
-
-// GetBidRequester interface
-type GetBidRequester interface {
 	// GetBidRequest generate bid-request from request
 	GetBidRequest(context.Context, *http.Request) (BidRequest, error)
-}
-
-// RenderBidResponser interface
-type RenderBidResponser interface {
 	// RenderBidResponse return the renderer of this supplier
 	RenderBidResponse(context.Context, io.Writer, BidResponse) http.Header
 }

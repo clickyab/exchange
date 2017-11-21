@@ -16,12 +16,12 @@ import (
 
 type demandManager struct {
 	activeDemands []exchange.Demand
-	lock          *sync.RWMutex
+	sync.RWMutex
 }
 
 func (dm *demandManager) loadDemands() {
-	dm.lock.Lock()
-	defer dm.lock.Unlock()
+	dm.Lock()
+	defer dm.Unlock()
 	dm.activeDemands = base.NewManager().ActiveDemands()
 	dispatcher.ResetProviders()
 	for _, demand := range dm.activeDemands {
@@ -42,5 +42,5 @@ func (dm *demandManager) Initialize() {
 }
 
 func init() {
-	mysql.Register(&demandManager{lock: &sync.RWMutex{}})
+	mysql.Register(&demandManager{})
 }

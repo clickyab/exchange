@@ -7,18 +7,12 @@ import (
 	"net/http"
 
 	"clickyab.com/exchange/octopus/exchange"
-	"clickyab.com/exchange/octopus/exchange/srtb"
 	"github.com/clickyab/services/assert"
 	simple "github.com/clickyab/simple-rtb"
 )
 
-// Supplier is srtb version of exchange-supplier
-type Supplier struct {
-	exchange.SupplierBase
-}
-
 // RenderBidResponse for rendering simple rtb
-func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchange.BidResponse) http.Header {
+func RenderBidResponse(ctx context.Context, s exchange.Supplier, w io.Writer, b exchange.BidResponse) http.Header {
 	bids := make([]simple.Bid, 0)
 	for _, i := range b.Bids() {
 		bids = append(bids, simple.Bid{
@@ -37,9 +31,4 @@ func (s *Supplier) RenderBidResponse(ctx context.Context, w io.Writer, b exchang
 	assert.Nil(err)
 	w.Write(r)
 	return http.Header{}
-}
-
-// GetBidRequest transform request object to internal model
-func (s *Supplier) GetBidRequest(ctx context.Context, r *http.Request) (exchange.BidRequest, error) {
-	return srtb.NewSimpleRTBFromRequest(s, r)
 }
