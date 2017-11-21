@@ -10,10 +10,14 @@ import (
 type impression struct {
 	inner  *openrtb.Impression
 	banner exchange.Banner
+	sup    exchange.Supplier
 	cid    string
 }
 
 func (m *impression) Currency() string {
+	if m.inner.BidFloorCurrency == "" {
+		m.inner.BidFloorCurrency = m.sup.Currency()
+	}
 	return m.inner.BidFloorCurrency
 }
 

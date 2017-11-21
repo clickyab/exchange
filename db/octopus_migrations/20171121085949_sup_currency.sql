@@ -1,7 +1,7 @@
 
 -- +migrate Up
 -- SQL in section 'Up' is executed when this migration is applied
-ALTER TABLE suppliers ADD currency VARCHAR(10) NULL;
+ALTER TABLE suppliers ADD currency VARCHAR(5) DEFAULT 'IRR' NOT NULL;
 
 -- +migrate Down
 -- SQL section 'Down' is executed when this migration is rolled back

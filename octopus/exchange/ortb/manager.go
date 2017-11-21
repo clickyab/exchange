@@ -41,10 +41,10 @@ func NewOpenRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.BidRe
 		return nil, err
 	}
 
-	/*if !suppliers.ValidateSupplierByCur(rq, s) {
+	if !validateSupplier(rq, s) {
 		return nil, errors.New("invalid impression currency")
 	}
-	*/
+
 	for i := range rq.inner.Imp {
 		rq.inner.Imp[i].BidFloor = exchange.IncShare(rq.inner.Imp[i].BidFloor, s.Share())
 	}
@@ -172,4 +172,13 @@ func newBanner(b exchange.Banner) *openrtb.Banner {
 		}(),
 	}
 
+}
+
+func validateSupplier(br exchange.BidRequest, sup exchange.Supplier) bool {
+	for _, imp := range br.Imp() {
+		if imp.Currency() != sup.Currency() {
+			return false
+		}
+	}
+	return true
 }
