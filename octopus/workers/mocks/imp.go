@@ -14,7 +14,12 @@ type Imp struct {
 	SBidFloor float64
 	SSecure   bool
 	SCid      string
+	SCurrency string
 	Attribute map[string]interface{}
+}
+
+func (i Imp) Currency() string {
+	return i.SCurrency
 }
 
 func (i Imp) CID() string {

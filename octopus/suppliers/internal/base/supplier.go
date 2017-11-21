@@ -23,6 +23,7 @@ type Supplier struct {
 	ICurrency     string                `json:"currency" db:"currency"`
 }
 
+// Currency is the suppliers currency considered in database
 func (s Supplier) Currency() string {
 	return s.ICurrency
 }

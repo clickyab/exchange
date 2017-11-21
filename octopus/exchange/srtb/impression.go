@@ -10,9 +10,13 @@ type impression struct {
 	inner  *srtb.Impression
 	banner exchange.Banner
 	cid    string
+	sup    exchange.Supplier
 }
 
 func (i *impression) Currency() string {
+	if i.inner.Currency == "" {
+		i.inner.Currency = i.sup.Currency()
+	}
 	return i.inner.Currency
 }
 

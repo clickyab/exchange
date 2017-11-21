@@ -73,7 +73,7 @@ func (b *bidRequest) ID() string {
 func (b *bidRequest) Imp() []exchange.Impression {
 	if b.imps == nil {
 		for i := range b.inner.Imp {
-			b.imps = append(b.imps, &impression{inner: &b.inner.Imp[i], banner: &banner{inner: b.inner.Imp[i].Banner}})
+			b.imps = append(b.imps, &impression{inner: &b.inner.Imp[i], banner: &banner{inner: b.inner.Imp[i].Banner}, sup: b.sup})
 		}
 	}
 	return b.imps

@@ -51,9 +51,9 @@ func doError(w http.ResponseWriter, err error) {
 	dec := json.NewEncoder(w)
 	w.WriteHeader(http.StatusBadRequest)
 	dec.Encode(struct {
-		Error error
+		Error string `json:"error"`
 	}{
-		Error: err,
+		Error: err.Error(),
 	})
 }
 
