@@ -40,8 +40,13 @@ type demand struct {
 	FWhiteListCountries mysql.StringJSONArray `json:"white_countrie" db:"white_countrie" `
 	FExcludedSuppliers  mysql.StringJSONArray `json:"excluded_suppliers" db:"excluded_suppliers"`
 	UserID              int64                 `json:"user_id" db:"user_id"`
+	FCurrencies         mysql.StringJSONArray `json:"currencies" db:"currencies"`
 	FTestMode           bool                  `json:"test_mode" db:"test_mode"`
 	client              *http.Client
+}
+
+func (d *demand) Currencies() []string {
+	return d.FCurrencies
 }
 
 func (d *demand) GetBidResponse(ctx context.Context, r *http.Response, s exchange.Supplier) (exchange.BidResponse, error) {

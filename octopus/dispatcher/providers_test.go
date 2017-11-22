@@ -27,6 +27,7 @@ func newBidRequest(c *gomock.Controller, count int) exchange.BidRequest {
 	for i := range tmp {
 		s := mock_entity.NewMockImpression(c)
 		s.EXPECT().ID().Return(<-random.ID).AnyTimes()
+		s.EXPECT().Currency().Return("IRR").AnyTimes()
 		tmp[i] = s
 	}
 	m := mock_entity.NewMockBidRequest(c)
@@ -64,6 +65,7 @@ func TestProviders(t *testing.T) {
 			Convey("Should return two ads", func() {
 
 				d1 := mock_entity.NewMockDemand(ctrl)
+				d1.EXPECT().Currencies().Return([]string{"IRR"}).AnyTimes()
 				d1.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
 				d1.EXPECT().TestMode().Return(false).AnyTimes()
 
@@ -97,6 +99,7 @@ func TestProviders(t *testing.T) {
 			Convey("Should return NO ads", func() {
 				d1 := mock_entity.NewMockDemand(ctrl)
 				d1.EXPECT().TestMode().Return(false).AnyTimes()
+				d1.EXPECT().Currencies().Return([]string{"IRR"}).AnyTimes()
 				d1.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
 				d1.EXPECT().Name().Return("d1").AnyTimes()
 				d1.EXPECT().Handicap().Return(int64(100)).AnyTimes()
@@ -127,6 +130,7 @@ func TestProviders(t *testing.T) {
 
 			Convey("Should return one provider with three ads (timeout test)", func() {
 				d1 := mock_entity.NewMockDemand(ctrl)
+				d1.EXPECT().Currencies().Return([]string{"IRR"}).AnyTimes()
 				d1.EXPECT().TestMode().Return(false).AnyTimes()
 				d1.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
 				d1.EXPECT().Name().Return("d1").AnyTimes()
@@ -150,6 +154,7 @@ func TestProviders(t *testing.T) {
 					}).AnyTimes()
 				Register(d1, time.Millisecond*100)
 				d2 := mock_entity.NewMockDemand(ctrl)
+				d2.EXPECT().Currencies().Return([]string{"IRR"}).AnyTimes()
 				d2.EXPECT().TestMode().Return(false).AnyTimes()
 				d2.EXPECT().WhiteListCountries().Return([]string{}).AnyTimes()
 				d2.EXPECT().Name().Return("d2").AnyTimes()

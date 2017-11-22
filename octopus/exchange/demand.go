@@ -99,4 +99,6 @@ type Demand interface {
 	// they must return as soon as possible, waiting for result must be done
 	// in separate co-routine. just create a channel, run a co-routine, and return.
 	Provide(context.Context, BidRequest, chan BidResponse)
+	// Currencies return acceptable currency by this demand
+	Currencies() []string
 }
