@@ -8,6 +8,7 @@ import (
 	"github.com/clickyab/services/initializer"
 	_ "github.com/clickyab/services/kv/redis"
 	"github.com/clickyab/services/shell"
+	_ "github.com/clickyab/services/slack"
 	"github.com/sirupsen/logrus"
 )
 
