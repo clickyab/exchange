@@ -73,7 +73,6 @@ func DemandJob(rq exchange.BidRequest, resp exchange.BidResponse, demand string)
 		Source:     rq.Inventory().Domain(),
 		Supplier:   rq.Inventory().Supplier().Name(),
 		Demand:     demand,
-		Time:       time.Now(),
 		BidLen:     len(resp.Bids()),
 		TotalPrice: total,
 	}
