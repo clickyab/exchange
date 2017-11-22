@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"clickyab.com/exchange/octopus/exchange/materialize/jsonbackend"
 	"clickyab.com/exchange/octopus/models"
 	"clickyab.com/exchange/octopus/workers/internal/datamodels"
 	"github.com/clickyab/services/assert"
@@ -13,43 +14,6 @@ import (
 	"github.com/clickyab/services/random"
 	"github.com/clickyab/services/safe"
 )
-
-type model struct {
-	Request struct {
-		ID        string    `json:"id"`
-		Time      time.Time `json:"time"`
-		Inventory struct {
-			FloorCPM     int64  `json:"floor_cpm"`
-			SoftFloorCPM int64  `json:"soft_floor_cpm"`
-			Name         string `json:"name"`
-			Supplier     struct {
-				FloorCPM     int64  `json:"floor_cpm"`
-				SoftFloorCPM int64  `json:"soft_floor_cpm"`
-				Name         string `json:"name"`
-				Share        int    `json:"share"`
-			} `json:"supplier"`
-			Domain string `json:"domain"`
-		} `json:"inventory"`
-	} `json:"request"`
-	Response struct {
-		ID string `json:"id"`
-
-		Bids []struct {
-			ID         string   `json:"id"`
-			ImpID      string   `json:"imp_id"`
-			Price      int64    `json:"price"`
-			WinURL     string   `json:"win_url"`
-			Categories []string `json:"categories"`
-			AdID       string   `json:"ad_id"`
-			AdHeight   int      `json:"ad_height"`
-			AdWidth    int      `json:"ad_width"`
-			AdDomain   []string `json:"ad_domains"`
-			Demand     struct {
-				Name string `json:"name"`
-			} `json:"demand"`
-		} `json:"bids"`
-	} `json:"response"`
-}
 
 var extraCount = config.RegisterInt("octopus.workers.extra.count", 10, "the consumer count for a worker")
 
@@ -93,24 +57,18 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 		for {
 			select {
 			case del = <-chn:
-				obj := model{}
+				obj := jsonbackend.Demand{}
 				err := del.Decode(&obj)
 				assert.Nil(err)
-				var win int64
-				for _, v := range obj.Response.Bids {
-					if cpm := v.Price; cpm > 0 {
-						win++
-					}
-				}
 
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:        obj.Request.Inventory.Supplier.Name,
-					Source:          obj.Request.Inventory.Domain,
-					Demand:          obj.Response.Bids[0].Demand.Name,
-					Time:            models.FactTableID(obj.Request.Time),
+					Supplier:        obj.Supplier,
+					Source:          obj.Source,
+					Demand:          obj.Demand,
+					Time:            models.FactTableID(time.Now()),
 					RequestOutCount: 1,
-					BidOutCount:     int64(len(obj.Response.Bids)),
-					AdInCount:       win,
+					BidOutCount:     int64(obj.BidLen),
+					AdInCount:       int64(obj.TotalPrice),
 					Acknowledger:    del,
 					WorkerID:        s.workerID,
 				}
