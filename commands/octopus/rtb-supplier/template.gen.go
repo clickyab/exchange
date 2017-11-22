@@ -368,7 +368,7 @@ func commandsOctopusRtbSupplierStaticTemplateIndexHtml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "commands/octopus/rtb-supplier/static/template/index.html", size: 35177, mode: os.FileMode(420), modTime: time.Unix(1511173037, 0)}
+	info := bindataFileInfo{name: "commands/octopus/rtb-supplier/static/template/index.html", size: 35177, mode: os.FileMode(420), modTime: time.Unix(1511273974, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -588,7 +588,7 @@ func commandsOctopusRtbSupplierStaticTemplateJsMainJs() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "commands/octopus/rtb-supplier/static/template/js/main.js", size: 15886, mode: os.FileMode(420), modTime: time.Unix(1511177674, 0)}
+	info := bindataFileInfo{name: "commands/octopus/rtb-supplier/static/template/js/main.js", size: 15886, mode: os.FileMode(420), modTime: time.Unix(1511273974, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

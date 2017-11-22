@@ -6,6 +6,7 @@ import (
 	_ "github.com/clickyab/services/fluentd"
 	"github.com/clickyab/services/initializer"
 	"github.com/clickyab/services/shell"
+	_ "github.com/clickyab/services/slack"
 	"github.com/sirupsen/logrus"
 )
 
