@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	sm *supplierManager
+	sm = &supplierManager{}
 )
 
 type supplierManager struct {
@@ -55,5 +55,5 @@ func GetSupplierByKey(key string) (exchange.Supplier, error) {
 }
 
 func init() {
-	mysql.Register(&supplierManager{})
+	mysql.Register(sm)
 }
