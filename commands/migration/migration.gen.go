@@ -19,6 +19,7 @@
 // db/octopus_migrations/20171030152634_demand.sql
 // db/octopus_migrations/20171121085949_sup_currency.sql
 // db/octopus_migrations/20171121142233_currency.sql
+// db/octopus_migrations/20171122083834_demand.sql
 // DO NOT EDIT!
 
 package main
@@ -466,6 +467,26 @@ func dbOctopus_migrations20171121142233_currencySql() (*asset, error) {
 	return a, nil
 }
 
+var _dbOctopus_migrations20171122083834_demandSql = "\x1f\x8b\x08\x00\x00\x00\x00\x00\x00\xff\x9c\xd1\xc1\x4b\x84\x40\x14\xc7\xf1\xfb\xfc\x15\xbf\x9b\x45\xec\x25\xd8\xd3\x9e\xa6\x75\xa5\x85\x59\x2d\xd3\x20\x22\x62\x72\x1e\xf9\x58\x1d\xc5\x19\xb1\xfe\xfb\x90\xd8\xad\xa0\x83\x7a\x7c\x8f\xf7\x7d\x97\x8f\x58\xad\x70\x55\xf3\x7b\xa7\x3d\x21\x6f\xc7\xf1\xe1\x5e\x81\x2d\x1c\x15\x9e\x1b\x8b\x20\x6f\x03\xb0\x03\x7d\x50\xd1\x7b\x32\x18\x4a\xb2\xf0\x25\x3b\x7c\x77\xe3\x11\x3b\xe8\xb6\xad\x98\x8c\x90\x2a\xdb\xa5\xc8\xe4\x8d\xda\xc1\x50\xad\xad\x71\x38\x24\xe1\x3e\x7a\xc2\x36\x51\xf9\x21\x46\xcd\xb6\xf7\xf4\x5a\x71\xcd\x1e\x91\x4a\x64\x86\x38\xc9\x10\xe7\x4a\x61\x33\xa1\x2f\x9b\xbe\x5b\x5e\x1b\xfd\xb9\x3c\x1e\x88\x8e\x73\x6a\x6d\xcc\x29\x2d\xfa\xae\x23\x5b\x30\x39\x3c\xca\x74\x7b\x2b\xd3\x8b\xeb\xf5\xfa\x12\xe1\x2e\x92\xb9\xca\x10\x3c\xbf\x04\x38\xff\xdb\x88\x3f\x32\x61\x33\xd8\x93\xcd\x19\x66\x5c\x4e\xa2\xe9\x9a\xaa\x22\x83\x37\x5d\x1c\xe7\xf2\xec\xe3\xe5\x38\xb3\xdb\x1f\x9a\xd9\xe9\x2f\x98\x09\x6d\x98\x26\x77\xff\xb8\x6c\x84\x10\xe2\x2b\x00\x00\xff\xff\xa9\xf4\xe2\x14\x12\x03\x00\x00"
+
+func dbOctopus_migrations20171122083834_demandSqlBytes() ([]byte, error) {
+	return bindataRead(
+		_dbOctopus_migrations20171122083834_demandSql,
+		"db/octopus_migrations/20171122083834_demand.sql",
+	)
+}
+
+func dbOctopus_migrations20171122083834_demandSql() (*asset, error) {
+	bytes, err := dbOctopus_migrations20171122083834_demandSqlBytes()
+	if err != nil {
+		return nil, err
+	}
+
+	info := bindataFileInfo{name: "db/octopus_migrations/20171122083834_demand.sql", size: 0, mode: os.FileMode(0), modTime: time.Unix(0, 0)}
+	a := &asset{bytes: bytes, info: info}
+	return a, nil
+}
+
 // Asset loads and returns the asset for the given name.
 // It returns an error if the asset could not be found or
 // could not be loaded.
@@ -537,6 +558,7 @@ var _bindata = map[string]func() (*asset, error){
 	"db/octopus_migrations/20171030152634_demand.sql":                  dbOctopus_migrations20171030152634_demandSql,
 	"db/octopus_migrations/20171121085949_sup_currency.sql":            dbOctopus_migrations20171121085949_sup_currencySql,
 	"db/octopus_migrations/20171121142233_currency.sql":                dbOctopus_migrations20171121142233_currencySql,
+	"db/octopus_migrations/20171122083834_demand.sql":                  dbOctopus_migrations20171122083834_demandSql,
 }
 
 // AssetDir returns the file names below a certain
@@ -601,6 +623,7 @@ var _bintree = &bintree{nil, map[string]*bintree{
 			"20171030152634_demand.sql":                  &bintree{dbOctopus_migrations20171030152634_demandSql, map[string]*bintree{}},
 			"20171121085949_sup_currency.sql":            &bintree{dbOctopus_migrations20171121085949_sup_currencySql, map[string]*bintree{}},
 			"20171121142233_currency.sql":                &bintree{dbOctopus_migrations20171121142233_currencySql, map[string]*bintree{}},
+			"20171122083834_demand.sql":                  &bintree{dbOctopus_migrations20171122083834_demandSql, map[string]*bintree{}},
 		}},
 	}},
 }}

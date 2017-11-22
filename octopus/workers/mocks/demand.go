@@ -18,6 +18,10 @@ type Demands struct {
 	IExcludeSupplier []string
 }
 
+func (d Demands) Currencies() []string {
+	panic("implement me")
+}
+
 func (d Demands) Win(context.Context, float64, string) {
 	panic("implement me")
 }

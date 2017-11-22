@@ -153,6 +153,17 @@ func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
 	return true
 }
 
+func acceptCurrnecy(bq exchange.BidRequest, data providerData) bool {
+
+	c := bq.Imp()[0].Currency()
+	for _, v := range data.provider.Currencies() {
+		if c == v {
+			return false
+		}
+	}
+	return true
+}
+
 func isSameProvider(bq exchange.BidRequest, data providerData) bool {
 	return bq.Inventory().Name() == data.name
 }
@@ -195,6 +206,7 @@ func init() {
 		isSameProvider,
 		notWhitelistCountries,
 		isExcludedDemands,
+		acceptCurrnecy,
 	}
 }
 
