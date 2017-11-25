@@ -154,9 +154,12 @@ func demandIsAllowed(m exchange.BidRequest, d providerData) bool {
 }
 
 func acceptCurrnecy(bq exchange.BidRequest, data providerData) bool {
-
+	currencies := data.provider.Currencies()
+	if len(currencies) == 0 {
+		return false
+	}
 	c := bq.Imp()[0].Currency()
-	for _, v := range data.provider.Currencies() {
+	for _, v := range currencies {
 		if c == v {
 			return false
 		}
