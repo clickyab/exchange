@@ -15,10 +15,7 @@ type impression struct {
 }
 
 func (m *impression) Currency() string {
-	if m.inner.BidFloorCurrency == "" {
-		m.inner.BidFloorCurrency = m.sup.Currency()
-	}
-	return m.inner.BidFloorCurrency
+	return m.sup.Currency()
 }
 
 // CID return ortb CID
