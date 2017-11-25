@@ -11,6 +11,8 @@ import (
 	"github.com/clickyab/services/config"
 	_ "github.com/clickyab/services/kv/redis"
 
+	"os"
+
 	_ "github.com/clickyab/services/fluentd"
 	"github.com/clickyab/services/initializer"
 	_ "github.com/clickyab/services/mysql/connection/mysql"
@@ -21,6 +23,8 @@ import (
 
 func main() {
 	config.Initialize(commands.Organization, commands.AppName, commands.Prefix, commands.DefaultConfig())
+	config.DumpConfig(os.Stdout)
+
 	defer initializer.Initialize()()
 
 	sig := shell.WaitExitSignal()

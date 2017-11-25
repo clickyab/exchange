@@ -37,7 +37,7 @@ type demand struct {
 	FHandicap           int64                 `json:"handicap" db:"handicap"`
 	Share               int                   `json:"-" db:"share"`
 	Rate                int                   `json:"-" db:"call_rate"`
-	FWhiteListCountries mysql.StringJSONArray `json:"white_countrie" db:"white_countrie" `
+	FWhiteListCountries mysql.StringJSONArray `json:"white_countries" db:"white_countries"`
 	FExcludedSuppliers  mysql.StringJSONArray `json:"excluded_suppliers" db:"excluded_suppliers"`
 	UserID              int64                 `json:"user_id" db:"user_id"`
 	FCurrencies         mysql.StringJSONArray `json:"currencies" db:"currencies"`

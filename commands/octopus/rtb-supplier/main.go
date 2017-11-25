@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"clickyab.com/exchange/commands"
 	"github.com/clickyab/services/config"
 	_ "github.com/clickyab/services/fluentd"
@@ -14,9 +16,9 @@ var exchangeURL = config.RegisterString("supplier.exchange.url", "http://exchang
 var prefix = "commands/octopus/rtb-supplier/static/template"
 
 func main() {
-
 	config.Initialize(commands.Organization, commands.AppName, commands.Prefix, commands.DefaultConfig())
-	logrus.Warn(exchangeURL.String())
+	config.DumpConfig(os.Stdout)
+
 	defer initializer.Initialize()()
 	sig := shell.WaitExitSignal()
 	logrus.Debugf("%s received, exiting...", sig.String())

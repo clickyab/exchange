@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"clickyab.com/exchange/commands"
 
 	"github.com/clickyab/services/config"
@@ -14,6 +16,8 @@ import (
 
 func main() {
 	config.Initialize(commands.Organization, commands.AppName, commands.Prefix, commands.DefaultConfig())
+	config.DumpConfig(os.Stdout)
+
 	defer initializer.Initialize()()
 
 	sig := shell.WaitExitSignal()
