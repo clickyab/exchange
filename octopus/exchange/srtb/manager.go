@@ -55,12 +55,7 @@ func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
 				Height: bq.Imp()[i].Banner().Height(),
 				Width:  bq.Imp()[i].Banner().Width(),
 			},
-			BidFloor: func() float64 {
-				if bq.Imp()[i].BidFloor() != 0 {
-					return exchange.IncShare(bq.Imp()[i].BidFloor(), bq.Inventory().Supplier().Share())
-				}
-				return exchange.IncShare(float64(bq.Inventory().Supplier().FloorCPM()), bq.Inventory().Supplier().Share())
-			}(),
+			BidFloor: bq.Imp()[i].BidFloor(),
 			Secure: func() int {
 				if bq.Imp()[i].Secure() {
 					return 1
