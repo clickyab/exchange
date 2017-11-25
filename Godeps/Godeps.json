@@ -100,6 +100,10 @@
 			"Rev": "22619236e2edf1c82b8e703317fdc84d8e401915"
 		},
 		{
+			"ImportPath": "github.com/clickyab/services/hub",
+			"Rev": "22619236e2edf1c82b8e703317fdc84d8e401915"
+		},
+		{
 			"ImportPath": "github.com/clickyab/services/influx",
 			"Rev": "22619236e2edf1c82b8e703317fdc84d8e401915"
 		},
@@ -285,6 +289,10 @@
 			"ImportPath": "github.com/ogier/pflag",
 			"Comment": "v0.0.1-7-g45c278a",
 			"Rev": "45c278ab3607870051a2ea9040bb85fcb8557481"
+		},
+		{
+			"ImportPath": "github.com/olebedev/emitter",
+			"Rev": "9110dbae3d07cb26c2993dbf3bdbd0aad98329f9"
 		},
 		{
 			"ImportPath": "github.com/philhofer/fwd",
