@@ -55,7 +55,7 @@ func (n *app) Cat() []exchange.Category {
 // publisher return ortb publisher
 func (n *app) Publisher() exchange.Publisher {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher, inventory: n}
 	}
 	return n.pub
 }
@@ -135,7 +135,7 @@ func (n *site) Cat() []exchange.Category {
 // publisher return ortb publisher
 func (n *site) Publisher() exchange.Publisher {
 	if n.pub == nil {
-		n.pub = &publisher{inner: n.inner.Publisher}
+		n.pub = &publisher{inner: n.inner.Publisher, inventory: n}
 	}
 	return n.pub
 }
