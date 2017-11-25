@@ -87,5 +87,11 @@ func GetAd(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	log(nCtx, bq).WithField("count", len(res.Bids())).Debug("bidResponses is passed the system select")
 	storeKeys(ctx, bq, res)
 
-	bq.Inventory().Supplier().RenderBidResponse(nCtx, w, res)
+	h := bq.Inventory().Supplier().RenderBidResponse(nCtx, w, res)
+
+	for k, v := range h {
+		for _, vv := range v {
+			w.Header().Set(k, vv)
+		}
+	}
 }

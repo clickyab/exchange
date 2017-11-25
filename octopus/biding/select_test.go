@@ -42,15 +42,15 @@ type dem struct {
 func cases() []situation {
 	return []situation{
 		{1, 300, 200, []dem{{470, 100}, {440, 110}}, 440, x.ShouldEqual},
-		{2, 300, 200, []dem{{470, 100}, {440, 100}}, 441, x.ShouldEqual},
-		{3, 300, 200, []dem{{470, 120}, {230, 115}}, 301, x.ShouldEqual},
+		{2, 300, 200, []dem{{470, 100}, {440, 100}}, 440, x.ShouldEqual},
+		{3, 300, 200, []dem{{470, 120}, {230, 115}}, 300, x.ShouldEqual},
 		{4, 300, 200, []dem{{340, 100}, {300, 125}}, 300, x.ShouldEqual},
-		{5, 300, 200, []dem{{230, 100}, {250, 110}}, 231, x.ShouldEqual},
+		{5, 300, 200, []dem{{230, 100}, {250, 110}}, 230, x.ShouldEqual},
 		{6, 300, 200, []dem{{200, 120}, {230, 90}}, 200, x.ShouldEqual},
 		{7, 300, 200, []dem{{250, 100}, {250, 100}}, 250, x.ShouldEqual},
-		{8, 300, 200, []dem{{350, 100}}, 301, x.ShouldEqual},
-		{9, 300, 200, []dem{{310, 100}}, 301, x.ShouldEqual},
-		{10, 300, 200, []dem{{240, 120}}, 201, x.ShouldEqual},
+		{8, 300, 200, []dem{{350, 100}}, 300, x.ShouldEqual},
+		{9, 300, 200, []dem{{310, 100}}, 300, x.ShouldEqual},
+		{10, 300, 200, []dem{{240, 120}}, 200, x.ShouldEqual},
 	}
 
 }
