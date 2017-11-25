@@ -221,15 +221,6 @@ func (m *Manager) ActiveDemands() []exchange.Demand {
 
 				MaxIdleConnsPerHost: demands[i].IdleConnections,
 			},
-			Timeout: func() time.Duration {
-				if time.Duration(demands[i].Timeout) < 100*time.Millisecond {
-					return 100 * time.Millisecond
-				}
-				if time.Duration(demands[i].Timeout) > time.Second {
-					return time.Second
-				}
-				return time.Duration(demands[i].Timeout)
-			}(),
 		}
 
 		res = append(res, &demands[i])

@@ -94,6 +94,7 @@ func newImpression(m []exchange.Impression, sup exchange.Supplier) []openrtb.Imp
 	ms := make([]openrtb.Impression, 0)
 	for x := range m {
 		t := openrtb.Impression{
+
 			ID: m[x].ID(),
 			Secure: func() openrtb.NumberOrString {
 				if m[x].Secure() {
@@ -107,7 +108,7 @@ func newImpression(m []exchange.Impression, sup exchange.Supplier) []openrtb.Imp
 				}
 				return exchange.IncShare(float64(sup.FloorCPM()), sup.Share())
 			}(),
-			BidFloorCurrency: "IRR",
+			BidFloorCurrency: m[x].Currency(),
 		}
 		switch m[x].Type() {
 		case exchange.AdTypeBanner:
