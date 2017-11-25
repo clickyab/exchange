@@ -88,7 +88,7 @@ func (d *demand) Provide(ctx context.Context, bq exchange.BidRequest, ch chan ex
 	}
 
 	req.Header = header
-	xlog.GetWithField(ctx, "key", d.Name()).Debug("calling demand")
+	xlog.GetWithField(ctx, "key", d.Name()).WithField("req", buf.String()).Debug("calling demand")
 	resp, err := d.client.Do(req.WithContext(ctx))
 	if err != nil {
 		xlog.GetWithError(ctx, err).Debug()
