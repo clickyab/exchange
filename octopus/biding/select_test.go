@@ -41,6 +41,7 @@ type dem struct {
 
 func cases() []situation {
 	return []situation{
+
 		{1, 300, 200, []dem{{470, 100}, {440, 110}}, 440, x.ShouldEqual},
 		{2, 300, 200, []dem{{470, 100}, {440, 100}}, 440, x.ShouldEqual},
 		{3, 300, 200, []dem{{470, 120}, {230, 115}}, 300, x.ShouldEqual},
