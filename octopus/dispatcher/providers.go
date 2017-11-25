@@ -137,7 +137,7 @@ func Call(ctx context.Context, req exchange.BidRequest) []exchange.BidResponse {
 	// The close is essential here.
 	close(allRes)
 
-	response := []exchange.BidResponse{}
+	var response []exchange.BidResponse
 	for i := range allRes {
 		response = append(response, i)
 	}

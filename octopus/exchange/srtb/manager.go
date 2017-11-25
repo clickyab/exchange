@@ -45,10 +45,11 @@ func NewSimpleRTBFromRequest(s exchange.Supplier, r *http.Request) (exchange.Bid
 // bidRequestToSRTB change bid-request to srtb
 // TODO : Split it to multiple simpler function
 func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
-	imps := []simple.Impression{}
+	var imps []simple.Impression
 	for i := range bq.Imp() {
 		imps = append(imps, simple.Impression{
-			ID: bq.Imp()[i].ID(),
+			Currency: bq.Imp()[i].Currency(),
+			ID:       bq.Imp()[i].ID(),
 			Banner: &simple.Banner{
 				ID:     bq.Imp()[i].Banner().ID(),
 				Height: bq.Imp()[i].Banner().Height(),
@@ -69,6 +70,7 @@ func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
 		})
 	}
 	res := &simple.BidRequest{
+
 		Imp: imps,
 		ID:  bq.ID(),
 		Device: &simple.Device{
@@ -120,7 +122,7 @@ func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
 				ID:     n.ID(),
 				Domain: n.Domain(),
 				Cat: func() []string {
-					res := []string{}
+					var res []string
 					for i := range n.Cat() {
 						res = append(res, string(n.Cat()[i]))
 					}
@@ -137,7 +139,7 @@ func bidRequestToSRTB(bq exchange.BidRequest) (*simple.BidRequest, error) {
 				ID:     n.ID(),
 				Domain: n.Domain(),
 				Cat: func() []string {
-					res := []string{}
+					var res []string
 					for i := range n.Cat() {
 						res = append(res, string(n.Cat()[i]))
 					}
