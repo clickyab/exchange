@@ -63,7 +63,7 @@ func SelectCPM(ctx context.Context, bq exchange.BidRequest, all []exchange.BidRe
 			lower = sorted[1].Price()
 		}
 		if lower < tb.Price() {
-			tp = lower + 1.0
+			tp = lower
 		} else {
 			tp = tb.Price()
 		}

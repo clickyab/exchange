@@ -29,6 +29,9 @@ func RenderBidResponse(ctx context.Context, s exchange.Supplier, w io.Writer, b 
 		Bids: bids,
 	})
 	assert.Nil(err)
+
 	w.Write(r)
-	return http.Header{}
+	header := http.Header{}
+	header.Set("content-type", "application/json")
+	return header
 }
