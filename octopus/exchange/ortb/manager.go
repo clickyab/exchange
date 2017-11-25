@@ -94,19 +94,12 @@ func newImpression(m []exchange.Impression, sup exchange.Supplier) []openrtb.Imp
 	ms := make([]openrtb.Impression, 0)
 	for x := range m {
 		t := openrtb.Impression{
-
 			ID: m[x].ID(),
 			Secure: func() openrtb.NumberOrString {
 				if m[x].Secure() {
 					return openrtb.NumberOrString(1)
 				}
 				return openrtb.NumberOrString(0)
-			}(),
-			BidFloor: func() float64 {
-				if m[x].BidFloor() != 0 {
-					return exchange.IncShare(m[x].BidFloor(), sup.Share())
-				}
-				return exchange.IncShare(float64(sup.FloorCPM()), sup.Share())
 			}(),
 			BidFloorCurrency: m[x].Currency(),
 		}
