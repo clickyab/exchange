@@ -6,7 +6,9 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/clickyab/services/hub"
 	"github.com/clickyab/services/mysql"
+	"github.com/clickyab/services/safe"
 
 	"clickyab.com/exchange/octopus/demands/internal/base"
 	"clickyab.com/exchange/octopus/dispatcher"
@@ -33,12 +35,19 @@ func (dm *demandManager) Initialize() {
 	dm.loadDemands()
 	reloadChan := make(chan os.Signal)
 	signal.Notify(reloadChan, syscall.SIGHUP)
-	go func() {
-		for i := range reloadChan {
-			logrus.Infof("Reloading demands config, due to signal %s", i)
-			dm.loadDemands()
+	s := hub.Subscribe("reload")
+	safe.GoRoutine(func() {
+		for {
+			select {
+			case <-s:
+				logrus.Infof("Reloading demands config, due to publisher")
+				dm.loadDemands()
+			case i := <-reloadChan:
+				logrus.Infof("Reloading demands config, due to signal %s", i)
+				dm.loadDemands()
+			}
 		}
-	}()
+	})
 }
 
 func init() {

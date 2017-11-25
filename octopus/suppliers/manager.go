@@ -9,7 +9,9 @@ import (
 
 	"clickyab.com/exchange/octopus/exchange"
 	"clickyab.com/exchange/octopus/suppliers/internal/base"
+	"github.com/clickyab/services/hub"
 	"github.com/clickyab/services/mysql"
+	"github.com/clickyab/services/safe"
 	"github.com/sirupsen/logrus"
 )
 
@@ -34,12 +36,19 @@ func (sm *supplierManager) Initialize() {
 	sm.loadSuppliers()
 	reloadChan := make(chan os.Signal)
 	signal.Notify(reloadChan, syscall.SIGHUP)
-	go func() {
-		for i := range reloadChan {
-			logrus.Infof("Reloading supplier config, due to signal %s", i)
-			sm.loadSuppliers()
+	s := hub.Subscribe("reload")
+	safe.GoRoutine(func() {
+		for {
+			select {
+			case <-s:
+				logrus.Infof("Reloading supplier config, due to publisher")
+				sm.loadSuppliers()
+			case i := <-reloadChan:
+				logrus.Infof("Reloading supplier config, due to signal %s", i)
+				sm.loadSuppliers()
+			}
 		}
-	}()
+	})
 }
 
 // GetSupplierByKey return a single supplier by its id
