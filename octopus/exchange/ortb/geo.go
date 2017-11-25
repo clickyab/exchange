@@ -53,6 +53,9 @@ func (g *geo) ISP() exchange.ISP {
 
 // Attributes return Attributes
 func (g *geo) Attributes() map[string]interface{} {
+	if g.inner == nil {
+		return map[string]interface{}{}
+	}
 	return map[string]interface{}{
 		"Type":          g.inner.Type,
 		"Accuracy":      g.inner.Accuracy,

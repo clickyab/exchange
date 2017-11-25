@@ -7,7 +7,6 @@ import (
 
 	"clickyab.com/exchange/octopus/router/internal/demands"
 	"clickyab.com/exchange/octopus/router/internal/restful"
-	"github.com/clickyab/services/assert"
 	"github.com/clickyab/services/config"
 
 	"github.com/clickyab/services/framework"
@@ -19,7 +18,7 @@ type initRouter struct {
 }
 
 func (initRouter) Routes(mux framework.Mux) {
-	mux.POST("panic", "/panic/:token", panic)
+	mux.POST("panic", "/panic/:token", doPanic)
 
 	mux.POST("get-ad", "/rest/get/:key", restful.GetAd)
 	mux.GET("click", "/click/:id", restful.Click)
@@ -39,7 +38,7 @@ func init() {
 
 var token = config.RegisterString("exchange.panic_token", "", "")
 
-func panic(ctx context.Context, w http.ResponseWriter, r *http.Request) {
+func doPanic(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	if token.String() == "" {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("panic route is disabled"))
@@ -47,7 +46,7 @@ func panic(ctx context.Context, w http.ResponseWriter, r *http.Request) {
 	}
 	t := xmux.Param(ctx, "token")
 	if token.String() == t {
-		assert.True(false)
+		panic("DON'T PANIC, IT'S JUST A TEST")
 	}
 
 }

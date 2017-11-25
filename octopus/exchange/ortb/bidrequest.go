@@ -47,7 +47,9 @@ func (b *bidRequest) UnmarshalJSON(d []byte) error {
 		return err
 	}
 
-	// TODO: extra validate
+	if i.User == nil {
+		return errors.New("user object not found")
+	}
 	if i.Device == nil || i.Device.IP == "" {
 		return errors.New("user ip (under device object) is required")
 	}
@@ -161,7 +163,6 @@ func (b *bidRequest) Attributes() map[string]interface{} {
 		"AllImps": b.inner.AllImps,
 		"BApp":    b.inner.BApp,
 		"Bcat":    b.inner.Bcat,
-		"Cur":     b.inner.Cur,
 		"Regs":    b.inner.Regs,
 	}
 }
