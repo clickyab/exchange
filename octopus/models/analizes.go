@@ -21,34 +21,35 @@ const (
 
 // SupplierSourceDemand supplier_source_demand
 type SupplierSourceDemand struct {
-	ID              int64  `json:"id" db:"id"`
-	Demand          string `json:"demand" db:"demand"`
-	Supplier        string `json:"supplier" db:"supplier"`
-	Source          string `json:"source" db:"source"`
-	TimeID          int64  `json:"time_id" db:"time_id"`
-	RequestOutCount int64  `json:"request_out_count" db:"request_out_count"`
-	AdInCount       int64  `json:"ad_in_count" db:"ad_in_count"`
-	ImpOutCount     int64  `json:"imp_out_count" db:"imp_out_count"`
-	AdOutCount      int64  `json:"ad_out_count" db:"ad_out_count"`
-	AdOutBid        int64  `json:"ad_out_bid" db:"ad_out_bid"`
-	DeliverCount    int64  `json:"deliver_count" db:"deliver_count"`
-	DeliverBid      int64  `json:"deliver_bid" db:"deliver_bid"`
-	Click           int64  `json:"click" db:"click"`
+	ID         int64   `json:"id" db:"id"`
+	Demand     string  `json:"demand" db:"demand"`
+	Supplier   string  `json:"supplier" db:"supplier"`
+	Source     string  `json:"source" db:"source"`
+	TimeID     int64   `json:"time_id" db:"time_id"`
+	RequestOut int64   `json:"request_out" db:"request_out"`
+	AdIn       int64   `json:"ad_in" db:"ad_in"`
+	AdOut      int64   `json:"ad_out" db:"ad_out"`
+	BidWin     float64 `json:"bid_win" db:"bid_win"`
+	AdWin      int64   `json:"ad_win" db:"ad_win"`
+	AdDeliver  int64   `json:"ad_deliver" db:"ad_deliver"`
+	BidDeliver int64   `json:"bid_deliver" db:"bid_deliver"`
+	Profit     int64   `json:"profit" db:"profit"`
+	Click      int64   `json:"click" db:"click"`
 }
 
 // SupplierSource supplier_source
 type SupplierSource struct {
-	ID             int64  `json:"id" db:"id"`
-	Supplier       string `json:"supplier" db:"supplier"`
-	Source         string `json:"source" db:"source"`
-	TimeID         int64  `json:"time_id" db:"time_id"`
-	RequestInCount int64  `json:"request_in_count" db:"request_in_count"`
-	ImpInCount     int64  `json:"imp_in_count" db:"imp_in_count"`
-	AdOutCount     int64  `json:"ad_out_count" db:"ad_out_count"`
-	DeliverCount   int64  `json:"deliver_count" db:"deliver_count"`
-	DeliverBid     int64  `json:"deliver_bid" db:"deliver_bid"`
-	Profit         int64  `json:"profit" db:"profit"`
-	Click          int64  `json:"click" db:"click"`
+	ID         int64   `json:"id" db:"id"`
+	Supplier   string  `json:"supplier" db:"supplier"`
+	Source     string  `json:"source" db:"source"`
+	TimeID     int64   `json:"time_id" db:"time_id"`
+	AdIn       int64   `json:"ad_in" db:"ad_in"`
+	AdOut      int64   `json:"ad_out" db:"ad_out"`
+	AdWin      int64   `json:"ad_win" db:"ad_win"`
+	AdDeliver  int64   `json:"ad_deliver" db:"ad_deliver"`
+	BidDeliver float64 `json:"bid_deliver" db:"bid_deliver"`
+	Profit     int64   `json:"profit" db:"profit"`
+	Click      int64   `json:"click" db:"click"`
 }
 
 // TimeTable TimeTable
@@ -65,16 +66,16 @@ type TimeTable struct {
 
 // ExchangeReport exchange_report
 type ExchangeReport struct {
-	ID                    int64     `json:"id" db:"id"`
-	Date                  time.Time `json:"target_date" db:"target_date"`
-	SupplierImpressionIN  int64     `json:"supplier_impression_in" db:"supplier_impression_in"`
-	SupplierImpressionOUT int64     `json:"supplier_impression_out" db:"supplier_impression_out"`
-	DemandImpressionIN    int64     `json:"demand_impression_in" db:"demand_impression_in"`
-	DemandImpressionOUT   int64     `json:"demand_impression_out" db:"demand_impression_out"`
-	Earn                  int64     `json:"earn" db:"earn"`
-	Spent                 int64     `json:"spent" db:"spent"`
-	Income                int64     `json:"income" db:"income"`
-	Click                 int64     `json:"click" db:"click"`
+	ID            int64     `json:"id" db:"id"`
+	Date          time.Time `json:"target_date" db:"target_date"`
+	SupplierAdIN  int64     `json:"supplier_ad_in" db:"supplier_ad_in"`
+	SupplierAdOUT int64     `json:"supplier_ad_out" db:"supplier_ad_out"`
+	DemandAdIN    int64     `json:"demand_ad_in" db:"demand_ad_in"`
+	DemandAdOUT   int64     `json:"demand_ad_out" db:"demand_ad_out"`
+	Earn          float64   `json:"earn" db:"earn"`
+	Spent         float64   `json:"spent" db:"spent"`
+	Income        float64   `json:"income" db:"income"`
+	Click         int64     `json:"click" db:"click"`
 }
 
 // Parts is a multi query trick
@@ -85,35 +86,33 @@ type Parts struct {
 
 // DemandReport demand_report
 type DemandReport struct {
-	ID              int64     `json:"id" db:"id"`
-	Demand          string    `json:"demand" db:"demand"`
-	TargetDate      time.Time `json:"target_date" db:"target_date"`
-	RequestOutCount int64     `json:"request_out_count" db:"request_out_count"`
-	AdInCount       int64     `json:"ad_in_count" db:"ad_in_count"`
-	ImpOutCount     int64     `json:"imp_out_count" db:"imp_out_count"`
-	AdOutCount      int64     `json:"ad_out_count" db:"ad_out_count"`
-	AdOutBid        int64     `json:"ad_out_bid" db:"ad_out_bid"`
-	DeliverCount    int64     `json:"deliver_count" db:"deliver_count"`
-	DeliverBid      int64     `json:"deliver_bid" db:"deliver_bid"`
-	Profit          int64     `json:"profit" db:"profit"`
-	SuccessRate     float64   `json:"success_rate" db:"success_rate"`
-	DeliverRate     float64   `json:"deliver_rate" db:"deliver_rate"`
-	WinRate         float64   `json:"win_rate" db:"win_rate"`
-	Click           int64     `json:"click" db:"click"`
+	ID          int64     `json:"id" db:"id"`
+	Demand      string    `json:"demand" db:"demand"`
+	TargetDate  time.Time `json:"target_date" db:"target_date"`
+	AdOut       int64     `json:"ad_out" db:"ad_out"`
+	AdIn        int64     `json:"ad_in" db:"ad_in"`
+	AdWin       int64     `json:"ad_win" db:"ad_win"`
+	AdDeliver   int64     `json:"ad_deliver" db:"ad_deliver"`
+	BidDeliver  int64     `json:"bid_deliver" db:"bid_deliver"`
+	Profit      int64     `json:"profit" db:"profit"`
+	SuccessRate float64   `json:"success_rate" db:"success_rate"`
+	DeliverRate float64   `json:"deliver_rate" db:"deliver_rate"`
+	WinRate     float64   `json:"win_rate" db:"win_rate"`
+	Click       int64     `json:"click" db:"click"`
 }
 
 // SupplierReporter table
 type SupplierReporter struct {
-	ID             int64     `json:"id" db:"id"`
-	Supplier       string    `json:"supplier" db:"supplier"`
-	Date           time.Time `json:"target_date" db:"target_date"`
-	ImpressionIn   int64     `json:"impression_in_count" db:"impression_in_count"`
-	AdOutCount     int64     `json:"ad_out_count" db:"ad_out_count"`
-	DeliveredCount int64     `json:"delivered_count" db:"delivered_count"`
-	Earn           int64     `json:"earn" db:"earn"`
-	SuccessRate    float64   `json:"success_rate" db:"success_rate"`
-	DeliverRate    float64   `json:"deliver_rate" db:"deliver_rate"`
-	Click          int64     `json:"click" db:"click"`
+	ID          int64     `json:"id" db:"id"`
+	Supplier    string    `json:"supplier" db:"supplier"`
+	Date        time.Time `json:"target_date" db:"target_date"`
+	AdIn        int64     `json:"ad_in" db:"ad_in"`
+	AdOut       int64     `json:"ad_out" db:"ad_out"`
+	AdDeliver   int64     `json:"ad_deliver" db:"ad_deliver"`
+	Earn        int64     `json:"earn" db:"earn"`
+	SuccessRate float64   `json:"success_rate" db:"success_rate"`
+	DeliverRate float64   `json:"deliver_rate" db:"deliver_rate"`
+	Click       int64     `json:"click" db:"click"`
 }
 
 // MultiQuery is a hack to run multiple query in one transaction

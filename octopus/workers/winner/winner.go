@@ -65,8 +65,10 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 					Source:       obj.Publisher,
 					Demand:       obj.Demand,
 					Time:         models.FactTableID(obj.Time),
-					AdOutCount:   1,
-					AdOutBid:     obj.WinnerCPM,
+					SupDemAdWin:  1,
+					SupAdOut:     1,
+					SupDemBidWin: obj.WinnerCPM,
+					SupBidOut:    obj.WinnerCPM,
 					Acknowledger: del,
 					WorkerID:     s.workerID,
 				}

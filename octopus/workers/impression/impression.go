@@ -61,13 +61,13 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				err := del.Decode(&obj)
 				assert.Nil(err)
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Source:            obj.Publisher,
-					Supplier:          obj.Supplier,
-					Time:              models.FactTableID(obj.Time),
-					RequestInCount:    1,
-					ImpressionInCount: int64(len(obj.Imps)),
-					Acknowledger:      del,
-					WorkerID:          s.workerID,
+					Source:       obj.Publisher,
+					Supplier:     obj.Supplier,
+					Time:         models.FactTableID(obj.Time),
+					SupRequestIn: 1,
+					SupAdIn:      int64(len(obj.Imps)),
+					Acknowledger: del,
+					WorkerID:     s.workerID,
 				}
 			case <-done:
 				cnl()
