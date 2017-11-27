@@ -62,12 +62,14 @@ func (s *consumer) Consume() chan<- broker.Delivery {
 				assert.Nil(err)
 
 				datamodels.ActiveAggregator().Channel() <- datamodels.TableModel{
-					Supplier:     obj.Supplier,
-					Source:       obj.Publisher,
-					Demand:       obj.Demand,
-					DeliverBid:   obj.Winner,
-					DeliverCount: 1,
-					Profit:       obj.Profit,
+					Supplier:         obj.Supplier,
+					Source:           obj.Publisher,
+					Demand:           obj.Demand,
+					SupDemBidDeliver: obj.Winner,
+					SupBidDeliver:    obj.Winner,
+					SupDemAdDeliver:  1,
+					SupAdDeliver:     1,
+					Profit:           obj.Profit,
 					// TODO : why this is different with other?? make it same.
 					Time:         models.FactTableID(timestampToTime(obj.Time)),
 					Acknowledger: del,

@@ -12,9 +12,9 @@ import (
 // fetchDemand select demand side
 func (m *Manager) fetchDemand(start int64, end int64) *ExchangeReport {
 	ex := ExchangeReport{}
-	q := fmt.Sprintf(`SELECT COALESCE(SUM(ad_out_count),0) AS demand_impression_in,
-	COALESCE(SUM(imp_out_count),0) AS demand_impression_out,
-	COALESCE(SUM(deliver_bid),0) AS earn
+	q := fmt.Sprintf(`SELECT COALESCE(SUM(ad_in),0) AS demand_ad_in,
+	COALESCE(SUM(ad_out),0) AS demand_ad_out,
+	COALESCE(SUM(bid_deliver),0) AS earn
 	FROM %s
 	WHERE time_id >= ?
 	AND time_id <= ?`, DemandTableName)
@@ -26,9 +26,9 @@ func (m *Manager) fetchDemand(start int64, end int64) *ExchangeReport {
 // fetchSupplier select demand side
 func (m *Manager) fetchSupplier(start int64, end int64) *ExchangeReport {
 	ex := ExchangeReport{}
-	q := fmt.Sprintf(`SELECT COALESCE(SUM(request_in_count),0) AS supplier_impression_in,
-	COALESCE(SUM(deliver_count),0) AS supplier_impression_out,
-	COALESCE(SUM(deliver_bid),0) AS spent
+	q := fmt.Sprintf(`SELECT COALESCE(SUM(ad_in),0) AS supplier_ad_in,
+	COALESCE(SUM(ad_out),0) AS supplier_ad_out,
+	COALESCE(SUM(bid_deliver),0) AS spent
 	FROM %s
 	WHERE time_id >= ?
 	AND time_id <= ?`, SupplierTableName)
@@ -45,27 +45,27 @@ func (m *Manager) updateExchangeReport(t time.Time) {
 	sup := m.fetchSupplier(from, to)
 	q := fmt.Sprintf(`INSERT INTO %s
 				(target_date,
-				supplier_impression_in,
-				supplier_impression_out,
-				demand_impression_in,
-				demand_impression_out,
+				supplier_ad_in,
+				supplier_ad_out,
+				demand_ad_in,
+				demand_ad_out,
 				earn,
 				spent,
 				income,
 				click)
 				VALUES(?,?,?,?,?,?,?,?,?)
 				ON DUPLICATE KEY UPDATE
-				supplier_impression_in = VALUES(supplier_impression_in),
-				supplier_impression_out = VALUES(supplier_impression_out),
-				demand_impression_in = VALUES(demand_impression_in),
-				demand_impression_out = VALUES(demand_impression_out),
+				supplier_ad_in = VALUES(supplier_ad_in),
+				supplier_ad_out = VALUES(supplier_ad_out),
+				demand_ad_in = VALUES(demand_ad_in),
+				demand_ad_out = VALUES(demand_ad_out),
 				earn = VALUES(earn),
 				spent = VALUES(spent),
 				income = VALUES(income),
 				click = VALUES(click)
 				`, ExchangeReportTableName)
-	_, err := m.GetWDbMap().Exec(q, td, sup.SupplierImpressionIN,
-		sup.SupplierImpressionOUT, dem.DemandImpressionIN, dem.DemandImpressionOUT,
+	_, err := m.GetWDbMap().Exec(q, td, sup.SupplierAdIN,
+		sup.SupplierAdOUT, dem.DemandAdIN, dem.DemandAdOUT,
 		sup.Spent, dem.Earn, dem.Earn-sup.Spent, dem.Click+sup.Click)
 	assert.Nil(err)
 }

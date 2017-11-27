@@ -24,19 +24,38 @@ type TableModel struct {
 	Demand   string // All
 	Time     int64  // All
 
-	RequestInCount    int64   //demand
-	RequestOutCount   int64   //demand
-	ImpressionInCount int64   //imp,demand
-	BidOutCount       int64   //demand
-	AdInCount         int64   //demand
-	AdOutCount        int64   //win
-	AdOutBid          float64 //win
-	DeliverCount      int64   //show
-	DeliverBid        float64 //show
-	Profit            float64 //show
+	//impression Job : 1 for every bidRequest supplier hit exchange
+	SupRequestIn int64
+	//impression Job : count of seatBids supplier send to exchange
+	SupAdIn int64
+	//winner job : number of win ads *1
+	SupAdOut int64
+	//winner job : price the ad won
+	SupBidOut float64
+	//show job : number of ad shown *1
+	SupAdDeliver int64
+	//show job : price of won ad
+	SupBidDeliver float64
 
-	Click int64
+	// demand Job : total demand bid send to exchange
+	SupDemBidIn float64
+	// demand job : 1 the bidRequest send to demand
+	SupDemRequestOut int64
+	// demand Job: the number of bid seat exchange send to demand
+	SupDemAdOut int64
+	// winner job : the winner price ad won
+	SupDemBidWin float64
+	// winner job:  the count of demand ad won
+	SupDemAdWin int64
+	// demand Job :the number of seat bid demand provide for exchange
+	SupDemAdIn int64
+	// show Job : the total ad count delivered to publisher
+	SupDemAdDeliver int64
+	// show job : the total bid price delivered to publisher
+	SupDemBidDeliver float64
 
+	Profit       float64 //show
+	Click        int64
 	Acknowledger Acknowledger
 	WorkerID     string
 }

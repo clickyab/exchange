@@ -9,21 +9,22 @@ import (
 )
 
 func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
-	b := tm.RequestOutCount+tm.BidOutCount+tm.AdInCount+tm.AdOutCount+tm.DeliverCount+tm.Click > 0 && tm.DeliverBid+tm.Profit+tm.AdOutBid > 0
+	b := tm.SupDemRequestOut+tm.SupDemAdOut+tm.SupDemAdWin+tm.SupDemAdIn+tm.SupDemAdDeliver+tm.Click > 0 || tm.SupDemBidIn+tm.Profit+tm.SupDemBidWin+tm.SupDemBidDeliver > 0
 	if b {
-		//(supplier,demand,source,time_id,request_out_count,imp_out_count,imp_in_count,win_count,win_bid,deliver_count,deliver_bid,profit,click)
-		return true, fmt.Sprintf(`("%s", "%s", "%s", %d, %d, %d, %d, %d, %f, %d,%f,%f,%d)`,
+		//(supplier,demand,source,time_id,request_out,bid_in,ad_out,ad_win,bid_win,ad_in,ad_deliver,bid_deliver,profit,click)
+		return true, fmt.Sprintf(`("%s", "%s", "%s", %d, %d,%f, %d, %d, %f,%d, %d, %f,%f,%d)`,
 			tm.Supplier,
 			tm.Demand,
 			tm.Source,
 			tm.Time,
-			tm.RequestOutCount,
-			tm.BidOutCount,
-			tm.AdInCount,
-			tm.AdOutCount,
-			tm.AdOutBid,
-			tm.DeliverCount,
-			tm.DeliverBid,
+			tm.SupDemRequestOut,
+			tm.SupDemBidIn,
+			tm.SupDemAdOut,
+			tm.SupDemAdWin,
+			tm.SupDemBidWin,
+			tm.SupDemAdIn,
+			tm.SupDemAdDeliver,
+			tm.SupDemBidDeliver,
 			tm.Profit,
 			tm.Click,
 		)
@@ -32,18 +33,19 @@ func hasDataSupplierDemand(tm *datamodels.TableModel) (bool, string) {
 }
 
 func hasDataSupplier(tm *datamodels.TableModel) (bool, string) {
-	b := tm.RequestOutCount+tm.BidOutCount+tm.AdInCount+tm.AdOutCount+tm.DeliverCount+tm.Click > 0 && tm.DeliverBid+tm.Profit+tm.AdOutBid > 0
+	b := tm.SupRequestIn+tm.SupAdIn+tm.SupAdOut+tm.SupAdDeliver+tm.Click > 0 || tm.SupBidDeliver+tm.Profit+tm.SupBidOut > 0
 	if b {
-		// (supplier,source,time_id,request_in_count,imp_in_count,imp_out_count,deliver_count,deliver_bid,profit,click)
-		return true, fmt.Sprintf(`("%s","%s",%d,%d,%d,%d,%d,%f,%f,%d)`,
+		// (supplier,source,time_id,request_in,ad_in,ad_out,bid_out,ad_deliver,bid_deliver,profit,click)
+		return true, fmt.Sprintf(`("%s","%s",%d,%d,%d,%d,%f,%d,%f,%f,%d)`,
 			tm.Supplier,
 			tm.Source,
 			tm.Time,
-			tm.RequestInCount,
-			tm.ImpressionInCount,
-			tm.AdOutCount,
-			tm.DeliverCount,
-			(tm.DeliverBid)-(tm.Profit),
+			tm.SupRequestIn,
+			tm.SupAdIn,
+			tm.SupAdOut,
+			tm.SupBidOut,
+			tm.SupAdDeliver,
+			(tm.SupBidDeliver)-(tm.Profit),
 			tm.Profit,
 			tm.Click,
 		)
@@ -53,28 +55,30 @@ func hasDataSupplier(tm *datamodels.TableModel) (bool, string) {
 }
 
 const supDemSrcTable = `INSERT INTO sup_dem_src
-(supplier,demand,source,time_id,request_out_count,imp_out_count,ad_in_count,ad_out_count,ad_out_bid,deliver_count,deliver_bid,profit,click) VALUES
+(supplier,demand,source,time_id,request_out,bid_in,ad_out,ad_win,bid_win,ad_in,ad_deliver,bid_deliver,profit,click) VALUES
 %s
 ON DUPLICATE KEY UPDATE
- request_out_count=request_out_count+VALUES(request_out_count),
- imp_out_count=imp_out_count+VALUES(imp_out_count),
- ad_in_count=ad_in_count+VALUES(ad_in_count),
- ad_out_count=ad_out_count+VALUES(ad_out_count),
- ad_out_bid=ad_out_bid+VALUES(ad_out_bid),
- deliver_count=deliver_count+VALUES(deliver_count),
- deliver_bid=deliver_bid+VALUES(deliver_bid),
+ request_out=request_out+VALUES(request_out),
+ bid_in=bid_in+VALUES(bid_in),
+ ad_out=ad_out+VALUES(ad_out),
+ ad_win=ad_win+VALUES(ad_win),
+ bid_win=bid_win+VALUES(bid_win),
+ ad_in=ad_in+VALUES(ad_in),
+ ad_deliver=ad_deliver+VALUES(ad_deliver),
+ bid_deliver=bid_deliver+VALUES(bid_deliver),
  profit=profit+VALUES(profit),
  click=click+VALUES(click)
 `
 const supSrcTable = `INSERT INTO sup_src
-(supplier,source,time_id,request_in_count,imp_in_count,ad_out_count,deliver_count,deliver_bid,profit,click) VALUES
+(supplier,source,time_id,request_in,ad_in,ad_out,bid_out,ad_deliver,bid_deliver,profit,click) VALUES
 %s
 ON DUPLICATE KEY UPDATE
- request_in_count=request_in_count+VALUES(request_in_count),
- imp_in_count=imp_in_count+VALUES(imp_in_count),
- ad_out_count=ad_out_count+VALUES(ad_out_count),
- deliver_count=deliver_count+VALUES(deliver_count),
- deliver_bid=deliver_bid+VALUES(deliver_bid),
+ request_in=request_in+VALUES(request_in),
+ ad_in=ad_in+VALUES(ad_in),
+ ad_out=ad_out+VALUES(ad_out),
+ bid_out=bid_out+VALUES(bid_out),
+ ad_deliver=ad_deliver+VALUES(ad_deliver),
+ bid_deliver=bid_deliver+VALUES(bid_deliver),
  profit=profit+VALUES(profit),
  click=click+VALUES(click)
 `

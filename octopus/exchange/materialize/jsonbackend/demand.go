@@ -19,6 +19,7 @@ type Demand struct {
 	Time       time.Time `json:"time"`
 	TotalPrice float64   `json:"total_price"`
 	BidLen     int       `json:"bid_len"`
+	ImpLen     int       `json:"imp_len"`
 
 	src []byte
 }
@@ -75,5 +76,6 @@ func DemandJob(rq exchange.BidRequest, resp exchange.BidResponse, demand string)
 		Demand:     demand,
 		BidLen:     len(resp.Bids()),
 		TotalPrice: total,
+		ImpLen:     len(rq.Imp()),
 	}
 }
