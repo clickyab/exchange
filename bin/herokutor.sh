@@ -93,6 +93,7 @@ pushd ${TEMPORARY}
 rocker build --push -var Build=${BUILD} -var EnvDir=${VARS} -var Cache=${CACHE} -var Target=${TARGET} -var Version=${BRANCH}.${COMMITCOUNT} -var App=${APP}
 popd
 
+NAMESPACE="${APP}"
 if [[ "${BRANCH}" == "dev" ]]; then
     NAMESPACE=${APP}-staging
 fi
