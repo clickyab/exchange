@@ -81,7 +81,7 @@ IMPORT /app
 ENV TZ=Asia/Tehran
 RUN ln -snf /usr/share/zoneinfo/\$TZ /etc/localtime && echo \$TZ > /etc/timezone
 
-RUN apt-get update && apt-get install -y ca-certificates && apt-get clean
+RUN apt-get update && apt-get install -y tzdata ca-certificates && apt-get clean
 
 TAG registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
 PUSH registry.clickyab.ae/clickyab/{{ .App }}:{{ .Version }}
